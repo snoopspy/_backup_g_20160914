@@ -6,7 +6,9 @@ CONFIG += staticlib
 DESTDIR = $${PWD}
 
 SOURCES += \
-	../src/sys/memleak/*.cpp
+	../src/sys/memleak/*.cpp \
+	../src/sys/procinfo/*.cpp
 	
 HEADERS += \
-	../src/sys/memleak/*.h
+	../src/sys/memleak/*.h \
+	../src/sys/procinfo/*.h

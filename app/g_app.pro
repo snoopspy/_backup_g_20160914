@@ -1,3 +1,4 @@
 TEMPLATE = subdirs
 SUBDIRS += \
-	sys/memleak/gmemleak_app.pro
+	sys/gsys_app.pro
+
