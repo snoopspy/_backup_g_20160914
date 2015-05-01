@@ -1,8 +1,7 @@
 #include <stdio.h>  // printf
 #include <stdlib.h> // malloc
 
-class Obj
-{
+class Obj {
 public:
   virtual ~Obj() // (A)
   {
@@ -28,8 +27,7 @@ public:
   }
 };
 
-int main()
-{
+int main() {
   Obj* obj1 = new Obj;                            // (B)
   delete obj1;                                    // (A), (C)
 

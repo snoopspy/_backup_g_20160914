@@ -5,13 +5,11 @@ static const int LOOP_CNT = 1000000;
 #ifdef _WIN32
 
 #include <windows.h>
-void gettickcount_msec_test()
-{
+void gettickcount_msec_test() {
   DWORD beg = GetTickCount();
   DWORD end;
   DWORD diff;
-  for (int i = 0; i < LOOP_CNT; i++)
-  {
+  for (int i = 0; i < LOOP_CNT; i++) {
     end = GetTickCount();
     diff = end - beg;
   }
@@ -19,13 +17,11 @@ void gettickcount_msec_test()
 }
 
 #include <mmsystem.h>
-void timegettime_msec_test()
-{
+void timegettime_msec_test() {
   DWORD beg = timeGetTime();
   DWORD end;
   DWORD diff;
-  for (int i = 0; i < LOOP_CNT; i++)
-  {
+  for (int i = 0; i < LOOP_CNT; i++) {
     end = timeGetTime();
     diff = end - beg;
   }
@@ -38,13 +34,11 @@ void timegettime_msec_test()
 // gnuc
 // ----------------------------------------------------------------------------
 #include <time.h>
-void clock_usec_test()
-{
+void clock_usec_test() {
   clock_t beg = clock();
   clock_t end;
   clock_t diff;
-  for (int i = 0; i < LOOP_CNT; i++)
-  {
+  for (int i = 0; i < LOOP_CNT; i++) {
     end = clock();
     diff = end - beg;
   }
@@ -52,13 +46,11 @@ void clock_usec_test()
 }
 
 #include <time.h>
-void time_sec_test()
-{
+void time_sec_test() {
   time_t beg; time(&beg);
   time_t end;
   time_t diff;
-  for (int i = 0; i < LOOP_CNT; i++)
-  {
+  for (int i = 0; i < LOOP_CNT; i++) {
     time(&end);
     diff = end - beg;
   }
@@ -66,13 +58,11 @@ void time_sec_test()
 }
 
 #include <sys/time.h>
-void gettimeofday_usec_test()
-{
+void gettimeofday_usec_test() {
   struct timeval beg; gettimeofday(&beg, NULL);
   struct timeval end;
   long diff;
-  for (int i = 0; i < LOOP_CNT; i++)
-  {
+  for (int i = 0; i < LOOP_CNT; i++) {
     gettimeofday(&end, NULL);
     diff = (end.tv_sec - beg.tv_sec) * 1000000 + (end.tv_usec - beg.tv_usec);
   }
@@ -80,13 +70,11 @@ void gettimeofday_usec_test()
 }
 
 #include <time.h>
-void clock_gettime_nsec_test()
-{
+void clock_gettime_nsec_test() {
   struct timespec beg; clock_gettime(CLOCK_MONOTONIC, &beg);
   struct timespec end;
   long diff;
-  for (int i = 0; i < LOOP_CNT; i++)
-  {
+  for (int i = 0; i < LOOP_CNT; i++) {
     clock_gettime(CLOCK_MONOTONIC, &end);
     diff = (end.tv_sec - beg.tv_sec) * 1000000000 + (end.tv_nsec - beg.tv_nsec);
   }
@@ -98,15 +86,13 @@ void clock_gettime_nsec_test()
 // c++11
 // ----------------------------------------------------------------------------
 #include <chrono>
-void system_clock_msec_test()
-{
+void system_clock_msec_test() {
   using namespace std::chrono;
 
   system_clock::time_point beg = system_clock::now();
   system_clock::time_point end;
   milliseconds diff;
-  for (int i = 0; i < LOOP_CNT; i++)
-  {
+  for (int i = 0; i < LOOP_CNT; i++) {
     end = system_clock::now();
     diff = duration_cast<milliseconds>(end - beg);
   }
@@ -114,15 +100,13 @@ void system_clock_msec_test()
 }
 
 #include <chrono>
-void system_clock_usec_test()
-{
+void system_clock_usec_test() {
   using namespace std::chrono;
 
   system_clock::time_point beg = system_clock::now();
   system_clock::time_point end;
   microseconds diff;
-  for (int i = 0; i < LOOP_CNT; i++)
-  {
+  for (int i = 0; i < LOOP_CNT; i++) {
     end = system_clock::now();
     diff = duration_cast<microseconds>(end - beg);
   }
@@ -130,15 +114,13 @@ void system_clock_usec_test()
 }
 
 #include <chrono>
-void system_clock_nsec_test()
-{
+void system_clock_nsec_test() {
   using namespace std::chrono;
 
   system_clock::time_point beg = system_clock::now();
   system_clock::time_point end;
   nanoseconds diff;
-  for (int i = 0; i < LOOP_CNT; i++)
-  {
+  for (int i = 0; i < LOOP_CNT; i++) {
     end = system_clock::now();
     diff = duration_cast<nanoseconds>(end - beg);
   }
@@ -146,15 +128,13 @@ void system_clock_nsec_test()
 }
 
 #include <chrono>
-void high_resolution_clock_msec_test()
-{
+void high_resolution_clock_msec_test() {
   using namespace std::chrono;
 
   high_resolution_clock::time_point beg = high_resolution_clock::now();
   high_resolution_clock::time_point end;
   milliseconds diff;
-  for (int i = 0; i < LOOP_CNT; i++)
-  {
+  for (int i = 0; i < LOOP_CNT; i++) {
     end = high_resolution_clock::now();
     diff = duration_cast<milliseconds>(end - beg);
   }
@@ -162,15 +142,13 @@ void high_resolution_clock_msec_test()
 }
 
 #include <chrono>
-void high_resolution_clock_usec_test()
-{
+void high_resolution_clock_usec_test() {
   using namespace std::chrono;
 
   high_resolution_clock::time_point beg = high_resolution_clock::now();
   high_resolution_clock::time_point end;
   microseconds diff;
-  for (int i = 0; i < LOOP_CNT; i++)
-  {
+  for (int i = 0; i < LOOP_CNT; i++) {
     end = high_resolution_clock::now();
     diff = duration_cast<microseconds>(end - beg);
   }
@@ -178,15 +156,13 @@ void high_resolution_clock_usec_test()
 }
 
 #include <chrono>
-void high_resolution_clock_nsec_test()
-{
+void high_resolution_clock_nsec_test() {
   using namespace std::chrono;
 
   high_resolution_clock::time_point beg = high_resolution_clock::now();
   high_resolution_clock::time_point end;
   nanoseconds diff;
-  for (int i = 0; i < LOOP_CNT; i++)
-  {
+  for (int i = 0; i < LOOP_CNT; i++) {
     end = high_resolution_clock::now();
     diff = duration_cast<nanoseconds>(end - beg);
   }
@@ -198,16 +174,14 @@ void high_resolution_clock_nsec_test()
 // qt
 // ----------------------------------------------------------------------------
 #include <QTime>
-void qtime_msec_test()
-{
+void qtime_msec_test() {
   QTime time;
   time.start();
 
   int beg = time.elapsed();
   int end;
   int diff;
-  for (int i = 0; i < LOOP_CNT; i++)
-  {
+  for (int i = 0; i < LOOP_CNT; i++) {
     end = time.elapsed();
     diff = end - beg;
   }
@@ -215,16 +189,14 @@ void qtime_msec_test()
 }
 
 #include <QElapsedTimer>
-void qelapsedtimer_msec_test()
-{
+void qelapsedtimer_msec_test() {
   QElapsedTimer elapsedTimer;
   elapsedTimer.start();
 
   quint64 beg = elapsedTimer.elapsed();
   quint64 end;
   quint64 diff;
-  for (int i = 0; i < LOOP_CNT; i++)
-  {
+  for (int i = 0; i < LOOP_CNT; i++) {
     end = elapsedTimer.elapsed();
     diff = end - beg;
   }
@@ -232,16 +204,14 @@ void qelapsedtimer_msec_test()
 }
 
 #include <QElapsedTimer>
-void qelapsedtimer_nsec_test()
-{
+void qelapsedtimer_nsec_test() {
   QElapsedTimer elapsedTimer;
   elapsedTimer.start();
 
   quint64 beg = elapsedTimer.nsecsElapsed();
   quint64 end;
   quint64 diff;
-  for (int i = 0; i < LOOP_CNT; i++)
-  {
+  for (int i = 0; i < LOOP_CNT; i++) {
     end = elapsedTimer.nsecsElapsed();
     diff = end - beg;
   }
@@ -252,8 +222,7 @@ void qelapsedtimer_nsec_test()
 // ----------------------------------------------------------------------------
 // main
 // ----------------------------------------------------------------------------
-int main()
-{
+int main() {
 #ifdef WIN32
   //
   // windows

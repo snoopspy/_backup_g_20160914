@@ -17,26 +17,21 @@
 // ----------------------------------------------------------------------------
 // GTimeDiffGetTimeOfDay_
 // ----------------------------------------------------------------------------
-namespace GTimeDiffGetTimeOfDay_
-{
+namespace GTimeDiffGetTimeOfDay_ {
   typedef int Milestone;
 
   typedef long /*__suseconds_t*/ Diff;
 
-  struct Clock
-  {
+  struct Clock {
     struct timeval tv_;
 
-    Diff operator - (const Clock &rhs) const
-    {
+    Diff operator - (const Clock &rhs) const {
       return (tv_.tv_sec - rhs.tv_.tv_sec) * 1000000 + (tv_.tv_usec - rhs.tv_.tv_usec);
     }
   };
 
-  struct Timer
-  {
-    Clock now()
-    {
+  struct Timer {
+    Clock now() {
       Clock res;
       gettimeofday(&res.tv_, NULL);
       return res;

@@ -1,7 +1,6 @@
 #include <GTimeDiffChrono>
 #include "mytest.h"
 
-TEST(Chrono, test)
-{
+TEST(Chrono, test) {
   MyTest<GTimeDiffChrono>();
 }

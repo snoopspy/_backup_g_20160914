@@ -1,7 +1,6 @@
 #include <GTimeDiffNull>
 #include "mytest.h"
 
-TEST(Null, test)
-{
+TEST(Null, test) {
   MyTest<GTimeDiffNull>();
 }

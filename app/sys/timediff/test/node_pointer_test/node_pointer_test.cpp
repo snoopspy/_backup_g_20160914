@@ -1,19 +1,16 @@
 #include <iostream>
 #include <GTimeDiffChrono>
 
-struct Node
-{
+struct Node {
   Node(int value = 0) { this->value = value; }
   struct Node* next;
   int value;
 };
 
-Node* makeNode()
-{
+Node* makeNode() {
   Node* res = new Node;
   Node* node = res;
-  for (int i = 0; i < 10; i++)
-  {
+  for (int i = 0; i < 10; i++) {
     Node* next = new Node;
     node->next = next;
     node = next;
@@ -41,8 +38,7 @@ Node* makeNode()
 
 static const int LOOP_CNT = 10000000;
 
-int main()
-{
+int main() {
   Node* node = makeNode();
   GTimeDiffChrono pfm;
 

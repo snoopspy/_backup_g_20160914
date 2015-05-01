@@ -15,15 +15,13 @@ void foo3() {
   foo2();
 }
 
-TEST(GStackTrace, test)
-{
+TEST(GStackTrace, test) {
   LOG(INFO) << "beg test";
   foo3();
   LOG(INFO) << "aft test";
 }
 
-void sleepProc(int n)
-{
+void sleepProc(int n) {
   LOG(INFO) << "beg sleepProc " << n;
   for (int i = 0; i < 5; i++) {
     std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -31,8 +29,7 @@ void sleepProc(int n)
   LOG(INFO) << "end sleepProc " << n;
 }
 
-TEST(GStackTrace, sleepThreadTest)
-{
+TEST(GStackTrace, sleepThreadTest) {
   LOG(INFO) << "beg sleepThreadTest";
   {
     constexpr int THREAD_CNT = 3;
@@ -65,8 +62,7 @@ namespace SpinLockTest {
   }
 };
 
-TEST(GStackTrace, spinLockTest)
-{
+TEST(GStackTrace, spinLockTest) {
   LOG(INFO) << "beg spinLockTest";
   {
     SpinLockTest::active_ = true;

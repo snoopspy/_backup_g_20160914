@@ -1,8 +1,7 @@
 #include <stdio.h>  // printf
 #include <stdlib.h> // malloc
 
-class Obj
-{
+class Obj {
 public:
   void* operator new(size_t size) // (A)
   {
@@ -29,8 +28,7 @@ public:
   }
 };
 
-int main()
-{
+int main() {
   new Obj;                     // (A)
   new(__FILE__) Obj;           // (B)
   new(__FILE__, __LINE__) Obj; // (C)

@@ -5,13 +5,10 @@
 #include <iostream>
 
 template <class PERFORMANCE, int LOOP_CNT = 100000>
-struct MyTest
-{
-  MyTest()
-  {
+struct MyTest {
+  MyTest() {
     PERFORMANCE pfm;
-    for (int i = 0; i < LOOP_CNT; i++)
-    {
+    for (int i = 0; i < LOOP_CNT; i++) {
       pfm.check(1);
       pfm.check(2);
       pfm.check(3);

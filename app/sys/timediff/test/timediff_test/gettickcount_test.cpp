@@ -3,8 +3,7 @@
 #include <GTimeDiffGetTickCount>
 #include "mytest.h"
 
-TEST(GetTickCount, test)
-{
+TEST(GetTickCount, test) {
   MyTest<GTimeDiffGetTickCount>();
 }
 

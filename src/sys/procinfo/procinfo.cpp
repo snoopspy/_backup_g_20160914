@@ -3,8 +3,7 @@
 #include <string.h>
 #include "procinfo.h"
 
-GProcInfo& GProcInfo::load(pid_t pid)
-{
+GProcInfo& GProcInfo::load(pid_t pid) {
   std::string pid_str = pid == 0 ? "self" : std::to_string(pid);
   std::string file_name = "/proc/" + pid_str + "/stat";
 

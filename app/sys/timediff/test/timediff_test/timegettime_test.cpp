@@ -3,8 +3,7 @@
 #include <GTimeDiffTimeGetTime>
 #include "mytest.h"
 
-TEST(TimeGetTime, test)
-{
+TEST(TimeGetTime, test) {
   MyTest<GTimeDiffTimeGetTime>();
 }
 

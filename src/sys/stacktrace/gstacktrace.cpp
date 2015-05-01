@@ -10,8 +10,7 @@
 // ----------------------------------------------------------------------------
 // GStracTrace
 // ----------------------------------------------------------------------------
-GStackTrace::GStackTrace()
-{
+GStackTrace::GStackTrace() {
   DLOG(INFO) << "GStackTrace::GStackTrace()";
   prev_handler_ = 0;
   setOutput(stdout);
@@ -19,24 +18,20 @@ GStackTrace::GStackTrace()
   setSignal(SIGUSR1);
 }
 
-GStackTrace::~GStackTrace()
-{
+GStackTrace::~GStackTrace() {
   DLOG(INFO) << "GStackTrace::~GStackTrace()";
   unsetSignal();
 }
 
-void GStackTrace::setOutput(FILE* output)
-{
+void GStackTrace::setOutput(FILE* output) {
   output_ = output;
 }
 
-void GStackTrace::setMaxFrames(int maxFrames)
-{
+void GStackTrace::setMaxFrames(int maxFrames) {
   maxFrames_ = maxFrames;
 }
 
-void GStackTrace::setSignal(int signum)
-{
+void GStackTrace::setSignal(int signum) {
   unsetSignal();
   prev_handler_ = signal(signum, sighandler);
   if (prev_handler_ == SIG_ERR) {
@@ -46,8 +41,7 @@ void GStackTrace::setSignal(int signum)
   signum_ = signum;
 }
 
-void GStackTrace::unsetSignal()
-{
+void GStackTrace::unsetSignal() {
   if (prev_handler_ != 0) {
     __sighandler_t res = signal(signum_, prev_handler_);
     assert(res == sighandler);
@@ -55,8 +49,7 @@ void GStackTrace::unsetSignal()
   }
 }
 
-void GStackTrace::dump()
-{
+void GStackTrace::dump(){
   DIR *dir;
 
   if ((dir = opendir ("/proc/self/task")) == NULL) {
@@ -78,8 +71,7 @@ void GStackTrace::dump()
   closedir(dir);
 }
 
-void GStackTrace::printStacktrace()
-{
+void GStackTrace::printStacktrace() {
   mutex_.lock();
 
   fprintf(output_, "******** stack trace ******** (%ld)\n", syscall(SYS_gettid));
@@ -106,14 +98,12 @@ void GStackTrace::printStacktrace()
 
   // iterate over the returned symbol lines. skip the first, it is the
   // address of this function.
-  for (int i = 3; i < addrlen; i++)
-  {
+  for (int i = 3; i < addrlen; i++) {
     char *begin_name = 0, *begin_offset = 0, *end_offset = 0;
 
     // find parentheses and +address offset surrounding the mangled name:
     // ./module(function+0x15c) [0x8048a6d]
-    for (char *p = symbollist[i]; *p; ++p)
-    {
+    for (char *p = symbollist[i]; *p; ++p) {
       if (*p == '(')
         begin_name = p;
       else if (*p == '+')
@@ -124,8 +114,7 @@ void GStackTrace::printStacktrace()
       }
     }
 
-    if (begin_name && begin_offset && end_offset && begin_name < begin_offset)
-    {
+    if (begin_name && begin_offset && end_offset && begin_name < begin_offset) {
       *begin_name++ = '\0';
       *begin_offset++ = '\0';
       *end_offset = '\0';
@@ -149,8 +138,7 @@ void GStackTrace::printStacktrace()
         symbollist[i], begin_name, begin_offset);
       }
     }
-    else
-    {
+    else {
       // couldn't parse the line? print the whole line.
       fprintf(output_, "  %s\n", symbollist[i]);
     }
@@ -162,14 +150,12 @@ void GStackTrace::printStacktrace()
   mutex_.unlock();
 }
 
-void GStackTrace::sighandler(int signum)
-{
+void GStackTrace::sighandler(int signum) {
   if (signum == GStackTrace::instance().signum_)
     GStackTrace::instance().printStacktrace();
 }
 
-GStackTrace& GStackTrace::instance()
-{
+GStackTrace& GStackTrace::instance() {
   static GStackTrace _instance;
   return _instance;
 }

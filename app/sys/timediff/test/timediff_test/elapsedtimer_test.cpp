@@ -1,7 +1,6 @@
 #include <GTimeDiffElapsedTimer>
 #include "mytest.h"
 
-TEST(ElapsedTimer, test)
-{
+TEST(ElapsedTimer, test) {
   MyTest<GTimeDiffElapsedTimer>();
 }

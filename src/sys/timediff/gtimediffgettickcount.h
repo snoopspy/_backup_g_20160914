@@ -19,16 +19,14 @@
 // ----------------------------------------------------------------------------
 // GTimeDiffGetTickCount_
 // ----------------------------------------------------------------------------
-namespace GTimeDiffGetTickCount_
-{
+namespace GTimeDiffGetTickCount_ {
   typedef int Milestone;
 
   typedef DWORD Clock;
 
   typedef DWORD Diff;
 
-  struct Timer
-  {
+  struct Timer {
     Clock now() { return GetTickCount(); }
   };
 }

@@ -2,16 +2,13 @@
 #include <thread>
 #include <GTimeDiffChrono>
 
-void doSomething(int msec)
-{
+void doSomething(int msec) {
   std::this_thread::sleep_for(std::chrono::milliseconds(msec));
 }
 
-int main()
-{
+int main() {
   GTimeDiffChrono pfm;
-  for (int i = 0; i < 10; i++)
-  {
+  for (int i = 0; i < 10; i++) {
     pfm.check(__LINE__);
     doSomething(10);
     pfm.check(__LINE__);
