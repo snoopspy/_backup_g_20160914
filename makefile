@@ -11,7 +11,7 @@ app:
 clean:
 	cd lib && make clean; true
 	cd app && make clean; true
-	find -type d -name 'build-*'    -exec rm -r {} \;
+	find -type d -name 'build-*'    -exec rm -r {} \; | true
 	find -type f -name '*.o'        -delete
 	find -type f -name '*.pro.user' -delete
 
