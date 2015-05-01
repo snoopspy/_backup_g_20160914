@@ -6,7 +6,8 @@ bin/
 *.o
 *.pro.user
 *.so
-Makefile*
+Makefile
+Makefile.*
 moc_*
 qrc_*
 ui_*

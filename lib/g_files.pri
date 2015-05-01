@@ -6,4 +6,5 @@ SOURCES += \
 HEADERS += \
 	../src/sys/memleak/*.h \
 	../src/sys/procinfo/*.h \
-	../src/sys/stacktrace/*.h
+	../src/sys/stacktrace/*.h \
+	../src/sys/timediff/*.h
