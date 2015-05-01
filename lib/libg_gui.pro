@@ -1,5 +1,5 @@
 TEMPLATE = lib
-QT -= gui
+QT += widgets
 CONFIG += G_BUILD
 include(../g.pri)
 TARGET = $${G_NAME}
