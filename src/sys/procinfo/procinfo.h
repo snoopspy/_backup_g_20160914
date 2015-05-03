@@ -1,3 +1,13 @@
+// ----------------------------------------------------------------------------
+//
+// G Library version 0.1
+//
+// http://www.gilgil.net
+//
+// Copyright (c) Gilbert Lee All rights reserved
+//
+// ----------------------------------------------------------------------------
+
 #pragma once
 
 #include <cstdint>

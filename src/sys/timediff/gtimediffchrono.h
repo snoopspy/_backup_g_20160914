@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------
 //
-// VDream Component Suite version 9.1
+// G Library version 0.1
 //
 // http://www.gilgil.net
 //
@@ -8,8 +8,7 @@
 //
 // ----------------------------------------------------------------------------
 
-#ifndef __V_PERFORMANCE_CHRONO_H__
-#define __V_PERFORMANCE_CHRONO_H__
+#pragma once
 
 #include <chrono>
 #include <ostream>
@@ -42,5 +41,3 @@ std::ostream& operator << (std::ostream& os, std::chrono::high_resolution_clock:
   os << rhs.count();
   return os;
 }
-
-#endif // __V_PERFORMANCE_CHRONO_H__

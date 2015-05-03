@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------
 //
-// VDream Component Suite version 9.1
+// G Library version 0.1
 //
 // http://www.gilgil.net
 //
@@ -8,8 +8,7 @@
 //
 // ----------------------------------------------------------------------------
 
-#ifndef __V_PERFORMANCE_H__
-#define __V_PERFORMANCE_H__
+#pragma once
 
 #include <map>
 #include <iostream>
@@ -119,5 +118,3 @@ public:
     if (autoClear) clear();
   }
 };
-
-#endif // __V_PERFORMANCE_H__

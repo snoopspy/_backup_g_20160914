@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------
 //
-// VDream Component Suite version 9.1
+// G Library version 0.1
 //
 // http://www.gilgil.net
 //
@@ -8,8 +8,7 @@
 //
 // ----------------------------------------------------------------------------
 
-#ifndef __V_PERFORMANCE_GET_TIME_OF_DAY_H__
-#define __V_PERFORMANCE_GET_TIME_OF_DAY_H__
+#pragma once
 
 #include <sys/time.h>
 #include "gtimediff.h"
@@ -48,5 +47,3 @@ typedef GTimeDiff<
   GTimeDiffGetTimeOfDay_::Diff,
   GTimeDiffGetTimeOfDay_::Timer
 > GTimeDiffGetTimeOfDay;
-
-#endif // __V_PERFORMANCE_GET_TIME_OF_DAY_H__

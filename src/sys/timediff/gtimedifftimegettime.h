@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------
 //
-// VDream Component Suite version 9.1
+// G Library version 0.1
 //
 // http://www.gilgil.net
 //
@@ -8,8 +8,7 @@
 //
 // ----------------------------------------------------------------------------
 
-#ifndef __V_PERFORMANCE_TIME_GET_TIME_H__
-#define __V_PERFORMANCE_TIME_GET_TIME_H__
+#pragma once
 
 #ifdef _WIN32
 
@@ -42,5 +41,3 @@ typedef GTimeDiff<
 > GTimeDiffTimeGetTime;
 
 #endif // _WIN32
-
-#endif // __V_PERFORMANCE_TIME_GET_TIME_H__

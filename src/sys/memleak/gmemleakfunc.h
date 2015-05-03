@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------
 //
-// VDream Component Suite version 9.1
+// G Library version 0.1
 //
 // http://www.gilgil.net
 //
@@ -8,8 +8,7 @@
 //
 // ----------------------------------------------------------------------------
 
-#ifndef __V_MEM_LEAK_FUNC_H__
-#define __V_MEM_LEAK_FUNC_H__
+#pragma once
 
 #ifdef _DEBUG
 
@@ -46,5 +45,3 @@ void  operator delete[](void* ptr) throw();
 #endif // __cplusplus
 
 #endif // _DEBUG
-
-#endif // __V_MEM_LEAK_FUNC_H__

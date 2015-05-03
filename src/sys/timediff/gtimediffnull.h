@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------
 //
-// VDream Component Suite version 9.1
+// G Library version 0.1
 //
 // http://www.gilgil.net
 //
@@ -8,8 +8,7 @@
 //
 // ----------------------------------------------------------------------------
 
-#ifndef __V_PERFORMANCE_NULL_H__
-#define __V_PERFORMANCE_NULL_H__
+#pragma once
 
 #include "gtimediff.h"
 
@@ -53,5 +52,3 @@ typedef GTimeDiff<
   GTimeDiffNull_::Diff,
   GTimeDiffNull_::Timer
 > GTimeDiffNull;
-
-#endif // __V_PERFORMANCE_NULL_H__

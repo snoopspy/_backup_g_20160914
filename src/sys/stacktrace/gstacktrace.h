@@ -8,6 +8,8 @@
 //
 // ----------------------------------------------------------------------------
 
+#pragma once
+
 #include <mutex>
 #include <signal.h>
 #include <stdio.h>

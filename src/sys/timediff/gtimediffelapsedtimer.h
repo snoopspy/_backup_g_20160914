@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------
 //
-// VDream Component Suite version 9.1
+// G Library version 0.1
 //
 // http://www.gilgil.net
 //
@@ -8,8 +8,7 @@
 //
 // ----------------------------------------------------------------------------
 
-#ifndef __V_PERFORMANCE_ELAPSEDTIMER_H__
-#define __V_PERFORMANCE_ELAPSEDTIMER_H__
+#pragma once
 
 #include <QElapsedTimer>
 #include "gtimediff.h"
@@ -40,5 +39,3 @@ typedef GTimeDiff<
   GTimeDiffElapsedTimer_::Diff,
   GTimeDiffElapsedTimer_::Timer
 > GTimeDiffElapsedTimer;
-
-#endif // __V_PERFORMANCE_ELAPSEDTIMER_H__
