@@ -14,6 +14,7 @@ GStackTrace::GStackTrace() {
   DLOG(INFO) << "GStackTrace::GStackTrace()";
   prev_handler_ = 0;
   setOutput(stdout);
+  setSkipFrames(3);
   setMaxFrames(10);
   setSignal(SIGUSR1);
 }
@@ -25,6 +26,10 @@ GStackTrace::~GStackTrace() {
 
 void GStackTrace::setOutput(FILE* output) {
   output_ = output;
+}
+
+void GStackTrace::setSkipFrames(int skipFrames) {
+  skipFrames_ = skipFrames;
 }
 
 void GStackTrace::setMaxFrames(int maxFrames) {
@@ -98,7 +103,7 @@ void GStackTrace::printStacktrace() {
 
   // iterate over the returned symbol lines. skip the first, it is the
   // address of this function.
-  for (int i = 3; i < addrlen; i++) {
+  for (int i = skipFrames_; i < addrlen; i++) {
     char *begin_name = 0, *begin_offset = 0, *end_offset = 0;
 
     // find parentheses and +address offset surrounding the mangled name:

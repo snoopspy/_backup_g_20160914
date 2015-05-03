@@ -26,6 +26,7 @@ private:
 
 public:
   void setOutput(FILE* output);
+  void setSkipFrames(int skipFrames);
   void setMaxFrames(int maxFrames);
   void setSignal(int signum);
   void unsetSignal();
@@ -35,6 +36,7 @@ protected:
   __sighandler_t prev_handler_;
   int signum_;
   FILE* output_;
+  int skipFrames_;
   int maxFrames_;
   std::mutex mutex_;
 
