@@ -5,4 +5,4 @@ include(../g.pri)
 TARGET = $${G_NAME}
 CONFIG += staticlib
 DESTDIR = $${PWD}
-include(g_files.pri)
+include(libgfiles.pri)
