@@ -35,6 +35,6 @@ mingw: DEFINES *= __USE_MINGW_ANSI_STDIO=1
 # gstacktrace
 #------------------------------------------------------------------------------
 CONFIG(gstacktrace) {
-	QMAKE_LFLAGS *= -rdynamic
-	LIBS *= -lglog -pthread
+	QMAKE_LFLAGS *= -rdynamic -pthread
+	LIBS *= -lglog
 }
