@@ -1,9 +1,9 @@
-#include <thread>
 #include <assert.h>
 #include <cxxabi.h>
 #include <dirent.h>
 #include <execinfo.h>
-#include <glog/logging.h>
+#include <string.h>
+#include <unistd.h>
 #include <sys/syscall.h>
 #include "gstacktrace.h"
 
@@ -11,7 +11,6 @@
 // GStracTrace
 // ----------------------------------------------------------------------------
 GStackTrace::GStackTrace() {
-  DLOG(INFO) << "GStackTrace::GStackTrace()";
   prev_handler_ = 0;
   setOutput(stdout);
   setSkipFrames(3);
@@ -20,7 +19,6 @@ GStackTrace::GStackTrace() {
 }
 
 GStackTrace::~GStackTrace() {
-  DLOG(INFO) << "GStackTrace::~GStackTrace()";
   unsetSignal();
 }
 
@@ -40,7 +38,7 @@ void GStackTrace::setSignal(int signum) {
   unsetSignal();
   prev_handler_ = signal(signum, sighandler);
   if (prev_handler_ == SIG_ERR) {
-    LOG(FATAL) << "Calling signal(" << signum << ") return SIG_ERR " << strerror(errno);
+    fprintf(stderr, "Calling signal(%d) return SIG_ERR err=%s\n", signum, strerror(errno));
     prev_handler_ = 0;
   }
   signum_ = signum;
@@ -58,7 +56,7 @@ void GStackTrace::dump(){
   DIR *dir;
 
   if ((dir = opendir ("/proc/self/task")) == NULL) {
-    LOG(ERROR) << "opendir return NULL " << strerror(errno);
+    fprintf(stderr, "opendir return NULL err=%s\n", strerror(errno));
     return;
   }
 
@@ -70,7 +68,7 @@ void GStackTrace::dump(){
     pid_t tid = std::stoi(s);
     long int res = syscall(SYS_tgkill, tgid, tid, signum_); // tgkill(tgid, tid, signum_);
     if (res != 0) {
-      LOG(ERROR) << "Error in call kill " << strerror(errno);
+      fprintf(stderr, "Error in call kill err=%s\n", strerror(errno));
     }
   }
   closedir(dir);
