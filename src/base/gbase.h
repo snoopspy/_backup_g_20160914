@@ -11,5 +11,5 @@
 #pragma once
 
 namespace g {
-  constexpr static const char* VERSION;
+  extern const char* VERSION;
 }

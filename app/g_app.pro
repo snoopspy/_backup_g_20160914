@@ -1,4 +1,5 @@
 TEMPLATE = subdirs
 SUBDIRS += \
-	sys/gsys_app.pro
+	base/gbase_app.pro \
+  sys/gsys_app.pro
 
