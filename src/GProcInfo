@@ -1,1 +1,1 @@
-#include "sys/procinfo/procinfo.h"
+#include "sys/procinfo/gprocinfo.h"
