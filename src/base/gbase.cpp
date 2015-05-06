@@ -1,7 +1,5 @@
 #include "gbase.h"
 
-constexpr static const char* VERSION = "G Library version 0.1";
-
 namespace g {
 
 #ifdef _DEBUG
