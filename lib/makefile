@@ -2,32 +2,26 @@ all: debug release
 
 debug: libg_d libg_gui_d
 
-libg_d:
-	qmake libg.pro "CONFIG+=debug" -o Makefile.libg_d
-	make -f Makefile.libg_d
-	make clean -f Makefile.libg_d
-
-libg_gui_d:
-	qmake libg_gui.pro "CONFIG+=debug" -o Makefile.libg_gui_d
-	make -f Makefile.libg_gui_d
-	make clean -f Makefile.libg_gui_d
-
 release: libg libg_gui
 
+libg_d:
+	mkdir -p libg_d; cd libg_d;         qmake ../libg.pro     "CONFIG+=debug"; make
+	
+libg_gui_d:
+	mkdir -p libg_gui_d; cd libg_gui_d; qmake ../libg_gui.pro "CONFIG+=debug"; make
+
 libg:
-	qmake libg.pro -o Makefile.libg
-	make -f Makefile.libg
-	make clean -f Makefile.libg
+	mkdir -p libg; cd libg;             qmake ../libg.pro;                     make
 
 libg_gui:
-	qmake libg_gui.pro "QT+=widgets" -o Makefile.libg_gui
-	make -f Makefile.libg_gui
-	make clean -f Makefile.libg_gui
+	mkdir -p libg_gui; cd libg_gui;     qmake ../libg_gui.pro ;                make
 
 clean:
-	rm -rf *.o
+	rm -rf libg_d
+	rm -rf libg_gui_d
+	rm -rf libg
+	rm -rf libg_gui
 	rm -rf *.pro.user
 
 distclean: clean
 	rm -rf *.a
-	rm -rf Makefile*
