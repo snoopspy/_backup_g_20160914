@@ -1,9 +1,25 @@
-#define _GNU_SOURCE
-
-#include <stdio.h>
 #include <dlfcn.h>
+#include <stdio.h>
+#include "gmalloc.h"
 
-static void* (*real_malloc)(size_t)=NULL;
+// ----------------------------------------------------------------------------
+// GMallocImpl
+// ----------------------------------------------------------------------------
+class GMallocImpl {
+public:
+  static void* (*oldMalloc)(size_t) = nullptr;
+  static void (*oldFree)(void*) = nullptr;
+  static bool active = false;
+
+public:
+  static bool init();
+  static bool fini();
+};
+
+
+
+
+
 
 static void mtrace_init(void)
 {
