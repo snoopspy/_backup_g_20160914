@@ -1,47 +1,53 @@
 #include <dlfcn.h>
-#include <stdio.h>
+#include <glog/logging.h>
 #include "gmalloc.h"
 
 // ----------------------------------------------------------------------------
 // GMallocImpl
 // ----------------------------------------------------------------------------
 class GMallocImpl {
-public:
-  static void* (*oldMalloc)(size_t) = nullptr;
-  static void (*oldFree)(void*) = nullptr;
-  static bool active = false;
+private:
+  void* (*oldMalloc_)(size_t) = nullptr;
+  void (*oldFree_)(void*) = nullptr;
+   bool active = false;
 
 public:
-  static bool init();
-  static bool fini();
+  bool init() {
+    oldMalloc_ = (void*(*)(size_t))dlsym(RTLD_NEXT, "malloc");
+    if (oldMalloc_ == nullptr) {
+      LOG(ERROR) << "dlsym('malloc') return nullptr dlerror=" << dlerror();
+      goto _error;
+    }
+    oldFree_ = (void(*)(void*))dlsym(RTLD_NEXT, "free");
+    if (oldFree_ == nullptr) {
+      LOG(ERROR) << "dlsym('malloc') return nullptr dlerror=" << dlerror();
+      goto _error;
+    }
+    return true;
+  _error:
+    oldMalloc_ = nullptr;
+    oldFree_ = nullptr;
+    return false;
+  }
+
+  bool fini() {
+    return true; // gilgil temp 2015.05.12
+  }
+
+public:
+  static GMallocImpl& instance() {
+    static GMallocImpl gMallocImpl;
+    return gMallocImpl;
+  }
 };
 
-
-
-
-
-
-static void mtrace_init(void)
-{
-    real_malloc = dlsym(RTLD_NEXT, "malloc");
-    if (NULL == real_malloc) {
-        fprintf(stderr, "Error in `dlsym`: %s\n", dlerror());
-    }
+// ----------------------------------------------------------------------------
+// GMalloc
+// ----------------------------------------------------------------------------
+bool GMalloc::init() {
+  GMallocImpl::instance().init();
 }
 
-void *malloc(size_t size)
-{
-    if(real_malloc==NULL) {
-        mtrace_init();
-    }
-
-    void *p = NULL;
-    fprintf(stderr, "malloc(%d) = ", size);
-    p = real_malloc(size);
-    fprintf(stderr, "%p\n", p);
-    return p;
-}
-
-int main() {
-  mtrace_init();
+bool GMalloc::fini() {
+  GMallocImpl::instance().fini();
 }

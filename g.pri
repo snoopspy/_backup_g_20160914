@@ -43,3 +43,10 @@ mingw: DEFINES *= __USE_MINGW_ANSI_STDIO=1
 CONFIG(gstacktrace) {
 	QMAKE_LFLAGS *= -rdynamic
 }
+
+#------------------------------------------------------------------------------
+# gmalloc
+#------------------------------------------------------------------------------
+CONFIG(gmalloc) {
+	LIBS *= -ldl
+}
