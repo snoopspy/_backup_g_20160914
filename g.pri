@@ -2,6 +2,7 @@
 # c++11
 #------------------------------------------------------------------------------
 QMAKE_CXXFLAGS *= -std=c++11
+QMAKE_LFLAGS += -pthread
 
 #------------------------------------------------------------------------------
 # debug and release
@@ -40,5 +41,5 @@ mingw: DEFINES *= __USE_MINGW_ANSI_STDIO=1
 # gstacktrace
 #------------------------------------------------------------------------------
 CONFIG(gstacktrace) {
-	QMAKE_LFLAGS *= -rdynamic -pthread
+	QMAKE_LFLAGS *= -rdynamic
 }
