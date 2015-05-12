@@ -1,43 +1,75 @@
 #include <dlfcn.h>
-#include <glog/logging.h>
+#include <stdio.h>
 #include "gmalloc.h"
 
 // ----------------------------------------------------------------------------
 // GMallocImpl
 // ----------------------------------------------------------------------------
 class GMallocImpl {
-private:
-  void* (*oldMalloc_)(size_t) = nullptr;
-  void (*oldFree_)(void*) = nullptr;
-   bool active = false;
+public:
+  bool inited_ = false;
+  void* (*oldMalloc_)(size_t size) = nullptr;
+  void (*oldFree_)(void* ptr) = nullptr;
+
+public:
+  GMallocImpl() {
+    init();
+  }
+
+  virtual ~GMallocImpl() {
+    fini();
+  }
 
 public:
   bool init() {
+    if (inited_) return false;
+    inited_ = true;
     oldMalloc_ = (void*(*)(size_t))dlsym(RTLD_NEXT, "malloc");
     if (oldMalloc_ == nullptr) {
-      LOG(ERROR) << "dlsym('malloc') return nullptr dlerror=" << dlerror();
-      goto _error;
+      fprintf(stderr, "dlsym('malloc') return nullptr dlerror=%s\n", dlerror());
+      oldFree_ = nullptr;
+      return false;
     }
     oldFree_ = (void(*)(void*))dlsym(RTLD_NEXT, "free");
     if (oldFree_ == nullptr) {
-      LOG(ERROR) << "dlsym('malloc') return nullptr dlerror=" << dlerror();
-      goto _error;
+      fprintf(stderr, "dlsym('malloc') return nullptr dlerror=%s\n", dlerror());
+      return false;
     }
     return true;
-  _error:
-    oldMalloc_ = nullptr;
-    oldFree_ = nullptr;
-    return false;
   }
 
   bool fini() {
-    return true; // gilgil temp 2015.05.12
+    if (!inited_) return false;
+    inited_ = false;
+    bool res = true;
+    // ----- gilgil temp 2015.05.12 -----
+    /*
+    if (oldMalloc_ != nullptr) {
+      int nRes = dlclose((void*)oldMalloc_);
+      if (nRes != 0) {
+        fprintf(stderr, "dlclose(oldMalloc_) return %d\n", nRes);
+        res = false;
+      }
+      oldMalloc_ = nullptr;
+    }
+    if (oldFree_ != nullptr) {
+      int nRes = dlclose((void*)oldFree_);
+      if (nRes != 0) {
+        fprintf(stderr, "dlclose(oldFree_) return %d\n", nRes);
+        res = false;
+      }
+      oldFree_ = nullptr;
+    }
+    */
+    oldMalloc_ = nullptr;
+    oldFree_ = nullptr;
+    // ----------------------------------
+    return res;
   }
 
-public:
   static GMallocImpl& instance() {
-    static GMallocImpl gMallocImpl;
-    return gMallocImpl;
+    static GMallocImpl mallocImpl;
+    return mallocImpl;
   }
 };
 
@@ -45,9 +77,25 @@ public:
 // GMalloc
 // ----------------------------------------------------------------------------
 bool GMalloc::init() {
-  GMallocImpl::instance().init();
+  GMallocImpl& mallocImpl = GMallocImpl::instance();
+  return mallocImpl.init();
 }
 
 bool GMalloc::fini() {
-  GMallocImpl::instance().fini();
+  GMallocImpl& mallocImpl = GMallocImpl::instance();
+  return mallocImpl.fini();
+}
+
+// ----------------------------------------------------------------------------
+// override function
+// ----------------------------------------------------------------------------
+void *malloc(size_t size) {
+  GMallocImpl& mallocImpl = GMallocImpl::instance();
+  void* p = mallocImpl.oldMalloc_(size);
+  return p;
+}
+
+void free (void* ptr) __THROW {
+  GMallocImpl& mallocImpl = GMallocImpl::instance();
+  mallocImpl.oldFree_(ptr);
 }
