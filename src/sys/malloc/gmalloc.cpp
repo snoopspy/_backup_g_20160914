@@ -89,7 +89,7 @@ bool GMalloc::fini() {
 // ----------------------------------------------------------------------------
 // override function
 // ----------------------------------------------------------------------------
-void *malloc(size_t size) {
+void *malloc(size_t size) __THROW __wur {
   GMallocImpl& mallocImpl = GMallocImpl::instance();
   void* p = mallocImpl.oldMalloc_(size);
   return p;
