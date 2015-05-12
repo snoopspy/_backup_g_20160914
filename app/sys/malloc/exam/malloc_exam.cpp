@@ -1,19 +1,16 @@
-#include <map>
-//#include <malloc.h>
-#include <GMalloc>
+#include <cstdlib>
 
-class Obj {
-public:
-  char buf[256];
-};
+void foo(char* p, size_t size) __attribute__ ((noinline));
+
+void foo(char* p, size_t size) {
+  for (size_t i = 0; i < size; i++) p[i] = '\0';
+}
 
 int main() {
-  GMalloc::init();
-  void* p;
-  p = malloc(1); // memory leak
-  p = malloc(2);
-  free(p);
-  std::map<int, Obj> objList;
-  objList[0] = Obj();
-  objList[1] = Obj();
+  char* p;
+  p = new char[1]; // memory leak
+  foo(p, 1); // disable code optimization
+  p = new char[2];
+  foo(p, 2); // disable code optimization
+  delete[] p;
 }

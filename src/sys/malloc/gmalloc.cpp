@@ -1,23 +1,21 @@
 #include <dlfcn.h>
-#include <malloc.h>
 #include <stdio.h>
-#include "gmalloc.h"
 
 // ----------------------------------------------------------------------------
-// GMallocImpl
+// GMalloc
 // ----------------------------------------------------------------------------
-class GMallocImpl {
+class GMalloc {
 public:
   bool inited_ = false;
   void* (*oldMalloc_)(size_t size) = nullptr;
   void (*oldFree_)(void* ptr) = nullptr;
 
 public:
-  GMallocImpl() {
+  GMalloc() {
     init();
   }
 
-  virtual ~GMallocImpl() {
+  virtual ~GMalloc() {
     fini();
   }
 
@@ -42,50 +40,26 @@ public:
   bool fini() {
     if (!inited_) return false;
     inited_ = false;
-    bool res = true;
-    // ----- gilgil temp 2015.05.12 -----
-    /*
-    if (oldMalloc_ != nullptr) {
-      int nRes = dlclose((void*)oldMalloc_);
-      if (nRes != 0) {
-        fprintf(stderr, "dlclose(oldMalloc_) return %d\n", nRes);
-        res = false;
-      }
-      oldMalloc_ = nullptr;
-    }
-    if (oldFree_ != nullptr) {
-      int nRes = dlclose((void*)oldFree_);
-      if (nRes != 0) {
-        fprintf(stderr, "dlclose(oldFree_) return %d\n", nRes);
-        res = false;
-      }
-      oldFree_ = nullptr;
-    }
-    */
-    oldMalloc_ = nullptr;
-    oldFree_ = nullptr;
-    // ----------------------------------
-    return res;
+    return true;
   }
 
-  static GMallocImpl& instance() {
-    static GMallocImpl mallocImpl;
-    return mallocImpl;
+  void* acquire(size_t size) {
+    if (!inited_) return nullptr;
+    void* ptr = GMalloc::instance().oldMalloc_(size);
+    printf("GMalloc::acquire(%zu)\t> %p\n", size, ptr);
+    return ptr;
+  }
+
+  void release(void* ptr) {
+    if (!inited_) return;
+    printf("GMalloc::release(%p)\n", ptr);
+  }
+
+  static GMalloc& instance() {
+    static GMalloc _instance;
+    return _instance;
   }
 };
-
-// ----------------------------------------------------------------------------
-// GMalloc
-// ----------------------------------------------------------------------------
-bool GMalloc::init() {
-  GMallocImpl& mallocImpl = GMallocImpl::instance();
-  return mallocImpl.init();
-}
-
-bool GMalloc::fini() {
-  GMallocImpl& mallocImpl = GMallocImpl::instance();
-  return mallocImpl.fini();
-}
 
 // ----------------------------------------------------------------------------
 // override function
@@ -96,16 +70,11 @@ extern "C"
 #endif
 
 void *malloc(size_t size) __THROW {
-  GMallocImpl& mallocImpl = GMallocImpl::instance();
-  void* p = mallocImpl.oldMalloc_(size);
-  printf("malloc(%zu) return %p\n", size, p);
-  return p;
+  return GMalloc::instance().acquire(size);
 }
 
 void free(void* ptr) __THROW {
-  GMallocImpl& mallocImpl = GMallocImpl::instance();
-  mallocImpl.oldFree_(ptr);
-  printf("free(%p)\n", ptr);
+  GMalloc::instance().release(ptr);
 }
 
 #ifdef __cplusplus
