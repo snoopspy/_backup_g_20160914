@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <stddef.h>
+#include <cstddef> // for size_t
 
 // ----------------------------------------------------------------------------
 // GMalloc

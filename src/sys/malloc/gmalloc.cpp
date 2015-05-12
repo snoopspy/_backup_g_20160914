@@ -1,4 +1,5 @@
 #include <dlfcn.h>
+#include <malloc.h>
 #include <stdio.h>
 #include "gmalloc.h"
 
@@ -92,7 +93,7 @@ bool GMalloc::fini() {
 void *malloc(size_t size) __THROW {
   GMallocImpl& mallocImpl = GMallocImpl::instance();
   void* p = mallocImpl.oldMalloc_(size);
-  fprintf(stderr, "malloc(%zu) return %p\n", size, p);
+  printf("malloc(%zu) return %p\n", size, p);
   return p;
 }
 

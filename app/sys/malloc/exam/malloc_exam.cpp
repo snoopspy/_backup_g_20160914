@@ -2,9 +2,9 @@
 #include <GMalloc>
 
 int main() {
-  GMalloc::init();
+  //GMalloc::init();
   void* p;
-  p = malloc(128); // memory leak
-  p = malloc(256);
+  p = malloc(1); // memory leak
+  p = malloc(2);
   free(p);
 }
