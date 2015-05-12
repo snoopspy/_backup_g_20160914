@@ -90,6 +90,11 @@ bool GMalloc::fini() {
 // ----------------------------------------------------------------------------
 // override function
 // ----------------------------------------------------------------------------
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 void *malloc(size_t size) __THROW {
   GMallocImpl& mallocImpl = GMallocImpl::instance();
   void* p = mallocImpl.oldMalloc_(size);
@@ -97,8 +102,12 @@ void *malloc(size_t size) __THROW {
   return p;
 }
 
-void free (void* ptr) __THROW {
+void free(void* ptr) __THROW {
   GMallocImpl& mallocImpl = GMallocImpl::instance();
   mallocImpl.oldFree_(ptr);
   printf("free(%p)\n", ptr);
 }
+
+#ifdef __cplusplus
+}
+#endif
