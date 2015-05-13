@@ -7,10 +7,7 @@ void foo(char* p, size_t size) {
 }
 
 int main() {
-  char* p;
-  p = new char[1]; // memory leak
+  char* p = (char*)malloc(1);
   foo(p, 1); // disable code optimization
-  p = new char[2];
-  foo(p, 2); // disable code optimization
-  delete[] p;
+  free(p);
 }
