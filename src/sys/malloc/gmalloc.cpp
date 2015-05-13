@@ -46,7 +46,7 @@ public:
   void* acquire(size_t size) {
     if (!inited_) return nullptr;
     void* ptr = GMalloc::instance().oldMalloc_(size);
-    printf("GMalloc::acquire(%zu)\t> %p\n", size, ptr);
+    printf("GMalloc::acquire(%p) %zu\n", ptr, size);
     return ptr;
   }
 
