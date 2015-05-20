@@ -40,56 +40,56 @@ static const int LOOP_CNT = 10000000;
 
 int main() {
   Node* node = makeNode();
-  GTimeDiffChrono pfm;
+  GTimeDiffChrono td;
 
   Node node_;
   {
-    pfm.check(9);
+    td.check(9);
     for (int i = LOOP_CNT; i > 0; --i)
       node_.value = 0;
   }
 
-  pfm.check(10);
+  td.check(10);
   for (int i = LOOP_CNT; i > 0; --i)
     foo0(node);
 
-  pfm.check(11);
+  td.check(11);
   for (int i = LOOP_CNT; i > 0; --i)
     foo1(node);
 
-  pfm.check(12);
+  td.check(12);
   for (int i = LOOP_CNT; i > 0; --i)
     foo2(node);
 
-  pfm.check(13);
+  td.check(13);
   for (int i = LOOP_CNT; i > 0; --i)
     foo3(node);
 
-  pfm.check(14);
+  td.check(14);
   for (int i = LOOP_CNT; i > 0; --i)
     foo4(node);
 
-  pfm.check(15);
+  td.check(15);
   for (int i = LOOP_CNT; i > 0; --i)
     foo5(node);
 
-  pfm.check(16);
+  td.check(16);
   for (int i = LOOP_CNT; i > 0; --i)
     foo6(node);
 
-  pfm.check(17);
+  td.check(17);
   for (int i = LOOP_CNT; i > 0; --i)
     foo7(node);
 
-  pfm.check(18);
+  td.check(18);
   for (int i = LOOP_CNT; i > 0; --i)
     foo8(node);
 
-  pfm.check(19);
+  td.check(19);
   for (int i = LOOP_CNT; i > 0; --i)
     foo0(node);
 
-  pfm.check(-1);
-  pfm.report();
+  td.check(-1);
+  td.report();
 }
 

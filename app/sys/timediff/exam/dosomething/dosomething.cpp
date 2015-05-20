@@ -7,16 +7,16 @@ void doSomething(int msec) {
 }
 
 int main() {
-  GTimeDiffChrono pfm;
+  GTimeDiffChrono td;
   for (int i = 0; i < 10; i++) {
-    pfm.check(__LINE__);
+    td.check(__LINE__);
     doSomething(10);
-    pfm.check(__LINE__);
+    td.check(__LINE__);
     doSomething(20);
-    pfm.check(__LINE__);
+    td.check(__LINE__);
     doSomething(30);
-    pfm.check(__LINE__);
+    td.check(__LINE__);
     doSomething(40);
   }
-  pfm.report();
+  td.report();
 }

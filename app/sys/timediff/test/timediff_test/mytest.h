@@ -4,45 +4,45 @@
 #include <gtest/gtest.h>
 #include <iostream>
 
-template <class PERFORMANCE, int LOOP_CNT = 100000>
+template <class TimeDiff, int LOOP_CNT = 100000>
 struct MyTest {
   MyTest() {
-    PERFORMANCE pfm;
+    TimeDiff td;
     for (int i = 0; i < LOOP_CNT; i++) {
-      pfm.check(1);
-      pfm.check(2);
-      pfm.check(3);
-      pfm.check(4);
-      pfm.check(5);
-      pfm.check(6);
-      pfm.check(7);
-      pfm.check(8);
-      pfm.check(9);
-      pfm.check(10);
-      pfm.check(11);
-      pfm.check(12);
-      pfm.check(13);
-      pfm.check(14);
-      pfm.check(15);
-      pfm.check(16);
-      pfm.check(17);
-      pfm.check(18);
-      pfm.check(19);
-      pfm.check(20);
-      pfm.check(21);
-      pfm.check(22);
-      pfm.check(23);
-      pfm.check(24);
-      pfm.check(25);
-      pfm.check(26);
-      pfm.check(27);
-      pfm.check(28);
-      pfm.check(29);
-      pfm.check(30);
-      pfm.check(31);
-      pfm.check(32);
+      td.check(1);
+      td.check(2);
+      td.check(3);
+      td.check(4);
+      td.check(5);
+      td.check(6);
+      td.check(7);
+      td.check(8);
+      td.check(9);
+      td.check(10);
+      td.check(11);
+      td.check(12);
+      td.check(13);
+      td.check(14);
+      td.check(15);
+      td.check(16);
+      td.check(17);
+      td.check(18);
+      td.check(19);
+      td.check(20);
+      td.check(21);
+      td.check(22);
+      td.check(23);
+      td.check(24);
+      td.check(25);
+      td.check(26);
+      td.check(27);
+      td.check(28);
+      td.check(29);
+      td.check(30);
+      td.check(31);
+      td.check(32);
     }
-    pfm.report(std::cout);
+    td.report(std::cout);
   }
 };
 
