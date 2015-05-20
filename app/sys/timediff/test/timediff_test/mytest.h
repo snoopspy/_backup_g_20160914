@@ -4,10 +4,10 @@
 #include <gtest/gtest.h>
 #include <iostream>
 
-template <class TimeDiff, int LOOP_CNT = 100000>
+template <class TIMEDIFF, int LOOP_CNT = 100000>
 struct MyTest {
   MyTest() {
-    TimeDiff td;
+    TIMEDIFF td;
     for (int i = 0; i < LOOP_CNT; i++) {
       td.check(1);
       td.check(2);
