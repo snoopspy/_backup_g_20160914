@@ -8,8 +8,7 @@ std::string GErr::msg() {
   if (!msg_.empty()) return msg_;
 
   //
-  // linux error code
-  // EHWPOISON is maximum of linux error code
+  // linux error code(EHWPOISON: maximum of linux error code)
   //
   if (code_ > 0 && code_ <= EHWPOISON)
     return strerror(code_);
