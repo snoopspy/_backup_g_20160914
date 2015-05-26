@@ -26,31 +26,18 @@ namespace g {
 // GErr
 // ----------------------------------------------------------------------------
 struct GErr {
-  virtual int code() { return g::OK; }
-  virtual char* msg() { return (char*)"OK"; }
-};
-std::ostream& operator << (std::ostream& os, GErr& err);
+  GErr() : code_(g::OK) {}
+  GErr(int code) : code_(code) {}
+  GErr(int code, std::string msg) : code_(code), msg_(msg) {}
 
-// ----------------------------------------------------------------------------
-// GErrCode
-// ----------------------------------------------------------------------------
-struct GErrCode : GErr {
-  GErrCode(int code) : code_(code) {}
-  int code() override { return code_; }
-  char* msg() override;
+  int code() { return code_; }
+  std::string msg() {
+    if (!msg_.empty()) return msg_;
+    return std::to_string(code_);
+  }
 
 protected:
   int code_;
-};
-
-// ----------------------------------------------------------------------------
-// GErrMsg
-// ----------------------------------------------------------------------------
-struct GErrMsg : GErrCode {
-  GErrMsg(int code, const char* msg) : GErrCode(code), msg_(msg) {}
-  int code() override { return code_; }
-  char* msg() override { return (char*)msg_.c_str(); }
-
-protected:
   std::string msg_;
 };
+std::ostream& operator << (std::ostream& os, GErr& err);

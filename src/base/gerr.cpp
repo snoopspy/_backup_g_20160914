@@ -8,10 +8,3 @@ std::ostream& operator << (std::ostream& os, GErr& err) {
   os << err.msg() << " code=" << err.code();
   return os;
 }
-
-// ----------------------------------------------------------------------------
-// GErrCode
-// ----------------------------------------------------------------------------
-char* GErrCode::msg() {
-  return strerror(code_);
-}
