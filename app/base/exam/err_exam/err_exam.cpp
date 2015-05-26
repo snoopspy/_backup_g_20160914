@@ -9,7 +9,7 @@ struct Obj {
     return err_;
   }
 private:
-  GErr err_ { g::FAIL, "FAIL in Obj class" };
+  GErr err_ { g::FAIL, "NOT_SUPPORTED in Obj class" };
 };
 
 int main() {
@@ -19,12 +19,12 @@ int main() {
   }
 
   {
-    GErr err{ g::FAIL };
+    GErr err{ g::NOT_SUPPORTED };
     clog << err << endl;
   }
 
   {
-    GErr err { g::FAIL, "FAIL" };
+    GErr err { g::NOT_SUPPORTED, "NOT_SUPPORTED" };
     clog << err << endl;
   }
 

@@ -17,7 +17,7 @@ namespace g {
   enum {
     OK = 0,
     FAIL = -1,
-    UNKNOWN = 1,
+    UNKNOWN = 1024,
     NOT_SUPPORTED
   };
 }
