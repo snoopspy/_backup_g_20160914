@@ -52,7 +52,12 @@ void GStackTrace::unsetSignal() {
   }
 }
 
-void GStackTrace::dump(){
+void GStackTrace::dump(bool allThreads) {
+  if (!allThreads) {
+    printStacktrace();
+    return;
+  }
+
   DIR *dir;
 
   if ((dir = opendir ("/proc/self/task")) == NULL) {

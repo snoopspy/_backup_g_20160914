@@ -32,7 +32,7 @@ public:
   void setMaxFrames(int maxFrames);
   void setSignal(int signum);
   void unsetSignal();
-  void dump();
+  void dump(bool allThreads = true);
 
 protected:
   __sighandler_t prev_handler_;
