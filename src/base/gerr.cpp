@@ -20,3 +20,5 @@ std::ostream& operator << (std::ostream& os, GErr& err) {
   os << err.msg() << " code=" << err.code();
   return os;
 }
+
+thread_local GErr lastErr;

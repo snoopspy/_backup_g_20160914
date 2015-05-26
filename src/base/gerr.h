@@ -32,9 +32,13 @@ struct GErr {
 
   int code() { return code_; }
   std::string msg();
+  void set(int code) { code_ = code; }
+  void set(int code, std::string msg) { code_ = code; msg_ = msg; }
 
 protected:
   int code_;
   std::string msg_;
 };
 std::ostream& operator << (std::ostream& os, GErr& err);
+
+extern thread_local GErr lastErr;
