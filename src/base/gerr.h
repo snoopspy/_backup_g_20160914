@@ -31,10 +31,7 @@ struct GErr {
   GErr(int code, std::string msg) : code_(code), msg_(msg) {}
 
   int code() { return code_; }
-  std::string msg() {
-    if (!msg_.empty()) return msg_;
-    return std::to_string(code_);
-  }
+  std::string msg();
 
 protected:
   int code_;
