@@ -1,10 +1,36 @@
 #include <iostream>
 #include <GErr>
 
-int main() {
-  GErrCode errCode { g::OK };
-  std::cout << errCode << std::endl;
+using namespace std;
 
-  GErrMsg errMsg { g::FAIL, "FAIL" };
-  std::cout << errMsg << std::endl;
+struct Obj {
+  GErr& err() {
+
+    return err_;
+  }
+private:
+  GErrMsg err_ { ::g::NOT_SUPPORTED, "NOT_SUPPORTED" };
+};
+
+int main() {
+  {
+    GErr err;
+    clog << err << endl;
+  }
+
+  {
+    GErrCode errCode { g::OK };
+    clog << errCode << endl;
+  }
+
+  {
+    GErrMsg errMsg { g::FAIL, "FAIL" };
+    clog << errMsg << endl;
+  }
+
+  {
+    Obj obj;
+    GErr err = obj.err();
+    clog << err << endl;
+  }
 }

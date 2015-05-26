@@ -17,7 +17,8 @@ namespace g {
   enum {
     OK = 0,
     FAIL = -1,
-    UNKNOWN = 1
+    UNKNOWN = 1,
+    NOT_SUPPORTED
   };
 }
 
@@ -25,8 +26,8 @@ namespace g {
 // GErr
 // ----------------------------------------------------------------------------
 struct GErr {
-  virtual int code() = 0;
-  virtual char* msg() = 0;
+  virtual int code() { return g::OK; }
+  virtual char* msg() { return (char*)"OK"; }
 };
 std::ostream& operator << (std::ostream& os, GErr& err);
 
@@ -46,7 +47,7 @@ protected:
 // GErrMsg
 // ----------------------------------------------------------------------------
 struct GErrMsg : GErrCode {
-  GErrMsg(int code, char* msg) : GErrCode(code), msg_(msg) {}
+  GErrMsg(int code, const char* msg) : GErrCode(code), msg_(msg) {}
   int code() override { return code_; }
   char* msg() override { return (char*)msg_.c_str(); }
 
