@@ -1,3 +1,4 @@
 TEMPLATE = subdirs
 SUBDIRS += \
-	exam/gbase_exam.pro
+	err_exam \
+	version_exam
