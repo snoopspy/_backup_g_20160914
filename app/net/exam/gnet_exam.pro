@@ -1,4 +1,4 @@
 TEMPLATE = subdirs
 SUBDIRS += \
-	tcpclient_exam \
-	tcpserver_exam
+	sockclient_exam \
+	sockserver_exam

@@ -9,7 +9,7 @@ DEFINE_int32(port, 10065, "port number");
 int main() {
   GSock sock(AF_INET, SOCK_STREAM, 0);
   GSockAddr sockAddr;
-  if (!sock.bind(sockAddr), sizeof(struct sockaddr)) {
+  if (!sock.bind(&sockAddr, sizeof(struct sockaddr))) {
     std::clog << lastErr << std::endl;
   }
 }
