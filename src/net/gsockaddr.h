@@ -17,21 +17,9 @@
 // ----------------------------------------------------------------------------
 union GSockAddr {
   GSockAddr() {}
+  GSockAddr(sa_family_t family, in_port_t port, in_addr_t addr);
 
-  GSockAddr(sa_family_t family) {
-    addrIn_.sin_family = family;
-  }
-
-  GSockAddr(sa_family_t family, in_port_t port) {
-    addrIn_.sin_family = family;
-    addrIn_.sin_port = port;
-  }
-
-  GSockAddr(sa_family_t family, in_port_t port, in_addr_t addr) {
-    addrIn_.sin_family = family;
-    addrIn_.sin_port = port;
-    addrIn_.sin_addr.s_addr = addr;
-  }
+  void init(sa_family_t family, in_port_t port, in_addr_t addr);
 
   struct sockaddr addr_;
   struct sockaddr_in addrIn_;
