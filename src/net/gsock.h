@@ -25,6 +25,7 @@ struct GSock {
 
   int accept(GSockAddr *sockAddr, socklen_t *addrLen);
   bool bind(GSockAddr* sockAddr, socklen_t addrLen);
+  bool close();
   bool listen(int backLog);
   ssize_t recv(void *buf, size_t len, int flags);
   ssize_t recvfrom(void *buf, size_t len, int flags, GSockAddr* srcAddr, socklen_t *addrLen);
