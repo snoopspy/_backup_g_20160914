@@ -1,15 +1,40 @@
+#include <cstring>
 #include <iostream>
-#include <gflags/gflags.h>
 #include <GErr>
 #include <GSock>
 
-DEFINE_bool(ip6, false, "use ipv6");
-DEFINE_int32(port, 10065, "port number");
+in_addr_t localIp = INADDR_ANY;
+in_port_t localPort = 0;
+in_addr_t ip = 0x7F000001;
+in_port_t port = 10065;
+size_t bufSize = 1024;
+const char* msg = "hello world";
+
+using namespace std;
+
+void runTcpClient() {
+  GSock sock;
+
+  if (!sock.socket(AF_INET, SOCK_STREAM, 0)) { clog << lastErr << endl; return; }
+
+  GSockAddr sockAddr(AF_INET, htons(localPort), htonl(localIp));
+  if (!sock.bind(&sockAddr, sizeof(struct sockaddr_in))) { clog << lastErr << endl; return; }
+
+  sockAddr.init(AF_INET, htons(port), htonl(ip));
+  if (!sock.connect(&sockAddr, sizeof(struct sockaddr_in))) { clog << lastErr << endl; return; }
+
+  ssize_t writeLen = sock.send(msg, strlen(msg), 0);
+  if (writeLen == 0 || writeLen == -1) return;
+
+  char buf[bufSize];
+  ssize_t readLen = sock.recv(buf, bufSize - 1, 0);
+  if (readLen == 0 || readLen == -1) return;
+  buf[readLen] = '\0';
+  std::clog << buf << std::endl;
+
+  if (!sock.close()) { clog << lastErr << endl; return; }
+}
 
 int main() {
-  GSock sock(AF_INET, SOCK_STREAM, 0);
-  GSockAddr sockAddr;
-  if (!sock.bind(&sockAddr, sizeof(struct sockaddr))) {
-    std::clog << lastErr << std::endl;
-  }
+  runTcpClient();
 }

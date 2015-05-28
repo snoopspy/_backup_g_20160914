@@ -30,6 +30,13 @@ bool GSock::close() {
   return res != -1;
 }
 
+bool GSock::connect(GSockAddr* sockAddr, socklen_t addrLen) {
+  int res = ::connect((int)*this, &sockAddr->addr_, addrLen);
+  if (res == -1)
+    lastErr.set(errno);
+  return res != -1;
+}
+
 bool GSock::listen(int backLog) {
   int res = ::listen((int)*this, backLog);
   if (res == -1)
