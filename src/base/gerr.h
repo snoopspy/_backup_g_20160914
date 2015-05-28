@@ -35,6 +35,9 @@ struct GErr {
   void set(int code) { code_ = code; }
   void set(int code, std::string msg) { code_ = code; msg_ = msg; }
 
+  void clear() { code_ = g::OK; msg_ = ""; }
+  bool ok() { return code_ == g::OK; }
+
 protected:
   int code_;
   std::string msg_;
