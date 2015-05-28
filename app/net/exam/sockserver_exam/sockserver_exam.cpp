@@ -6,14 +6,16 @@ int backLog = 256;
 constexpr size_t bufSize = 1024;
 in_port_t port = 10065;
 
+using namespace std;
+
 void runTcpServer() {
   GSock acceptSock;
-  acceptSock.socket(AF_INET, SOCK_STREAM, 0);
+  if (!acceptSock.socket(AF_INET, SOCK_STREAM, 0)) { clog << lastErr << endl; return; }
   int optVal = 1;
-  acceptSock.setsockopt(SOL_SOCKET, SO_REUSEADDR, &optVal, sizeof(optVal));
+  if (!acceptSock.setsockopt(SOL_SOCKET, SO_REUSEADDR, &optVal, sizeof(optVal))) { clog << lastErr << endl; return; }
   GSockAddr acceptSockAddr(AF_INET, htons(port), INADDR_ANY);
-  acceptSock.bind(&acceptSockAddr, sizeof(struct sockaddr));
-  acceptSock.listen(backLog);
+  if (!acceptSock.bind(&acceptSockAddr, sizeof(struct sockaddr))) { clog << lastErr << endl; return; }
+  if (!acceptSock.listen(backLog)) { clog << lastErr << endl; return; }
 
   while (true) {
     GSockAddr connSockAddr;
