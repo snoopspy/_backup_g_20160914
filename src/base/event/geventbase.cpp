@@ -8,5 +8,12 @@ GEventBase::GEventBase() {
 }
 
 GEventBase::~GEventBase() {
-  // free base_ // gilgil temp 2015.05.29
+  if (base_ != nullptr) {
+    event_base_free(base_);
+    base_ = nullptr;
+  }
+}
+
+int GEventBase::dispatch() {
+  return event_base_dispatch(base_);
 }

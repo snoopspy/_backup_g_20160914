@@ -19,6 +19,8 @@ struct GEventBase {
   GEventBase();
   virtual ~GEventBase();
 
+  int dispatch();
+
 protected:
   struct event_base *base_;
 };
