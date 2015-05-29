@@ -20,6 +20,14 @@ struct GEvent {
   GEvent(GEventBase* eventBase) : eventBase_(eventBase), event_(nullptr) {}
   virtual ~GEvent();
 
+  int add(const struct timeval *timeout = nullptr) {
+    return event_add(event_, timeout);
+  }
+
+  int del() {
+    return event_del(event_);
+  }
+
 protected:
   virtual void callBack(evutil_socket_t fd, short event) = 0;
 
