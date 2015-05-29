@@ -16,6 +16,6 @@
 // GEventSignal
 // ----------------------------------------------------------------------------
 struct GEventSignal : GEvent {
-  GEventSignal();
+  GEventSignal(GEventBase* eventBase, int signum);
   ~GEventSignal() override;
 };
