@@ -5,7 +5,7 @@
 // GEvent
 // ----------------------------------------------------------------------------
 GEvent::~GEvent() {
-  if (event_ == nullptr) {
+  if (event_ != nullptr) {
     LOG(WARNING) << "event is not null(" << (void*)event_ << ")";
   }
 }
