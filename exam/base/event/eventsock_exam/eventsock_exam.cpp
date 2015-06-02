@@ -6,9 +6,8 @@
 void callback(evutil_socket_t fd, short events, void* arg) {
   DLOG(INFO) << "fd=" << fd << " event=" << events;
 
-  GSock sock(fd);
   char buf[1024];
-  ssize_t readLen = sock.recv(buf, 1023, 0);
+  ssize_t readLen = ::recv(fd, buf, 1023, 0);
   if (readLen == 0 || readLen == -1) {
     GEventSock* eventSock = (GEventSock*)arg;
     eventSock->del();
