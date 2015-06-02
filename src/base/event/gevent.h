@@ -27,7 +27,7 @@ struct GEvent {
     fd_ = -1;
     options_ = EV_PERSIST;
     callback_ = nullptr;
-    arg_ = nullptr;
+    arg_ = this;
   }
 
   virtual ~GEvent() {

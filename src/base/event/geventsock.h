@@ -10,18 +10,15 @@
 
 #pragma once
 
-#include <netinet/in.h>
+#include <glog/logging.h>
+#include "gevent.h"
+#include "net/gsock.h"
 
 // ----------------------------------------------------------------------------
-// GSockAddr
+// GEventSock
 // ----------------------------------------------------------------------------
-union GSockAddr {
-  GSockAddr() {}
-  GSockAddr(sa_family_t family, in_port_t port, in_addr_t addr); // addrIn_
-
-  void init(sa_family_t family, in_port_t port, in_addr_t addr); // addrIn_
-
-  struct sockaddr addr_; // 16 bytes
-  struct sockaddr_in addrIn_; // 16 bytes
-  struct sockaddr_in6 addrIn6; // 28 bytes
+struct GEventSock : GEvent {
+  GEventSock() : GEvent() {
+    options_ |= EV_READ;
+  }
 };

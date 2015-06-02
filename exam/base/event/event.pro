@@ -1,4 +1,5 @@
 TEMPLATE = subdirs
 SUBDIRS += \
 	eventsignal_exam \
-  eventtimer_exam
+	eventsock_exam \
+	eventtimer_exam

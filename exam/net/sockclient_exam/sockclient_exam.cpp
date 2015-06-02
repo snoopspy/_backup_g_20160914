@@ -21,7 +21,7 @@ void runTcpClient() {
   if (!sock.bind(&sockAddr)) { clog << lastErr << endl; return; }
 
   sockAddr.init(AF_INET, htons(port), htonl(ip));
-  if (!sock.connect(&sockAddr, sizeof(struct sockaddr_in))) { clog << lastErr << endl; return; }
+  if (!sock.connect(&sockAddr)) { clog << lastErr << endl; return; }
 
   ssize_t writeLen = sock.send(msg, strlen(msg), 0);
   if (writeLen == 0 || writeLen == -1) return;
