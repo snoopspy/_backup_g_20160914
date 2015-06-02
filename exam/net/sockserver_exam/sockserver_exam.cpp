@@ -45,6 +45,7 @@ void runTcpServer() {
   if (!acceptSock.close()) { clog << lastErr << endl; return; }
 }
 
-int main() {
+int main(int argc, char* argv[]) {
+  google::ParseCommandLineFlags(&argc, &argv, true);
   runTcpServer();
 }
