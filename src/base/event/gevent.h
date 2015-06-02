@@ -21,26 +21,37 @@ struct GEvent {
   typedef short Option;
   typedef short Options;
 
-  GEvent() : eventBase_(nullptr), event_(nullptr) {}
-  GEvent(GEventBase* eventBase) : eventBase_(eventBase), event_(nullptr) {}
-  virtual ~GEvent() { destroy(); }
+  GEvent() {
+    event_ = nullptr;
+    eventBase_ = nullptr;
+    fd_ = -1;
+    options_ = EV_PERSIST;
+    callback_ = nullptr;
+    arg_ = nullptr;
+  }
+
+  virtual ~GEvent() {
+    destroy();
+  }
 
   struct event* get() { return event_; }
   GEventBase* eventBase() { return eventBase_; }
-  void setEventBase(GEventBase* eventBase) { eventBase_ = eventBase; }
+  GEvent& setEventBase(GEventBase* eventBase) { eventBase_ = eventBase; return *this; }
+  evutil_socket_t fd() { return fd_; }
+  GEvent& setFd(evutil_socket_t fd) { fd_ = fd; return *this; }
+  Options options() { return options_; }
+  GEvent& setOptions(Options options) { options_ = options; return *this; }
+  event_callback_fn callback() { return callback_; }
+  GEvent& setCallback(event_callback_fn callback) { callback_ = callback; return *this; }
+  void* arg() { return arg_; }
+  GEvent& setArg(void* arg) { arg_ = arg; return *this; }
 
-protected:
-  bool create(evutil_socket_t fd, Options options, event_callback_fn callback, void* arg) {
+  bool create() {
     assert(eventBase_ != nullptr);
-    event_ = event_new(eventBase_->get(), fd, (short)options, callback, arg);
+    event_ = event_new(eventBase_->get(), fd_, (short)options_, callback_, arg_);
     return event_ != nullptr;
   }
 
-  bool create(Options options, event_callback_fn callback, void* arg) {
-    return create(-1, options, callback, arg);
-  }
-
-public:
   void destroy() {
     if (event_ != nullptr) {
       event_free(event_);
@@ -58,14 +69,16 @@ public:
     return event_add(event_, &timeout);
   }
 
-  //
-  // del
-  //
   int del() {
+    assert(event_ != nullptr);
     return event_del(event_);
   }
 
 protected:
-  GEventBase* eventBase_; // reference
   struct event* event_;
+  GEventBase* eventBase_;
+  evutil_socket_t fd_;
+  Options options_;
+  event_callback_fn callback_;
+  void* arg_;
 };
