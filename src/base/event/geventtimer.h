@@ -20,8 +20,8 @@ struct GEventTimer : GEvent {
   GEventTimer(
     GEventBase* eventBase,
     event_callback_fn callback,
-    Options options = EV_PERSIST,
-    void* arg = nullptr)
+    void* arg = nullptr,
+    Options options = EV_PERSIST)
     : GEvent(eventBase, -1, options, callback, arg) {}
   ~GEventTimer() {}
 };

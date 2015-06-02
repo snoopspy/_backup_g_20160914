@@ -1,5 +1,5 @@
 #include <iostream>
-#include "glog/logging.h"
+#include <gflags/gflags.h>
 #include <GErr>
 #include <GSock>
 

@@ -21,7 +21,7 @@ struct GEventSock : GEvent {
     GEventBase* eventBase,
     evutil_socket_t fd,
     event_callback_fn callback,
-    Options options = EV_READ | EV_PERSIST,
-    void* arg = nullptr)
+    void* arg = nullptr,
+    Options options = EV_READ | EV_PERSIST)
     : GEvent(eventBase, fd, options, callback, arg) {}
 };
