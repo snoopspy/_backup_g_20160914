@@ -2,23 +2,19 @@
 #include <glog/logging.h>
 #include <GEventSignal>
 
-struct MyEventSignal : GEventSignal {
-  MyEventSignal(GEventBase* eventBase, int signum) :
-    GEventSignal(eventBase, signum) {}
-protected:
-  void callBack(evutil_socket_t fd, short event) override {
-    DLOG(INFO) << "fd=" << fd << " event=" << event;
-    if (++called >= 3)
-      del();
+static int called = 0;
+void callback(evutil_socket_t fd, short events, void* arg) {
+  DLOG(INFO) << "fd=" << fd << " event=" << events;
+  if (++called >= 3) {
+    GEventSignal* eventSignal = (GEventSignal*)arg;
+    eventSignal->del();
   }
-
-protected:
-  int called = 0;
-};
+}
 
 int main() {
   GEventBase eventBase;
-  MyEventSignal eventSignal(&eventBase, SIGINT);
+  GEventSignal eventSignal(&eventBase);
+  eventSignal.create(SIGINT, EV_PERSIST, callback);
   eventSignal.add();
   eventBase.dispatch();
 }

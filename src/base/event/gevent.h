@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <cassert>
 #include <event2/util.h>
 #include "geventbase.h"
 
@@ -17,49 +18,43 @@
 // GEvent
 // ----------------------------------------------------------------------------
 struct GEvent {
-  GEvent(GEventBase* eventBase) : eventBase_(eventBase), event_(nullptr) {}
+  typedef short Option;
+  typedef short Options;
 
-  virtual ~GEvent() {
+  GEvent() : eventBase_(nullptr), event_(nullptr) {}
+  GEvent(GEventBase* eventBase) : eventBase_(eventBase), event_(nullptr) {}
+  virtual ~GEvent() { destroy(); }
+
+  struct event* get() { return event_; }
+  GEventBase* eventBase() { return eventBase_; }
+  void setEventBase(GEventBase* eventBase) { eventBase_ = eventBase; }
+
+protected:
+  bool create(evutil_socket_t fd, Options options, event_callback_fn callback, void* arg) {
+    assert(eventBase_ != nullptr);
+    event_ = event_new(eventBase_->get(), fd, (short)options, callback, arg);
+    return event_ != nullptr;
+  }
+
+  bool create(Options options, event_callback_fn callback, void* arg) {
+    return create(-1, options, callback, arg);
+  }
+
+public:
+  void destroy() {
     if (event_ != nullptr) {
-      LOG(WARNING) << "event is not null(" << (void*)event_ << ")";
+      event_free(event_);
+      event_ = nullptr;
     }
   }
 
-  //
-  // new
-  //
-
-  /*
-  @param base the event base to which the event should be attached.
-  @param fd the file descriptor or signal to be monitored, or -1.
-  @param events desired events to monitor: bitfield of EV_READ, EV_WRITE,
-      EV_SIGNAL, EV_PERSIST, EV_ET.
-  @param callback callback function to be invoked when the event occurs
-  @param callback_arg an argument to be passed to the callback function
-
-  @return a newly allocated struct event that must later be freed with
-    event_free().
-  @see event_free(), event_add(), event_del(), event_assign()
-  struct event *event_new(struct event_base *, evutil_socket_t, short, event_callback_fn, void *);
-  */
-  struct event_base* base_;
-  int fd_;
-  short events_;
-  event_callback_fn callback_;
-  void* callback_arg;
-
-  //
-  // free
-  //
-
-  //
-  // add
-  //
   int add() {
+    assert(event_ != nullptr);
     return event_add(event_, nullptr);
   }
 
   int add(const struct timeval timeout) {
+    assert(event_ != nullptr);
     return event_add(event_, &timeout);
   }
 
@@ -71,15 +66,6 @@ struct GEvent {
   }
 
 protected:
-  virtual void callBack(evutil_socket_t fd, short event) = 0;
-
-protected:
   GEventBase* eventBase_; // reference
-  struct event* event_; // created and deleted in descendant class
-
-protected:
-  static void _callBack(evutil_socket_t fd, short event, void* arg) {
-    GEvent* _event = (GEvent*)arg;
-    _event->callBack(fd, event);
-  }
+  struct event* event_;
 };
