@@ -17,14 +17,11 @@
 // GEventSignal
 // ----------------------------------------------------------------------------
 struct GEventSignal : GEvent {
-  GEventSignal() {
-    options_ |= EV_SIGNAL;
-  }
-
-  bool create() {
-    if (fd_ == -1) {
-      LOG(WARNING) << "fd_ must not be -1";
-    }
-    return GEvent::create();
-  }
+  GEventSignal(
+    GEventBase* eventBase,
+    evutil_socket_t fd,
+    event_callback_fn callback,
+    Options options = EV_SIGNAL | EV_PERSIST,
+    void* arg = nullptr)
+    : GEvent(eventBase, fd, options, callback, arg) {}
 };

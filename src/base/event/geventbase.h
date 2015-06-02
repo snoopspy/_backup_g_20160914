@@ -27,7 +27,9 @@ struct GEventBase {
     }
   }
 
-  struct event_base* get() { return base_; }
+  struct event_base* get() {
+    return base_;
+  }
 
   int dispatch() {
     return event_base_dispatch(base_);

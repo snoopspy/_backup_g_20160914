@@ -17,13 +17,11 @@
 // GEventTimer
 // ----------------------------------------------------------------------------
 struct GEventTimer : GEvent {
-  GEventTimer() {
-  }
-
-  bool create() {
-    if (fd_ == -1) {
-      LOG(WARNING) << "fd_ must be -1";
-    }
-    return GEvent::create();
-  }
+  GEventTimer(
+    GEventBase* eventBase,
+    event_callback_fn callback,
+    Options options = EV_PERSIST,
+    void* arg = nullptr)
+    : GEvent(eventBase, -1, options, callback, arg) {}
+  ~GEventTimer() {}
 };

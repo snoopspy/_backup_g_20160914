@@ -12,8 +12,7 @@ void callback(evutil_socket_t fd, short events, void* arg) {
 
 int main() {
   GEventBase eventBase;
-  GEventTimer eventTimer;
-  eventTimer.setEventBase(&eventBase).setCallback(callback).create();
+  GEventTimer eventTimer(&eventBase, callback);
   eventTimer.add(timeval{1, 0});
   eventBase.dispatch();
 }

@@ -29,8 +29,7 @@ int main() {
   if (!sock.connect(&sockAddr)) { DLOG(ERROR) << lastErr; return -1; }
 
   GEventBase eventBase;
-  GEventSock eventSock;
-  eventSock.setEventBase(&eventBase).setFd((int)sock).setCallback(callback).create();
+  GEventSock eventSock(&eventBase, (int)sock, callback);
   eventSock.add();
   eventBase.dispatch();
 }

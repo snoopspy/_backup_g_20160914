@@ -13,8 +13,7 @@ void callback(evutil_socket_t fd, short events, void* arg) {
 
 int main() {
   GEventBase eventBase;
-  GEventSignal eventSignal;
-  eventSignal.setEventBase(&eventBase).setFd(SIGINT).setCallback(callback).create();
+  GEventSignal eventSignal(&eventBase, SIGINT, callback);
   eventSignal.add();
   eventBase.dispatch();
 }
