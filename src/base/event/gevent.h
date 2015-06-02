@@ -18,7 +18,12 @@
 // GEvent
 // ----------------------------------------------------------------------------
 struct GEvent {
-  typedef short Option;
+  // EV_TIMEOUT 0x01
+  // EV_READ    0x02
+  // EV_WRITE   0x04
+  // EV_SIGNAL  0x08
+  // EV_PERSIST 0x10
+  // EV_ET      0x20
   typedef short Options;
 
   GEvent() {
