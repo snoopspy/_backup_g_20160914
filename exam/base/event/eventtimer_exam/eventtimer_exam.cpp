@@ -8,8 +8,7 @@ protected:
   void callBack(evutil_socket_t fd, short event) override {
     DLOG(INFO) << "fd=" << fd << " event=" << event;
     if (++called < 3) {
-      struct timeval tv = { 1, 0 };
-      add(&tv);
+      add(timeval{1, 0});
     }
   }
 
@@ -21,7 +20,6 @@ int main() {
   GEventBase eventBase;
   MyEventTimer eventTimer(&eventBase);
 
-  struct timeval tv = { 1, 0 };
-  eventTimer.add(&tv);
+  eventTimer.add(timeval{1, 0});
   eventBase.dispatch();
 }
