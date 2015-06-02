@@ -1,14 +1,15 @@
 #include <cstring>
 #include <iostream>
+#include <gflags/gflags.h>
 #include <GErr>
 #include <GSock>
 
-in_addr_t localIp = INADDR_ANY;
-in_port_t localPort = 0;
-in_addr_t ip = 0x7F000001;
-in_port_t port = 10065;
-size_t bufSize = 1024;
-const char* msg = "hello world";
+DEFINE_int32(localIp, INADDR_ANY, "local ip"); // in_addr_t
+DEFINE_int32(localPort, 0, "local port"); // in_port_t
+DEFINE_int32(ip, 0x7F000001, "ip"); // in_addr_t
+DEFINE_int32(port, 10065, "port"); // in_port_t
+DEFINE_int64(bufSize, 1024, "buffer size"); // size_t
+DEFINE_string(msg, "hello world", "message");
 
 using namespace std;
 
@@ -17,17 +18,17 @@ void runTcpClient() {
 
   if (!sock.socket(AF_INET, SOCK_STREAM, 0)) { clog << lastErr << endl; return; }
 
-  GSockAddr sockAddr(AF_INET, htons(localPort), htonl(localIp));
+  GSockAddr sockAddr(AF_INET, htons((in_port_t)FLAGS_localPort), htonl((in_addr_t)FLAGS_localIp));
   if (!sock.bind(&sockAddr)) { clog << lastErr << endl; return; }
 
-  sockAddr.init(AF_INET, htons(port), htonl(ip));
+  sockAddr.init(AF_INET, htons((in_port_t)FLAGS_port), htonl((in_addr_t)FLAGS_ip));
   if (!sock.connect(&sockAddr)) { clog << lastErr << endl; return; }
 
-  ssize_t writeLen = sock.send(msg, strlen(msg), 0);
+  ssize_t writeLen = sock.send(FLAGS_msg.c_str(), FLAGS_msg.length(), 0);
   if (writeLen == 0 || writeLen == -1) return;
 
-  char buf[bufSize];
-  ssize_t readLen = sock.recv(buf, bufSize - 1, 0);
+  char buf[FLAGS_bufSize];
+  ssize_t readLen = sock.recv(buf, FLAGS_bufSize - 1, 0);
   if (readLen == 0 || readLen == -1) return;
   buf[readLen] = '\0';
   std::clog << buf << std::endl;
