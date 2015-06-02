@@ -18,7 +18,7 @@ void runTcpClient() {
   if (!sock.socket(AF_INET, SOCK_STREAM, 0)) { clog << lastErr << endl; return; }
 
   GSockAddr sockAddr(AF_INET, htons(localPort), htonl(localIp));
-  if (!sock.bind(&sockAddr, sizeof(struct sockaddr_in))) { clog << lastErr << endl; return; }
+  if (!sock.bind(&sockAddr)) { clog << lastErr << endl; return; }
 
   sockAddr.init(AF_INET, htons(port), htonl(ip));
   if (!sock.connect(&sockAddr, sizeof(struct sockaddr_in))) { clog << lastErr << endl; return; }

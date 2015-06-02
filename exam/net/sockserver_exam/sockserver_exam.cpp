@@ -18,7 +18,7 @@ void runTcpServer() {
   if (!acceptSock.setsockopt(SOL_SOCKET, SO_REUSEADDR, &optVal, sizeof(optVal))) { clog << lastErr << endl; return; }
 
   GSockAddr acceptSockAddr(AF_INET, htons(port), htonl(localIp));
-  if (!acceptSock.bind(&acceptSockAddr, sizeof(struct sockaddr_in))) { clog << lastErr << endl; return; }
+  if (!acceptSock.bind(&acceptSockAddr)) { clog << lastErr << endl; return; }
 
   if (!acceptSock.listen(backLog)) { clog << lastErr << endl; return; }
 

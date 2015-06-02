@@ -24,7 +24,7 @@ struct GSock {
   operator int() const { return sock_; }
 
   int accept(GSockAddr *sockAddr, socklen_t *addrLen);
-  bool bind(GSockAddr* sockAddr, socklen_t addrLen);
+  bool bind(GSockAddr* sockAddr, socklen_t addrLen = sizeof(GSockAddr));
   bool close();
   bool connect(GSockAddr* sockAddr, socklen_t addrLen);
   bool listen(int backLog);
