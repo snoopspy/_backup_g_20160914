@@ -14,32 +14,28 @@ using namespace std;
 
 void runTcpServer() {
   bool ip4 = !FLAGS_ip6;
-  if (ip4) // gilgil temp 2015.06.03
-    clog << "ip4\n";
-  else
-    clog << "ip6\n";
-
-  sa_family_t family = ip4 ? AF_INET : AF_INET6;
 
   GSock acceptSock;
-
-  if (!acceptSock.socket(family, SOCK_STREAM, 0)) { clog << lastErr << endl; return; }
+  if (ip4) {
+    if (!acceptSock.socket(AF_INET, SOCK_STREAM, 0)) { clog << lastErr << endl; return; }
+  } else {
+    if (!acceptSock.socket(AF_INET6, SOCK_STREAM, 0)) { clog << lastErr << endl; return; }
+  }
 
   int optVal = 1;
   if (!acceptSock.setsockopt(SOL_SOCKET, SO_REUSEADDR, &optVal, sizeof(optVal))) { clog << lastErr << endl; return; }
 
-  GSockAddr acceptSockAddr;
+  GSockAddr bindAddr;
   if (ip4) {
-    acceptSockAddr.init(AF_INET, htons((in_port_t)FLAGS_port), htonl((in_addr_t)FLAGS_localIp));
+    bindAddr.init(AF_INET, htons((in_port_t)FLAGS_port), htonl((in_addr_t)FLAGS_localIp));
   } else {
     if (FLAGS_ip6only) {
       optVal = 1;
       if (!acceptSock.setsockopt(IPPROTO_IPV6, IPV6_V6ONLY, (char *)&optVal, sizeof(optVal))) { clog << lastErr << endl; return; }
     }
-    acceptSockAddr.init(AF_INET6, htons((in_port_t)FLAGS_port), 0, in6addr_any, 0);
+    bindAddr.init(AF_INET6, htons((in_port_t)FLAGS_port), 0, in6addr_any, 0);
   }
-
-  if (!acceptSock.bind(&acceptSockAddr)) { clog << lastErr << endl; return; }
+  if (!acceptSock.bind(&bindAddr)) { clog << lastErr << endl; return; }
 
   if (!acceptSock.listen(FLAGS_backLog)) { clog << lastErr << endl; return; }
 
