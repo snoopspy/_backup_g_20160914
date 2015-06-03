@@ -32,4 +32,3 @@ int main() {
   eventSock.add();
   eventBase.dispatch();
 }
-

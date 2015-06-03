@@ -1,6 +1,6 @@
 #include <cstring>
-#include <iostream>
 #include <gflags/gflags.h>
+#include <glog/logging.h>
 #include <GErr>
 #include <GSock>
 
@@ -19,9 +19,9 @@ void runTcpClient() {
 
   GSock sock;
   if (ip4) {
-    if (!sock.socket(AF_INET, SOCK_STREAM, 0)) { clog << lastErr << endl; return; }
+    if (!sock.socket(AF_INET, SOCK_STREAM, 0)) { LOG(ERROR) << lastErr; return; }
   } else {
-    if (!sock.socket(AF_INET6, SOCK_STREAM, 0)) { clog << lastErr << endl; return; }
+    if (!sock.socket(AF_INET6, SOCK_STREAM, 0)) { LOG(ERROR) << lastErr; return; }
   }
 
   GSockAddr bindAddr;
@@ -30,7 +30,7 @@ void runTcpClient() {
   } else {
     bindAddr.init(AF_INET6, htons(FLAGS_localPort), 0, in6addr_any, 0);
   }
-  if (!sock.bind(&bindAddr)) { clog << lastErr << endl; return; }
+  if (!sock.bind(&bindAddr)) { LOG(ERROR) << lastErr; return; }
 
   GSockAddr connAddr;
   if (ip4) {
@@ -38,7 +38,7 @@ void runTcpClient() {
   } else {
     connAddr.init(AF_INET6, htons(FLAGS_port), 0, in6addr_loopback, 0);
   }
-  if (!sock.connect(&connAddr)) { clog << lastErr << endl; return; }
+  if (!sock.connect(&connAddr)) { LOG(ERROR) << lastErr; return; }
 
   ssize_t writeLen = sock.send(FLAGS_msg.c_str(), FLAGS_msg.length());
   if (writeLen == 0 || writeLen == -1) return;
@@ -47,9 +47,9 @@ void runTcpClient() {
   ssize_t readLen = sock.recv(buf, FLAGS_bufSize - 1);
   if (readLen == 0 || readLen == -1) return;
   buf[readLen] = '\0';
-  std::clog << buf << std::endl;
+  LOG(INFO) << buf;
 
-  if (!sock.close()) { clog << lastErr << endl; return; }
+  if (!sock.close()) { LOG(ERROR) << lastErr; return; }
 }
 
 int main(int argc, char* argv[]) {
