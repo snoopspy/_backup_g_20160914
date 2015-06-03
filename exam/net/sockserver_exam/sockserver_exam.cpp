@@ -4,6 +4,7 @@
 #include <GSock>
 
 DEFINE_bool(ip6, false, "use ip6");
+DEFINE_bool(ip6only, false, "use ip6 only");
 DEFINE_int32(localIp, INADDR_ANY, "local ip"); // in_addr_t
 DEFINE_int32(port, 10065, "port"); // in_port_t
 DEFINE_int32(backLog, 256, "bacl log"); // int
@@ -28,10 +29,15 @@ void runTcpServer() {
   if (!acceptSock.setsockopt(SOL_SOCKET, SO_REUSEADDR, &optVal, sizeof(optVal))) { clog << lastErr << endl; return; }
 
   GSockAddr acceptSockAddr;
-  if (ip4)
+  if (ip4) {
     acceptSockAddr.init(AF_INET, htons((in_port_t)FLAGS_port), htonl((in_addr_t)FLAGS_localIp));
-  else
+  } else {
+    if (FLAGS_ip6only) {
+      optVal = 1;
+      if (!acceptSock.setsockopt(IPPROTO_IPV6, IPV6_V6ONLY, (char *)&optVal, sizeof(optVal))) { clog << lastErr << endl; return; }
+    }
     acceptSockAddr.init(AF_INET6, htons((in_port_t)FLAGS_port), 0, in6addr_any, 0);
+  }
 
   if (!acceptSock.bind(&acceptSockAddr)) { clog << lastErr << endl; return; }
 
