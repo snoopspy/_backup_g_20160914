@@ -4,6 +4,7 @@
 #include <GErr>
 #include <GSock>
 
+DEFINE_bool(ip6, false, "use ip6");
 DEFINE_int32(localIp, INADDR_ANY, "local ip"); // in_addr_t
 DEFINE_int32(localPort, 0, "local port"); // in_port_t
 DEFINE_int32(ip, 0x7F000001, "ip"); // in_addr_t
@@ -14,6 +15,11 @@ DEFINE_string(msg, "hello world", "message");
 using namespace std;
 
 void runTcpClient() {
+  if (FLAGS_ip6) // gilgil temp 2015.06.03
+    clog << "ip6\n";
+  else
+    clog << "ip4\n";
+
   GSock sock;
 
   if (!sock.socket(AF_INET, SOCK_STREAM, 0)) { clog << lastErr << endl; return; }
