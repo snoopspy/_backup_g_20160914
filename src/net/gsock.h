@@ -34,7 +34,7 @@ struct GSock {
   ssize_t send(const void *buf, size_t len, int flags = 0);
   ssize_t sendto(const void *buf, size_t len, int flags, GSockAddr *destAddr, socklen_t addrLen);
   ssize_t sendmsg(const struct msghdr *msg, int flags);
-  bool setsockopt(int level, int optName, const void *optVal, socklen_t optLen);
+  bool setsockopt(int level, int optName, const void *optVal = nullptr, socklen_t optLen = 0);
   bool socket(int domain, int type, int protocol);
 
 protected:

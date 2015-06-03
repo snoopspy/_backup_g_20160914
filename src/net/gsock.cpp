@@ -87,6 +87,12 @@ ssize_t GSock::sendmsg(const struct msghdr *msg, int flags) {
 }
 
 bool GSock::setsockopt(int level, int optName, const void *optVal, socklen_t optLen) {
+  int tempOptVal;
+  if (optVal == nullptr) {
+    tempOptVal = 1;
+    optVal = &tempOptVal;
+    optLen = sizeof(tempOptVal);
+  }
   int res = ::setsockopt((int)*this, level, optName, optVal, optLen);
   if (res == -1)
     lastErr.set(errno);
