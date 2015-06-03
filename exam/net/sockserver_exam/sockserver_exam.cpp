@@ -26,12 +26,12 @@ void runTcpServer() {
 
   GSockAddr bindAddr;
   if (ip4) {
-    bindAddr.init(AF_INET, htons((in_port_t)FLAGS_port), htonl((in_addr_t)FLAGS_localIp));
+    bindAddr.init(AF_INET, htons(FLAGS_port), htonl(FLAGS_localIp));
   } else {
     if (FLAGS_ip6only) {
       if (!acceptSock.setsockopt(IPPROTO_IPV6, IPV6_V6ONLY)) { clog << lastErr << endl; return; }
     }
-    bindAddr.init(AF_INET6, htons((in_port_t)FLAGS_port), 0, in6addr_any, 0);
+    bindAddr.init(AF_INET6, htons(FLAGS_port), 0, in6addr_any, 0);
   }
   if (!acceptSock.bind(&bindAddr)) { clog << lastErr << endl; return; }
 

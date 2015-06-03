@@ -26,17 +26,17 @@ void runTcpClient() {
 
   GSockAddr bindAddr;
   if (ip4) {
-    bindAddr.init(AF_INET, htons((in_port_t)FLAGS_localPort), htonl((in_addr_t)FLAGS_localIp));
+    bindAddr.init(AF_INET, htons(FLAGS_localPort), htonl(FLAGS_localIp));
   } else {
-    bindAddr.init(AF_INET6, htons((in_port_t)FLAGS_localPort), 0, in6addr_any, 0);
+    bindAddr.init(AF_INET6, htons(FLAGS_localPort), 0, in6addr_any, 0);
   }
   if (!sock.bind(&bindAddr)) { clog << lastErr << endl; return; }
 
   GSockAddr connAddr;
   if (ip4) {
-    connAddr.init(AF_INET, htons((in_port_t)FLAGS_port), htonl((in_addr_t)FLAGS_ip));
+    connAddr.init(AF_INET, htons(FLAGS_port), htonl(FLAGS_ip));
   } else {
-    connAddr.init(AF_INET6, htons((in_port_t)FLAGS_port), 0, in6addr_loopback, 0);
+    connAddr.init(AF_INET6, htons(FLAGS_port), 0, in6addr_loopback, 0);
   }
   if (!sock.connect(&connAddr)) { clog << lastErr << endl; return; }
 
