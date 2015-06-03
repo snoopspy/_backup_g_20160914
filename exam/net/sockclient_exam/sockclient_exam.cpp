@@ -40,11 +40,11 @@ void runTcpClient() {
   }
   if (!sock.connect(&connAddr)) { clog << lastErr << endl; return; }
 
-  ssize_t writeLen = sock.send(FLAGS_msg.c_str(), FLAGS_msg.length(), 0);
+  ssize_t writeLen = sock.send(FLAGS_msg.c_str(), FLAGS_msg.length());
   if (writeLen == 0 || writeLen == -1) return;
 
   char buf[FLAGS_bufSize];
-  ssize_t readLen = sock.recv(buf, FLAGS_bufSize - 1, 0);
+  ssize_t readLen = sock.recv(buf, FLAGS_bufSize - 1);
   if (readLen == 0 || readLen == -1) return;
   buf[readLen] = '\0';
   std::clog << buf << std::endl;

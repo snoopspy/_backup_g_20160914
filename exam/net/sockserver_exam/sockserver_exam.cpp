@@ -47,12 +47,12 @@ void runTcpServer() {
 
     while (true) {
       char buf[FLAGS_bufSize];
-      ssize_t readLen = connSock.recv(buf, FLAGS_bufSize - 1, 0);
+      ssize_t readLen = connSock.recv(buf, FLAGS_bufSize - 1);
       if (readLen == 0 || readLen == -1) break;
       buf[readLen] = '\0';
       std::clog << buf << std::endl;
 
-      ssize_t writeLen = connSock.send(buf, readLen, 0);
+      ssize_t writeLen = connSock.send(buf, readLen);
       if (writeLen == 0 || writeLen == -1) break;
     }
     if (!connSock.close()) { clog << lastErr << endl; return; }
