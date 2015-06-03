@@ -17,7 +17,9 @@
 // GSockAddr
 // ----------------------------------------------------------------------------
 union GSockAddr {
-  GSockAddr() {}
+  GSockAddr() {
+  }
+
   GSockAddr(sa_family_t family,
     in_port_t port,
     in_addr_t addr) {
