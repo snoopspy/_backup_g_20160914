@@ -57,19 +57,19 @@ struct GLastErr : GErr {
   GLastErr() { code_ = errno; }
 
   const char* name() override { return "LastErr"; }
-  virtual std::string msg() override { return strerror(code_); }
+  std::string msg() override { return strerror(code_); }
 };
 
 // ----------------------------------------------------------------------------
 // GStdErr
 // ----------------------------------------------------------------------------
-struct GStdErr : public GErr {
+struct GStdErr : GErr {
   GStdErr() { code_ = g::OK; }
   GStdErr(int code) { code_ = code; }
   GStdErr(int code, std::string msg) { code_ = code; msg_ = msg; }
 
   const char* name() override { return "StdErr"; }
-  virtual std::string msg() override { return msg_; }
+  std::string msg() override { return msg_; }
 
 protected:
   std::string msg_;
