@@ -3,7 +3,8 @@ SOURCES += \
 	$${PWD}/../src/base/event/*.cpp \
 	$${PWD}/../src/net/*.cpp \
 	$${PWD}/../src/sys/procinfo/*.cpp \
-	$${PWD}/../src/sys/stacktrace/*.cpp
+	$${PWD}/../src/sys/stacktrace/*.cpp \
+	$${PWD}/../src/sys/timediff/*.cpp
 
 HEADERS += \
 	$${PWD}/../src/base/*.h \

@@ -42,6 +42,14 @@ std::ostream& operator << (std::ostream& os, GErr& err) {
   return os;
 }
 
+std::ostream& operator << (std::ostream& os, GErr* err) {
+  if (err == nullptr) {
+    os << "err is null";
+    return os;
+  }
+  return operator << (os, *err);
+}
+
 // ----------------------------------------------------------------------------
 // GLastErr
 // ----------------------------------------------------------------------------
