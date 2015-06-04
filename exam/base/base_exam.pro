@@ -1,5 +1,5 @@
 TEMPLATE = subdirs
 SUBDIRS += \
 	err_exam \
-	event \
+	event_exam \
 	version_exam

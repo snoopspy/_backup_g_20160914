@@ -1,5 +1,5 @@
 TEMPLATE = subdirs
 SUBDIRS += \
-	base \
-	net \
-	sys
+	base/base_exam.pro \
+	net/net_exam.pro \
+	sys/sys_exam.pro
