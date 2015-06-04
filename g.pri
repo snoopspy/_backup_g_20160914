@@ -18,10 +18,6 @@ android-g++:                 G_NAME = $${G_NAME}_android
 contains(QT, gui)            G_NAME = $${G_NAME}_gui
 CONFIG(debug, debug|release) G_NAME = $${G_NAME}_d
 
-#message("G_NAME="$${G_NAME}) # gilgil temp 2015.04.27
-#message("DEFINES="$${DEFINES}) # gilgil temp 2015.04.27
-#message("CONFIG="$${CONFIG}) # gilgil temp 2015.04.27
-
 #------------------------------------------------------------------------------
 # G_DIR
 #------------------------------------------------------------------------------

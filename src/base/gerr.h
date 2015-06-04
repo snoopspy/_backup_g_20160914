@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <cstring>
 #include <ostream>
 #include <string>
 
@@ -35,7 +36,11 @@ struct GErr {
 protected:
   int code_;
 };
-std::ostream& operator << (std::ostream& os, GErr& err);
+
+std::ostream& operator << (std::ostream& os, GErr& err) {
+  os << err.name() << ":" << err.msg() << " code=" << err.code();
+  return os;
+}
 
 // ----------------------------------------------------------------------------
 // GLastErr
@@ -45,31 +50,3 @@ struct GLastErr : public GErr {
   const char* name() override { return "errno"; }
   virtual std::string msg() override { return strerror(code_); }
 };
-
-// ----- gilgil temp 2015.06.04 -----
-/*
-// ----------------------------------------------------------------------------
-// GErr
-// ----------------------------------------------------------------------------
-struct GErr {
-  GErr() : code_(g::OK) {}
-  GErr(int code) : code_(code) {}
-  GErr(int code, std::string msg) : code_(code), msg_(msg) {}
-
-  int code() { return code_; }
-  std::string msg();
-  void set(int code) { code_ = code; }
-  void set(int code, std::string msg) { code_ = code; msg_ = msg; }
-
-  void clear() { code_ = g::OK; msg_ = ""; }
-  bool ok() { return code_ == g::OK; }
-
-protected:
-  int code_;
-  std::string msg_;
-};
-
-
-extern thread_local GErr lastErr;
-*/
-// ----------------------------------
