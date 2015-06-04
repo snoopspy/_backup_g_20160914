@@ -27,14 +27,9 @@ namespace g {
 // GErr
 // ----------------------------------------------------------------------------
 struct GErr {
-  int code() { return code_; }
-  void setCode(int code) { code_ = code; }
-
   virtual const char* name() = 0;
+  virtual int code() = 0;
   virtual std::string msg() = 0;
-
-protected:
-  int code_;
 };
 
 std::ostream& operator << (std::ostream& os, GErr& err) {
@@ -57,7 +52,13 @@ struct GLastErr : GErr {
   GLastErr() { code_ = errno; }
 
   const char* name() override { return "LastErr"; }
+  int code() override { return code_; }
   std::string msg() override { return strerror(code_); }
+
+  void setCode(int code) { code_ = code; }
+
+protected:
+  int code_;
 };
 
 // ----------------------------------------------------------------------------
@@ -69,8 +70,13 @@ struct GStdErr : GErr {
   GStdErr(int code, std::string msg) { code_ = code; msg_ = msg; }
 
   const char* name() override { return "StdErr"; }
+  int code() override { return code_; }
   std::string msg() override { return msg_; }
 
+  void setCode(int code) { code_ = code; }
+  void setMsg(std::string msg) { msg_ = msg; }
+
 protected:
+  int code_;
   std::string msg_;
 };
