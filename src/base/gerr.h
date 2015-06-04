@@ -38,7 +38,7 @@ protected:
 };
 
 std::ostream& operator << (std::ostream& os, GErr& err) {
-  os << err.name() << ":" << err.msg() << " code=" << err.code();
+  os << err.name() << ":" << (err.msg().empty() ? "no msg" : err.msg()) << " code=" << err.code();
   return os;
 }
 
@@ -53,8 +53,24 @@ std::ostream& operator << (std::ostream& os, GErr* err) {
 // ----------------------------------------------------------------------------
 // GLastErr
 // ----------------------------------------------------------------------------
-struct GLastErr : public GErr {
+struct GLastErr : GErr {
   GLastErr() { code_ = errno; }
-  const char* name() override { return "errno"; }
+
+  const char* name() override { return "LastErr"; }
   virtual std::string msg() override { return strerror(code_); }
+};
+
+// ----------------------------------------------------------------------------
+// GStdErr
+// ----------------------------------------------------------------------------
+struct GStdErr : public GErr {
+  GStdErr() { code_ = g::OK; }
+  GStdErr(int code) { code_ = code; }
+  GStdErr(int code, std::string msg) { code_ = code; msg_ = msg; }
+
+  const char* name() override { return "StdErr"; }
+  virtual std::string msg() override { return msg_; }
+
+protected:
+  std::string msg_;
 };

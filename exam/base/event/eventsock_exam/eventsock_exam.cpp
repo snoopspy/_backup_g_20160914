@@ -3,6 +3,8 @@
 #include <GEventSock>
 #include <GSock>
 
+#define error() { GLastErr lastErr; LOG(ERROR) << lastErr; exit(1); }
+
 void callback(evutil_socket_t fd, short events, void* arg) {
   DLOG(INFO) << "fd=" << fd << " event=" << events;
 
@@ -19,13 +21,13 @@ void callback(evutil_socket_t fd, short events, void* arg) {
 
 int main() {
   GSock sock;
-  if (!sock.socket(AF_INET, SOCK_STREAM, 0)) { DLOG(ERROR) << lastErr; return -1; }
+  if (!sock.socket(AF_INET, SOCK_STREAM, 0)) error();
 
   GSockAddr sockAddr(AF_INET, 0, INADDR_ANY);
-  if (!sock.bind(&sockAddr)) { DLOG(ERROR) << lastErr; return -1; }
+  if (!sock.bind(&sockAddr)) error();
 
   sockAddr.init(AF_INET, htons(10065), htonl(0x7F000001));
-  if (!sock.connect(&sockAddr)) { DLOG(ERROR) << lastErr; return -1; }
+  if (!sock.connect(&sockAddr)) error();
 
   GEventBase eventBase;
   GEventSock eventSock(&eventBase, (int)sock, callback);
