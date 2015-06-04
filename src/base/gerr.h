@@ -33,6 +33,7 @@ struct GErr {
 };
 
 std::ostream& operator << (std::ostream& os, GErr& err);
+std::ostream& operator << (std::ostream& os, GErr&& err);
 std::ostream& operator << (std::ostream& os, GErr* err);
 
 // ----------------------------------------------------------------------------

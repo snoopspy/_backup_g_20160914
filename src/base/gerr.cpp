@@ -8,6 +8,10 @@ std::ostream& operator << (std::ostream& os, GErr& err) {
   return os;
 }
 
+std::ostream& operator << (std::ostream& os, GErr&& err) {
+  return operator << (os, err);
+}
+
 std::ostream& operator << (std::ostream& os, GErr* err) {
   if (err == nullptr) {
     os << "err is null";

@@ -1,6 +1,7 @@
 SOURCES += \
 	$${PWD}/../src/base/*.cpp \
 	$${PWD}/../src/base/event/*.cpp \
+	$${PWD}/../src/log/*.cpp \
 	$${PWD}/../src/net/*.cpp \
 	$${PWD}/../src/sys/procinfo/*.cpp \
 	$${PWD}/../src/sys/stacktrace/*.cpp \
@@ -9,6 +10,7 @@ SOURCES += \
 HEADERS += \
 	$${PWD}/../src/base/*.h \
 	$${PWD}/../src/base/event/*.h \
+	$${PWD}/../src/log/*.h \
 	$${PWD}/../src/net/*.h \
 	$${PWD}/../src/sys/procinfo/*.h \
 	$${PWD}/../src/sys/stacktrace/*.h \

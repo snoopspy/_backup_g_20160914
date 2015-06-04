@@ -12,16 +12,14 @@ DEFINE_int32(port, 10065, "port"); // in_port_t
 DEFINE_int64(bufSize, 1024, "buffer size"); // size_t
 DEFINE_string(msg, "hello world", "message");
 
-#define error() { GLastErr lastErr; LOG(ERROR) << lastErr; exit(1); }
-
 void runTcpClient() {
   bool ip4 = !FLAGS_ip6;
 
   GSock sock;
   if (ip4) {
-    if (!sock.socket(AF_INET, SOCK_STREAM, 0)) error();
+    if (!sock.socket(AF_INET, SOCK_STREAM, 0)) { LOG(ERROR) << GLastErr(); return; }
   } else {
-    if (!sock.socket(AF_INET6, SOCK_STREAM, 0)) error();
+    if (!sock.socket(AF_INET6, SOCK_STREAM, 0)) { LOG(ERROR) << GLastErr(); return; }
   }
 
   GSockAddr bindAddr;
@@ -30,7 +28,7 @@ void runTcpClient() {
   } else {
     bindAddr.init(AF_INET6, htons(FLAGS_localPort), 0, in6addr_any, 0);
   }
-  if (!sock.bind(&bindAddr)) error();
+  if (!sock.bind(&bindAddr)) { LOG(ERROR) << GLastErr(); return; }
 
   GSockAddr connAddr;
   if (ip4) {
@@ -38,7 +36,7 @@ void runTcpClient() {
   } else {
     connAddr.init(AF_INET6, htons(FLAGS_port), 0, in6addr_loopback, 0);
   }
-  if (!sock.connect(&connAddr)) error();
+  if (!sock.connect(&connAddr)) LOG(ERROR) << GLastErr();
 
   ssize_t writeLen = sock.send(FLAGS_msg.c_str(), FLAGS_msg.length());
   if (writeLen == 0 || writeLen == -1) return;
@@ -49,7 +47,7 @@ void runTcpClient() {
   buf[readLen] = '\0';
   LOG(INFO) << buf;
 
-  if (!sock.close()) error();
+  if (!sock.close()) { LOG(ERROR) << GLastErr(); return; }
 }
 
 int main(int argc, char* argv[]) {

@@ -18,7 +18,7 @@
 // ----------------------------------------------------------------------------
 struct GSock {
   GSock() {}
-  GSock(const GSock& rhs) { sock_ = rhs.sock_; }
+  GSock(const GSock& rhs) : sock_(rhs.sock_) {}
   GSock(int sock) : sock_(sock) {}
   GSock(int domain, int type, int protocol) { socket(domain, type, protocol); }
 

@@ -10,32 +10,30 @@ DEFINE_int32(port, 10065, "port"); // in_port_t
 DEFINE_int32(backLog, 256, "bacl log"); // int
 DEFINE_int64(bufSize, 1024, "buffer size"); // size_t
 
-#define error() { GLastErr lastErr; LOG(ERROR) << lastErr; exit(1); }
-
 void runTcpServer() {
   bool ip4 = !FLAGS_ip6;
 
   GSock acceptSock;
   if (ip4) {
-    if (!acceptSock.socket(AF_INET, SOCK_STREAM, 0)) error();
+    if (!acceptSock.socket(AF_INET, SOCK_STREAM, 0)) { LOG(ERROR) << GLastErr(); return; }
   } else {
-    if (!acceptSock.socket(AF_INET6, SOCK_STREAM, 0)) error();
+    if (!acceptSock.socket(AF_INET6, SOCK_STREAM, 0)) { LOG(ERROR) << GLastErr(); return; }
   }
 
-  if (!acceptSock.setsockopt(SOL_SOCKET, SO_REUSEADDR)) error();
+  if (!acceptSock.setsockopt(SOL_SOCKET, SO_REUSEADDR)) { LOG(ERROR) << GLastErr(); return; }
 
   GSockAddr bindAddr;
   if (ip4) {
     bindAddr.init(AF_INET, htons(FLAGS_port), htonl(FLAGS_localIp));
   } else {
     if (FLAGS_ip6only) {
-      if (!acceptSock.setsockopt(IPPROTO_IPV6, IPV6_V6ONLY)) error();
+      if (!acceptSock.setsockopt(IPPROTO_IPV6, IPV6_V6ONLY)) { LOG(ERROR) << GLastErr(); return; }
     }
     bindAddr.init(AF_INET6, htons(FLAGS_port), 0, in6addr_any, 0);
   }
-  if (!acceptSock.bind(&bindAddr)) error();
+  if (!acceptSock.bind(&bindAddr)) { LOG(ERROR) << GLastErr(); return; }
 
-  if (!acceptSock.listen(FLAGS_backLog)) error();
+  if (!acceptSock.listen(FLAGS_backLog)) { LOG(ERROR) << GLastErr(); return; }
 
   while (true) {
     GSockAddr connSockAddr;
@@ -53,10 +51,10 @@ void runTcpServer() {
       ssize_t writeLen = connSock.send(buf, readLen);
       if (writeLen == 0 || writeLen == -1) break;
     }
-    if (!connSock.close()) error();
+    if (!connSock.close()) { LOG(ERROR) << GLastErr(); return; }
   }
 
-  if (!acceptSock.close()) error();
+  if (!acceptSock.close()) { LOG(ERROR) << GLastErr(); return; }
 }
 
 int main(int argc, char* argv[]) {
