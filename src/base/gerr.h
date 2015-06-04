@@ -39,7 +39,7 @@ std::ostream& operator << (std::ostream& os, GErr* err);
 // GLastErr
 // ----------------------------------------------------------------------------
 struct GLastErr : GErr {
-  GLastErr() { code_ = errno; }
+  GLastErr()                  { code_ = errno; }
 
   const char* name() override { return "LastErr"; }
   int code()         override { return code_; }
