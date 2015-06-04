@@ -1,6 +1,8 @@
 #include <cstring>
 #include "gerr.h"
 
+// ----- gilgil temp 2015.06.04 -----
+/*
 // ----------------------------------------------------------------------------
 // GErr
 // ----------------------------------------------------------------------------
@@ -15,10 +17,13 @@ std::string GErr::msg() {
 
   return "UNKNOWN";
 }
+thread_local GErr lastErr;
+*/
+
+// ----------------------------------
 
 std::ostream& operator << (std::ostream& os, GErr& err) {
-  os << err.msg() << " code=" << err.code();
+  os << err.name() << ":" << err.msg() << " code=" << err.code();
   return os;
 }
 
-thread_local GErr lastErr;
