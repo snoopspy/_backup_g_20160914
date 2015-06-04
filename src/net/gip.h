@@ -21,7 +21,7 @@ public:
   GIp() {}
   GIp(const GIp& rhs) : ip_(rhs.ip_) {}
   GIp(const uint32_t ip) : ip_(ip) {}
-  GIp(const QString s);
+  GIp(const char* s);
 
   operator uint32_t() const { return ip_; }
   operator QString() const;

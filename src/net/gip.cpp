@@ -3,14 +3,12 @@
 #include "log/glog.h"
 #include "gip.h"
 
-#include <iostream>
-
 // ----------------------------------------------------------------------------
 // GIp
 // ----------------------------------------------------------------------------
-GIp::GIp(const QString s) {
+GIp::GIp(const char* s) {
   uint32_t ui;
-  int res = inet_pton(AF_INET, qPrintable(s), &ui);
+  int res = inet_pton(AF_INET, s, &ui);
   switch (res) {
     case 0:
       LOG(ERROR) << "inet_pton return zero s=" << s;
@@ -46,7 +44,11 @@ TEST(GIp, test) {
   QString s = ip;
   EXPECT_EQ(s, "127.0.0.1");
 
-  // ip = "abcdefg"; // gilgil temp 2015.06.04
+  ip = "1.2.3.4";
+  EXPECT_EQ(ip, 0x01020304);
+
+  ip = "wrong";
+  EXPECT_EQ(ip, 0x01020304);
 }
 
 #endif // GTEST
