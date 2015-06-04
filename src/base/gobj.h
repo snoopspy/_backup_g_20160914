@@ -11,6 +11,7 @@
 #pragma once
 
 #include <QObject>
+#include "base/gerr.h"
 
 // ----------------------------------------------------------------------------
 // GObj
@@ -18,4 +19,5 @@
 class GObj : public QObject {
 public:
   GObj(GObj *parent = nullptr) : QObject(parent) {}
+  GErr* err;
 };

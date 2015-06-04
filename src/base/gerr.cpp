@@ -1,6 +1,22 @@
 #include "gerr.h"
 
 // ----------------------------------------------------------------------------
+// GErr
+// ----------------------------------------------------------------------------
+std::ostream& operator << (std::ostream& os, GErr& err) {
+  os << err.name() << ":" << (err.msg().empty() ? "no msg" : err.msg()) << " code=" << err.code();
+  return os;
+}
+
+std::ostream& operator << (std::ostream& os, GErr* err) {
+  if (err == nullptr) {
+    os << "err is null";
+    return os;
+  }
+  return operator << (os, *err);
+}
+
+// ----------------------------------------------------------------------------
 // GTEST
 // ----------------------------------------------------------------------------
 #ifdef GTEST

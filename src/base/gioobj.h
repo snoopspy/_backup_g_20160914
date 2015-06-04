@@ -10,13 +10,12 @@
 
 #pragma once
 
-#include <QIODevice>
-#include <GObj>
+#include "base/gobj.h"
 
 // ----------------------------------------------------------------------------
 // GIOObj
 // ----------------------------------------------------------------------------
-class GIOObj : public GObj, QIODevice {
+class GIOObj : public GObj {
 public:
   GIOObj(GIOObj *parent = nullptr) : GObj(parent) {}
 };
