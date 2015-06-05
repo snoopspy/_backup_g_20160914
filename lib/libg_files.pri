@@ -1,6 +1,7 @@
 SOURCES += \
 	$${PWD}/../g/base/*.cpp \
 	$${PWD}/../g/base/event/*.cpp \
+	$${PWD}/../g/base/prop/*.cpp \
 	$${PWD}/../g/log/*.cpp \
 	$${PWD}/../g/net/*.cpp \
 	$${PWD}/../g/sys/procinfo/*.cpp \
@@ -10,6 +11,7 @@ SOURCES += \
 HEADERS += \
 	$${PWD}/../g/base/*.h \
 	$${PWD}/../g/base/event/*.h \
+	$${PWD}/../g/base/prop/*.h \
 	$${PWD}/../g/log/*.h \
 	$${PWD}/../g/net/*.h \
 	$${PWD}/../g/sys/procinfo/*.h \
