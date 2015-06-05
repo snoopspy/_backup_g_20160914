@@ -19,6 +19,5 @@ clean:
 distclean: clean
 	cd lib && make distclean; true
 	cd exam && make distclean; true
-	cd test && make distclean; true
 	find -type f -name '*.a'        -delete
 	find -type f -name 'Makefile*'  -delete
