@@ -1,15 +1,12 @@
-.PHONY: all lib exam test clean distclean
+.PHONY: all lib exam clean distclean
 
-all: lib exam test
+all: lib exam
 
 lib:
 	cd lib && make && cd ..
 
 exam:
 	cd exam && qmake && make && cd ..
-
-test:
-	cd test && qmake && make && cd ..
 
 clean:
 	cd lib && make clean; true

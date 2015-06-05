@@ -23,6 +23,7 @@ CONFIG(debug, debug|release) G_NAME = $${G_NAME}_d
 #------------------------------------------------------------------------------
 G_DIR = $${PWD}
 INCLUDEPATH += $${G_DIR}
+INCLUDEPATH += $${G_DIR}/g
 !CONFIG(G_BUILD) {
 	PRE_TARGETDEPS *= $${G_DIR}/lib/lib$${G_NAME}.a
 	LIBS *= -L$${G_DIR}/lib -l$${G_NAME}
