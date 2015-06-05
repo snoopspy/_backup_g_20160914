@@ -1,3 +1,5 @@
+#ifdef QT_GUI_LIB
+
 #include <QDebug> // gilgil temp
 #include <QGridLayout>
 
@@ -59,3 +61,5 @@ void GPropEditor::setObject(QObject* object)
     }
   }
 }
+
+#endif // QT_GUI_LIB

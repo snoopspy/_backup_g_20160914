@@ -1,3 +1,5 @@
+#ifdef QT_GUI_LIB
+
 #include "gpropitemfactory.h"
 #include "gpropitem_base.h"
 #include "gpropitem_bool.h"
@@ -115,3 +117,5 @@ GPropItemFactory& GPropItemFactory::instance()
   static GPropItemFactoryInstance factory;
   return factory;
 }
+
+#endif // QT_GUI_LIB

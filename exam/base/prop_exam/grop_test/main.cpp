@@ -7,9 +7,9 @@
 
 QObject* createObject()
 {
-  //QObject* res = new NetClient;
+  QObject* res = new NetClient;
   //QObject* res = new QLineEdit;
-  QObject* res = new MyObj;
+  //QObject* res = new MyObj;
 
   res->setObjectName("myName");
   return res;
