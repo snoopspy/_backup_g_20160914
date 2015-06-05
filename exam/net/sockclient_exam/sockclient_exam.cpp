@@ -3,7 +3,6 @@
 #include <gflags/gflags.h>
 #include <glog/logging.h>
 #include <GErr>
-#include <GEvent>
 #include <GSock>
 
 DEFINE_bool(ip6, false, "use ip6");
