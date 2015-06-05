@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <cassert>
+#include <assert.h>
 #include <event2/util.h>
 #include "geventbase.h"
 

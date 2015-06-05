@@ -10,10 +10,11 @@
 
 #pragma once
 
-#include "gnet.h"
+#include "base/gioobj.h"
 
 // ----------------------------------------------------------------------------
-// GNetClient
+// GTcpSession
 // ----------------------------------------------------------------------------
-struct GNetClient : GNet {
+struct GTcpSession : GIOObj {
+
 };

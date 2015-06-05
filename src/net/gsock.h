@@ -11,6 +11,7 @@
 #pragma once
 
 #include <unistd.h> // for close
+#include "base/gerr.h"
 #include "gsockaddr.h"
 
 // ----------------------------------------------------------------------------
@@ -40,7 +41,13 @@ struct GSock {
 
   bool connect(GSockAddr* sockAddr, socklen_t addrLen = sizeof(GSockAddr)) {
     int res = ::connect(*this, &sockAddr->addr_, addrLen);
-    return  res != -1;
+    if (res == -1) {
+      if (GLastErr().code() == EINPROGRESS)
+        return true;
+      else
+        return false;
+    }
+    return true;
   }
 
   bool listen(int backLog) {

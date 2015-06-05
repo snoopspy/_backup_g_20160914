@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <cstring>
+#include <string.h>
 #include <ostream>
 #include <string>
 
@@ -27,6 +27,8 @@ namespace g {
 // GErr
 // ----------------------------------------------------------------------------
 struct GErr {
+  virtual ~GErr() {}
+
   virtual const char* name() = 0;
   virtual int code() = 0;
   virtual std::string msg() = 0;

@@ -19,5 +19,13 @@
 class GObj : public QObject {
 public:
   GObj(GObj *parent = nullptr) : QObject(parent) {}
-  GErr* err;
+
+  ~GObj() override {
+    if (err != nullptr) {
+      delete err;
+      err = nullptr;
+    }
+  }
+
+  GErr* err{nullptr};
 };

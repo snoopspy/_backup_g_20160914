@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <cstring>
+#include <string.h>
 #include <netinet/in.h>
 
 // ----------------------------------------------------------------------------

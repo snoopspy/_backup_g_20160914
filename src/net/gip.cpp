@@ -6,19 +6,24 @@
 // ----------------------------------------------------------------------------
 // GIp
 // ----------------------------------------------------------------------------
-GIp::GIp(const char* s) {
+GIp::GIp(QString s) {
+  operator =(s);
+}
+
+GIp GIp::operator = (QString s) {
   uint32_t ui;
-  int res = inet_pton(AF_INET, s, &ui);
+  int res = inet_pton(AF_INET, qPrintable(s), &ui);
   switch (res) {
     case 0:
       LOG(ERROR) << "inet_pton return zero s=" << s;
       break;
-    case 1:
+    case 1: // succeed
       ip_ = ntohl(ui);
-      return; // succeed
+      break;
     default:
       LOG(ERROR) << "inet_pton return " << res << " " << GLastErr();
   }
+  return *this;
 }
 
 GIp::operator QString() const {
@@ -44,11 +49,11 @@ TEST(GIp, test) {
   QString s = ip;
   EXPECT_EQ(s, "127.0.0.1");
 
-  ip = "1.2.3.4";
-  EXPECT_EQ(ip, 0x01020304);
+  ip = QString("255.255.255.255");
+  EXPECT_EQ(ip, 0xFFFFFFFF);
 
-  ip = "wrong";
-  EXPECT_EQ(ip, 0x01020304);
+  ip = QString("wrong");
+  EXPECT_EQ(ip, 0xFFFFFFFF); // previous value
 }
 
 #endif // GTEST
