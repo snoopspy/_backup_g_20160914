@@ -18,9 +18,9 @@ void runTcpClient() {
 
   GSock sock;
   if (ip4) {
-    if (!sock.socket(AF_INET, SOCK_STREAM | O_NONBLOCK, 0)) { LOG(ERROR) << GLastErr(); return; }
+    if (!sock.socket(AF_INET, SOCK_STREAM, 0)) { LOG(ERROR) << GLastErr(); return; }
   } else {
-    if (!sock.socket(AF_INET6, SOCK_STREAM | O_NONBLOCK, 0)) { LOG(ERROR) << GLastErr(); return; }
+    if (!sock.socket(AF_INET6, SOCK_STREAM, 0)) { LOG(ERROR) << GLastErr(); return; }
   }
 
   GSockAddr bindAddr;
