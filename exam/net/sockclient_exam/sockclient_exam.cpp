@@ -36,7 +36,7 @@ void runTcpClient() {
   } else {
     connAddr.init(AF_INET6, htons(FLAGS_port), 0, in6addr_loopback, 0);
   }
-  if (!sock.connect(&connAddr)) LOG(ERROR) << GLastErr();
+  if (!sock.connect(&connAddr)) { LOG(ERROR) << GLastErr(); return; }
 
   ssize_t writeLen = sock.send(FLAGS_msg.c_str(), FLAGS_msg.length());
   if (writeLen == 0 || writeLen == -1) return;
