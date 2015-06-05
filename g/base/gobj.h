@@ -11,7 +11,7 @@
 #pragma once
 
 #include <QObject>
-#include "base/gerr.h"
+#include "g/base/gerr.h"
 
 // ----------------------------------------------------------------------------
 // GObj

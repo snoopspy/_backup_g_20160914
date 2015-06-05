@@ -1,17 +1,17 @@
 SOURCES += \
-	$${PWD}/../src/base/*.cpp \
-	$${PWD}/../src/base/event/*.cpp \
-	$${PWD}/../src/log/*.cpp \
-	$${PWD}/../src/net/*.cpp \
-	$${PWD}/../src/sys/procinfo/*.cpp \
-	$${PWD}/../src/sys/stacktrace/*.cpp \
-	$${PWD}/../src/sys/timediff/*.cpp
+	$${PWD}/../g/base/*.cpp \
+	$${PWD}/../g/base/event/*.cpp \
+	$${PWD}/../g/log/*.cpp \
+	$${PWD}/../g/net/*.cpp \
+	$${PWD}/../g/sys/procinfo/*.cpp \
+	$${PWD}/../g/sys/stacktrace/*.cpp \
+	$${PWD}/../g/sys/timediff/*.cpp
 
 HEADERS += \
-	$${PWD}/../src/base/*.h \
-	$${PWD}/../src/base/event/*.h \
-	$${PWD}/../src/log/*.h \
-	$${PWD}/../src/net/*.h \
-	$${PWD}/../src/sys/procinfo/*.h \
-	$${PWD}/../src/sys/stacktrace/*.h \
-	$${PWD}/../src/sys/timediff/*.h
+	$${PWD}/../g/base/*.h \
+	$${PWD}/../g/base/event/*.h \
+	$${PWD}/../g/log/*.h \
+	$${PWD}/../g/net/*.h \
+	$${PWD}/../g/sys/procinfo/*.h \
+	$${PWD}/../g/sys/stacktrace/*.h \
+	$${PWD}/../g/sys/timediff/*.h

@@ -11,7 +11,7 @@
 #pragma once
 
 #include <unistd.h> // for close
-#include "base/gerr.h"
+#include "g/base/gerr.h"
 #include "gsockaddr.h"
 
 // ----------------------------------------------------------------------------

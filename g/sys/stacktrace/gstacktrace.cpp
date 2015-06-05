@@ -175,7 +175,7 @@ GStackTrace& GStackTrace::instance() {
 #include <thread>
 #include <glog/logging.h>
 #include <gtest/gtest.h>
-#include <GStackTrace>
+#include "gstacktrace.h"
 
 void foo1() {
   GStackTrace::instance().dump();

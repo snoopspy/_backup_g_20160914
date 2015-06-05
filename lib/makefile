@@ -45,3 +45,7 @@ clean:
 
 distclean: clean
 	rm -rf *.a
+	rm -rf ../bin/g_d_test
+	rm -rf ../bin/g_gui_d_test
+	rm -rf ../bin/g_test
+	rm -rf ../bin/g_gui_test

@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "base/gobj.h"
+#include "g/base/gobj.h"
 
 // ----------------------------------------------------------------------------
 // GNet

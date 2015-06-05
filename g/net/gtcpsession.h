@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "base/gioobj.h"
+#include "g/base/gioobj.h"
 
 // ----------------------------------------------------------------------------
 // GTcpSession
