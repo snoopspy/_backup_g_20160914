@@ -1,4 +1,4 @@
-all: debug release debug_test release_test
+all: debug release debug_test release_test libg_d libg_gui_d libg libg_gui g_d_test g_gui_d_test g_test g_gui_test
 
 debug: libg_d libg_gui_d
 
