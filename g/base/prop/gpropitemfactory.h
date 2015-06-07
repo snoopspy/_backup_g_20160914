@@ -18,8 +18,7 @@
 // ----------------------------------------------------------------------------
 // GPropItemFactory
 // ----------------------------------------------------------------------------
-class GPropItemFactory : public QList<GPropItemCreator*>
-{
+class GPropItemFactory : public QList<GPropItemCreator*> {
 public:
   GPropItem* createItem(GPropItemParam param);
   static GPropItemFactory& instance();

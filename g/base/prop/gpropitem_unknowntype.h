@@ -18,29 +18,24 @@
 // ----------------------------------------------------------------------------
 // GPropItem_UnknownType
 // ----------------------------------------------------------------------------
-class GPropItem_UnknownType : public GPropItem
-{
+class GPropItem_UnknownType : public GPropItem {
   Q_OBJECT
 
 public:
-  GPropItem_UnknownType(GPropItemParam param) : GPropItem(param)
-  {
+  GPropItem_UnknownType(GPropItemParam param) : GPropItem(param) {
     this->setBackground(1, QBrush(Qt::lightGray));
   }
 
-  void update() override
-  {
+  void update() override {
   }
 };
 
 // ----------------------------------------------------------------------------
 // GPropItemCreator_UnknownType
 // ----------------------------------------------------------------------------
-class GPropItemCreator_UnknownType : public GPropItemCreator
-{
+class GPropItemCreator_UnknownType : public GPropItemCreator {
 public:
-  GPropItem* createItem(GPropItemParam param) override
-  {
+  GPropItem* createItem(GPropItemParam param) override {
     return new GPropItem_UnknownType(param);
   }
 };

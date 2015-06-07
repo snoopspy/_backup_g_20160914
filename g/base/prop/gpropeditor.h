@@ -17,8 +17,7 @@
 // ----------------------------------------------------------------------------
 // GPropEditor
 // ----------------------------------------------------------------------------
-class GPropEditor : public QTreeWidget
-{
+class GPropEditor : public QTreeWidget {
   Q_OBJECT
   Q_PROPERTY(QObject* object READ object WRITE setObject)
 

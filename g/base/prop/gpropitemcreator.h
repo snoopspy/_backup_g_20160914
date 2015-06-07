@@ -19,8 +19,7 @@
 // ----------------------------------------------------------------------------
 // GPropItemCreator
 // ----------------------------------------------------------------------------
-class GPropItemCreator
-{
+class GPropItemCreator {
 public:
   virtual GPropItem* createItem(GPropItemParam param) = 0;
 };

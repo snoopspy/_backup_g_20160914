@@ -9,11 +9,9 @@
 // ----------------------------------------------------------------------------
 // GPropItemFactoryInstance
 // ----------------------------------------------------------------------------
-class GPropItemFactoryInstance : public GPropItemFactory
-{
+class GPropItemFactoryInstance : public GPropItemFactory {
 public:
-  GPropItemFactoryInstance()
-  {
+  GPropItemFactoryInstance() {
     append(new GPropItemCreator_Bool);
     append(new GPropItemCreator_Base(QMetaType::Int));
     append(new GPropItemCreator_Base(QMetaType::UInt));
@@ -91,8 +89,7 @@ public:
 
         UserType = QMetaType::User
    */
-  virtual ~GPropItemFactoryInstance()
-  {
+  virtual ~GPropItemFactoryInstance() {
     // memory leak // gilgil temp 2105.03.18
   }
 };
@@ -100,11 +97,9 @@ public:
 // ----------------------------------------------------------------------------
 // GPropItemFactory
 // ----------------------------------------------------------------------------
-GPropItem* GPropItemFactory::createItem(GPropItemParam param)
-{
+GPropItem* GPropItemFactory::createItem(GPropItemParam param) {
   GPropItem* item = nullptr;
-  for (QList<GPropItemCreator*>::iterator it = begin(); it != end(); it++)
-  {
+  for (QList<GPropItemCreator*>::iterator it = begin(); it != end(); it++) {
     GPropItemCreator* creator = *it;
     item = creator->createItem(param);
     if (item != nullptr) break;
@@ -112,8 +107,7 @@ GPropItem* GPropItemFactory::createItem(GPropItemParam param)
   return item;
 }
 
-GPropItemFactory& GPropItemFactory::instance()
-{
+GPropItemFactory& GPropItemFactory::instance() {
   static GPropItemFactoryInstance factory;
   return factory;
 }

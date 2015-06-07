@@ -19,21 +19,18 @@
 // ----------------------------------------------------------------------------
 // GPropItem_Base
 // ----------------------------------------------------------------------------
-class GPropItem_Base : public GPropItem
-{
+class GPropItem_Base : public GPropItem {
   Q_OBJECT
 
 public:
-  GPropItem_Base(GPropItemParam param) : GPropItem(param)
-  {
+  GPropItem_Base(GPropItemParam param) : GPropItem(param) {
     lineEdit = new QLineEdit(param.treeWidget);
     lineEdit->setFrame(false);
     QObject::connect(lineEdit, SIGNAL(editingFinished()), this, SLOT(myEditingFinished()));
     param.treeWidget->setItemWidget(this, 1, lineEdit);
   }
 
-  void update() override
-  {
+  void update() override {
     lineEdit->setText(object->property(mpro.name()).toString());
   }
 
@@ -41,30 +38,19 @@ protected:
   QLineEdit* lineEdit;
 
 protected slots:
-  virtual void myEditingFinished()
-  {
-    bool res = object->setProperty(mpro.name(), QVariant::fromValue<QString>(lineEdit->text()));
-    if (!res)
-    {
-      qDebug() << QString("object->setProperty(%1, %2) return false").arg(mpro.name()).arg(lineEdit->text());
-    }
-    update();
-  }
+  virtual void myEditingFinished();
 };
 
 // ----------------------------------------------------------------------------
 // GPropItemCreator_Base
 // ----------------------------------------------------------------------------
-class GPropItemCreator_Base : public GPropItemCreator
-{
+class GPropItemCreator_Base : public GPropItemCreator {
 public:
-  GPropItemCreator_Base(int userType)
-  {
+  GPropItemCreator_Base(int userType) {
     this->userType = userType;
   }
 
-  GPropItem* createItem(GPropItemParam param) override
-  {
+  GPropItem* createItem(GPropItemParam param) override {
     if (param.mpro.userType() != userType) return nullptr;
     return new GPropItem_Base(param);
   }

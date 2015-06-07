@@ -15,19 +15,16 @@
 #include <QMetaProperty>
 #include <QTreeWidgetItem>
 
-struct GPropItemParam
-{
+struct GPropItemParam {
   QTreeWidget* treeWidget;
   QObject* object;
   QMetaProperty mpro;
 };
 
-class GPropItem : public QObject, public QTreeWidgetItem
-{
+class GPropItem : public QObject, public QTreeWidgetItem {
   Q_OBJECT
 public:
-  GPropItem(GPropItemParam param) : QTreeWidgetItem(param.treeWidget)
-  {
+  GPropItem(GPropItemParam param) : QTreeWidgetItem(param.treeWidget) {
     object = param.object;
     mpro = param.mpro;
     setText(0, mpro.name());

@@ -1,8 +1,7 @@
 #ifdef QT_GUI_LIB
 
-#include <QDebug> // gilgil temp
+#include <glog/logging.h>
 #include <QGridLayout>
-
 #include "gpropeditor.h"
 #include "gpropitem_unknowntype.h"
 #include "gpropitemfactory.h"
@@ -53,7 +52,7 @@ void GPropEditor::setObject(QObject* object)
     }
     if (item == nullptr)
     {
-      qDebug() << "item is nullptr" << mpro.typeName() << mpro.name();
+      LOG(WARNING) << "item is nullptr" << mpro.typeName() << mpro.name();
       new GPropItem_UnknownType(param);
     } else
     {

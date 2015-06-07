@@ -18,20 +18,17 @@
 // ----------------------------------------------------------------------------
 // GPropItem_Bool
 // ----------------------------------------------------------------------------
-class GPropItem_Bool : public GPropItem
-{
+class GPropItem_Bool : public GPropItem {
   Q_OBJECT
 
 public:
-  GPropItem_Bool(GPropItemParam param) : GPropItem(param)
-  {
+  GPropItem_Bool(GPropItemParam param) : GPropItem(param) {
     checkBox = new QCheckBox(param.treeWidget);
     QObject::connect(checkBox, SIGNAL(clicked(bool)), this, SLOT(myClicked(bool)));
     param.treeWidget->setItemWidget(this, 1, checkBox);
   }
 
-  void update() override
-  {
+  void update() override {
     checkBox->setChecked(object->property(mpro.name()).toBool());
   }
 
@@ -39,8 +36,7 @@ protected:
   QCheckBox* checkBox;
 
 protected slots:
-  void myClicked(bool checked)
-  {
+  void myClicked(bool checked) {
     object->setProperty(mpro.name(), checked);
     update();
   }
@@ -49,11 +45,9 @@ protected slots:
 // ----------------------------------------------------------------------------
 // GPropItemCreator_Bool
 // ----------------------------------------------------------------------------
-class GPropItemCreator_Bool : public GPropItemCreator
-{
+class GPropItemCreator_Bool : public GPropItemCreator {
 public:
-  GPropItem* createItem(GPropItemParam param) override
-  {
+  GPropItem* createItem(GPropItemParam param) override {
     if (param.mpro.userType() != QMetaType::Bool) return nullptr;
     return new GPropItem_Bool(param);
   }

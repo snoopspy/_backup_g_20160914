@@ -17,17 +17,14 @@
 // ----------------------------------------------------------------------------
 // GPropItem_QChar
 // ----------------------------------------------------------------------------
-class GPropItem_QChar : public GPropItem_Base
-{
+class GPropItem_QChar : public GPropItem_Base {
   Q_OBJECT
 public:
-  GPropItem_QChar(GPropItemParam param) : GPropItem_Base(param)
-  {
+  GPropItem_QChar(GPropItemParam param) : GPropItem_Base(param) {
   }
 
 protected slots:
-  void myEditingFinished() override
-  {
+  void myEditingFinished() override {
     QChar value;
     QString text = lineEdit->text();
     if (text.length() == 0) value = '\0';
@@ -40,11 +37,9 @@ protected slots:
 // ----------------------------------------------------------------------------
 // GPropItemCreator_QChar
 // ----------------------------------------------------------------------------
-class GPropItemCreator_QChar : public GPropItemCreator
-{
+class GPropItemCreator_QChar : public GPropItemCreator {
 public:
-  GPropItem* createItem(GPropItemParam param) override
-  {
+  GPropItem* createItem(GPropItemParam param) override {
     if (param.mpro.userType() != QMetaType::QChar) return nullptr;
     return new GPropItem_QChar(param);
   }
