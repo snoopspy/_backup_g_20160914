@@ -3,8 +3,7 @@
 #ifdef GTEST
 #include <gtest/gtest.h>
 
-TEST(Ip, defaultTest)
-{
+TEST(Ip, defaultTest) {
   {
     Ip ip;
   }
@@ -16,8 +15,7 @@ TEST(Ip, defaultTest)
   }
 }
 
-TEST(Ip, convTest)
-{
+TEST(Ip, convTest) {
   {
     Ip ip(1234);
   }
@@ -26,8 +24,7 @@ TEST(Ip, convTest)
   }
 }
 
-TEST(Ip, assignTest)
-{
+TEST(Ip, assignTest) {
   {
     Ip ip;
     ip = 1234;
@@ -38,8 +35,7 @@ TEST(Ip, assignTest)
   }
 }
 
-TEST(Ip, revAssignTest)
-{
+TEST(Ip, revAssignTest) {
   {
     quint32 i;
     Ip ip = 1234;

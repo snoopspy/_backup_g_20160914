@@ -4,8 +4,7 @@
 #include <QFile>
 #include <QLabel>
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
   QApplication a(argc, argv);
   GPropEditor editor;
   //editor.setGeometry(0, 0, 300, 500);

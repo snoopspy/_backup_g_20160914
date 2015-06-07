@@ -4,8 +4,7 @@
 //#include <QMetaType>
 #include <QString>
 
-class Ip
-{
+class Ip {
 public:
   Ip() { value = 0; }
 

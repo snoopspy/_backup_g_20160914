@@ -3,14 +3,12 @@
 
 #include <QObject>
 
-class MyObj : public QObject
-{
+class MyObj : public QObject {
   Q_OBJECT
   Q_PROPERTY(QChar my_ch MEMBER my_ch)
   Q_PROPERTY(int my_quint8 MEMBER my_quint8)
 public:
-  explicit MyObj(QObject *parent = 0) : QObject(parent)
-  {
+  explicit MyObj(QObject *parent = 0) : QObject(parent) {
     my_ch = 'a';
     my_quint8 = 8;
   }

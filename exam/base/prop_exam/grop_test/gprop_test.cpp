@@ -5,8 +5,7 @@
 #include "myobj.h"
 #include "netclient.h"
 
-QObject* createObject()
-{
+QObject* createObject() {
   QObject* res = new NetClient;
   //QObject* res = new QLineEdit;
   //QObject* res = new MyObj;
@@ -15,8 +14,7 @@ QObject* createObject()
   return res;
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
   QApplication a(argc, argv);
   QObject* object = createObject();
   GPropEditor editor;

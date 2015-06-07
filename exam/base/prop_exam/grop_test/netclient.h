@@ -4,8 +4,7 @@
 #include <QObject>
 #include "ip.h"
 
-class NetClient : public QObject
-{
+class NetClient : public QObject {
   Q_OBJECT
   Q_PROPERTY(QString host MEMBER host)
   Q_PROPERTY(QString ip MEMBER ip)
