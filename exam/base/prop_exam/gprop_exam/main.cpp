@@ -1,5 +1,4 @@
 #include <QApplication>
-#include <QDebug>
 #include <GPropEditor>
 
 #include <QFile>
@@ -8,7 +7,6 @@
 int main(int argc, char *argv[])
 {
   QApplication a(argc, argv);
-  qSetMessagePattern("%{type} %{threadid} (%{function} %{line}): %{message}");
   GPropEditor editor;
   //editor.setGeometry(0, 0, 300, 500);
 

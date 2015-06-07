@@ -18,7 +18,6 @@ QObject* createObject()
 int main(int argc, char *argv[])
 {
   QApplication a(argc, argv);
-  qSetMessagePattern("%{file}(%{line}): %{message}");
   QObject* object = createObject();
   GPropEditor editor;
   editor.setObject(object);

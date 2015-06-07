@@ -12,7 +12,6 @@
 
 #ifdef QT_GUI_LIB
 
-#include <QDebug> // gilgil temp 2015.03.24
 #include <QLineEdit>
 #include "gpropitemcreator.h"
 
