@@ -19,7 +19,8 @@ namespace g {
     OK = 0,
     FAIL = -1,
     UNKNOWN = 1024,
-    NOT_SUPPORTED
+    NOT_SUPPORTED,
+    VIRTUAL_FUNCTION_CALL
   };
 }
 
