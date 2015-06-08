@@ -31,8 +31,8 @@ public:
   bool close() override;
 
   QString localIp;
-  quint16 localPort {0};
+  quint16 localPort{0};
   QString host;
-  quint16 port {0};
+  quint16 port{0};
   GTcpSession* tcpSession;
 };

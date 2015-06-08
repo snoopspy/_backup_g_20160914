@@ -25,7 +25,7 @@ namespace GTimeDiffTimeGetTime_ {
 
   typedef DWORD Diff;
 
-  struct Timer   {
+  struct Timer {
     Clock now() { return timeGetTime(); }
   };
 }
