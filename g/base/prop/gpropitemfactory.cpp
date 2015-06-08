@@ -14,6 +14,10 @@ public:
   GPropItemFactoryInstance() {
     append(new GPropItemCreator_Bool);
 
+    append(new GPropItemCreator_Base(QMetaType::Char));
+    append(new GPropItemCreator_Base(QMetaType::UChar));
+    append(new GPropItemCreator_Base(QMetaType::Short));
+    append(new GPropItemCreator_Base(QMetaType::UShort));
     append(new GPropItemCreator_Base(QMetaType::Int));
     append(new GPropItemCreator_Base(QMetaType::UInt));
     append(new GPropItemCreator_Base(QMetaType::LongLong));

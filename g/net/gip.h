@@ -11,6 +11,7 @@
 #pragma once
 
 #include <QString>
+#include "base/prop/gprop.h"
 
 // ----------------------------------------------------------------------------
 // GIp
