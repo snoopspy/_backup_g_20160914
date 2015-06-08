@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include "gip.h"
 #include "gnetclient.h"
 #include "gtcpsession.h"
 
@@ -19,23 +18,21 @@
 // ----------------------------------------------------------------------------
 struct GTcpClient : GNetClient {
   Q_OBJECT
-  Q_PROPERTY(QString localIp MEMBER localIp_)
-  Q_PROPERTY(quint16 localPort MEMBER localPort_)
-  Q_PROPERTY(QString host MEMBER host_)
-  Q_PROPERTY(quint16 port MEMBER port_)
+  Q_PROPERTY(QString localIp MEMBER localIp)
+  Q_PROPERTY(quint16 localPort MEMBER localPort)
+  Q_PROPERTY(QString host MEMBER host)
+  Q_PROPERTY(quint16 port MEMBER port)
 
 public:
   GTcpClient(GObj *parent = nullptr);
   ~GTcpClient() override;
 
-public:
   bool open() override;
   bool close() override;
 
-public:
-  GIp localIp_ {0};
-  uint16_t localPort_ {0};
-  QString host_;
-  uint16_t port_ {0};
-  GTcpSession* tcpSession_;
+  QString localIp;
+  quint16 localPort {0};
+  QString host;
+  quint16 port {0};
+  GTcpSession* tcpSession;
 };

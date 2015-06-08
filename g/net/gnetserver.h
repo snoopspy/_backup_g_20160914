@@ -10,18 +10,11 @@
 
 #pragma once
 
-#include <QObject>
-#include "g/base/gerr.h"
+#include "gnet.h"
 
 // ----------------------------------------------------------------------------
-// GObj
+// GNetServer
 // ----------------------------------------------------------------------------
-struct GObj : public QObject {
-  GObj(GObj *parent = nullptr) : QObject(parent) {}
-  ~GObj() override;
-
-  virtual bool open();
-  virtual bool close();
-
-  GErr* err{nullptr};
+struct GNetServer : GNet {
+  GNetServer(GObj *parent = nullptr) : GNet(parent) {}
 };
