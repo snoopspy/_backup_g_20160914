@@ -16,7 +16,7 @@
 // ----------------------------------------------------------------------------
 // GObj
 // ----------------------------------------------------------------------------
-class GObj : public QObject {
+struct GObj : public QObject {
 public:
   GObj(GObj *parent = nullptr) : QObject(parent) {}
   ~GObj() override;
