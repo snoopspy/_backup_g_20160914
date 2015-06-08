@@ -10,7 +10,7 @@ GIp::GIp(QString s) {
   operator =(s);
 }
 
-GIp GIp::operator = (QString s) {
+GIp& GIp::operator = (QString s) {
   uint32_t ui;
   int res = inet_pton(AF_INET, qPrintable(s), &ui);
   switch (res) {

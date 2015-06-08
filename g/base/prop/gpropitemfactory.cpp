@@ -13,15 +13,16 @@ class GPropItemFactoryInstance : public GPropItemFactory {
 public:
   GPropItemFactoryInstance() {
     append(new GPropItemCreator_Bool);
+
     append(new GPropItemCreator_Base(QMetaType::Int));
     append(new GPropItemCreator_Base(QMetaType::UInt));
     append(new GPropItemCreator_Base(QMetaType::LongLong));
     append(new GPropItemCreator_Base(QMetaType::ULongLong));
     append(new GPropItemCreator_Base(QMetaType::Double));
+
     append(new GPropItemCreator_QChar);
 
     append(new GPropItemCreator_Base(QMetaType::QString));
-
   }
 
   /*

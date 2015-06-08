@@ -4,11 +4,13 @@
 #include <QLineEdit>
 #include "myobj.h"
 #include "netclient.h"
+#include <GTcpClient>
 
 QObject* createObject() {
-  QObject* res = new NetClient;
+  //QObject* res = new NetClient;
   //QObject* res = new QLineEdit;
   //QObject* res = new MyObj;
+  QObject* res = new GTcpClient;
 
   res->setObjectName("myName");
   return res;

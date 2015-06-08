@@ -22,11 +22,11 @@ public:
   GIp(const uint32_t ip) : ip_(ip) {}
   GIp(const QString s);
 
-  GIp operator = (GIp& rhs) { ip_ = rhs.ip_; return *this; }
-  GIp operator = (uint32_t ip) { ip_ = ip; return *this;}
-  GIp operator = (QString s);
+  GIp& operator = (const GIp& rhs) { ip_ = rhs.ip_; return *this; }
+  GIp& operator = (const uint32_t ip) { ip_ = ip; return *this;}
+  GIp& operator = (const QString s);
 
-  operator uint32_t() const { return ip_; }
+  explicit operator uint32_t() const { return ip_; }
   operator QString() const;
 
   void clear() { ip_ = 0; }

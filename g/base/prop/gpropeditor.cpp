@@ -44,7 +44,7 @@ void GPropEditor::setObject(QObject* object) {
       item = factory.createItem(param);
     }
     if (item == nullptr) {
-      LOG(WARNING) << "item is nullptr" << mpro.typeName() << mpro.name();
+      LOG(WARNING) << "item is nullptr typeName='" << mpro.typeName() <<"' name='"<< mpro.name() << "'";
       new GPropItem_UnknownType(param);
     } else {
       item->update();
