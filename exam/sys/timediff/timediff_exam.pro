@@ -1,6 +1,6 @@
 TEMPLATE = subdirs
 SUBDIRS += \
-  benchmark_test \
-	dosomething \
-  node_pointer_test \
-	simple
+  timediff_benchmark_test \
+	timediff_dosomething \
+  timediff_node_pointer_test \
+	timediff_simple
