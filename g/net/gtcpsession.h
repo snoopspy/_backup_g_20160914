@@ -18,14 +18,24 @@
 // ----------------------------------------------------------------------------
 struct GTcpSession : GIOObj {
   GTcpSession(GObj *parent = nullptr) : GIOObj(parent) {}
+  GTcpSession(GObj *parent, GSock sock) : GIOObj(parent) , sock_(sock) {}
+  ~GTcpSession() override { close(); }
+
+  bool open() override {
+    return sock_ != -1;
+  }
+
+  bool close() override {
+    return sock_.close();
+  }
 
   ssize_t read(char *buf, ssize_t len) override {
-    return sock.recv(buf, len);
+    return sock_.recv(buf, len);
   }
 
   ssize_t write(const char *buf, ssize_t len) override {
-    return sock.send(buf, len);
+    return sock_.send(buf, len);
   }
 
-  GSock sock;
+  GSock sock_;
 };

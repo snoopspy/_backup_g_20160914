@@ -55,8 +55,10 @@ bool GTcpServer::bind() {
   for (struct addrinfo* info = infos; info != nullptr; info = info->ai_next) {
     if (!acceptSock_.socket(info->ai_family, info->ai_socktype, info->ai_protocol))
       continue;
-    if (!acceptSock_.bind(info->ai_addr, info->ai_addrlen))
+    if (!acceptSock_.bind(info->ai_addr, info->ai_addrlen)) {
+      acceptSock_.close();
       continue;
+    }
     succeed = true;
     break;
   }
@@ -80,7 +82,7 @@ GSock GTcpServer::accept(GSockAddr *sockAddr, socklen_t *addrLen) {
 }
 
 bool GTcpServer::acceptClose() {
-  DLOG(INFO) << "bef acceptSock_.close()"; // gilgil temp
+  DLOG(INFO) << "bef acceptSock_.close() sock=" << acceptSock_; // gilgil temp
   bool res = acceptSock_.close();
   DLOG(INFO) << "aft acceptSock_.close()" << res; // gilgil temp
   return res;
