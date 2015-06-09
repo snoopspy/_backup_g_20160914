@@ -28,6 +28,7 @@ GIp::operator QString() const {
   const char* res = inet_ntop(AF_INET, &ui, s, INET_ADDRSTRLEN);
   if (res == nullptr) {
     LOG(ERROR) << "inet_ntop return null " << GLastErr();
+    return QString();
   }
   return QString{s};
 }
