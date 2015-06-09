@@ -3,8 +3,8 @@
 
 int main() {
   GTcpClient tcpClient;
-  tcpClient.host = "127.0.0.1";
-  tcpClient.port = 10065;
+  tcpClient.host_ = "127.0.0.1";
+  tcpClient.port_ = 10065;
 
   if (!tcpClient.open()) {
     LOG(ERROR) << tcpClient.err;

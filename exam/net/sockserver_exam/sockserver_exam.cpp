@@ -7,7 +7,7 @@ DEFINE_bool(ip6, false, "use ip6");
 DEFINE_bool(ip6only, false, "use ip6 only");
 DEFINE_int32(localIp, INADDR_ANY, "local ip"); // in_addr_t
 DEFINE_int32(port, 10065, "port"); // in_port_t
-DEFINE_int32(backLog, 256, "bacl log"); // int
+DEFINE_int32(backLog, 256, "back log"); // int
 DEFINE_int64(bufSize, 1024, "buffer size"); // size_t
 
 void runTcpServer() {

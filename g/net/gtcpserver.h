@@ -18,11 +18,22 @@
 // GTcpServer
 // ----------------------------------------------------------------------------
 struct GTcpServer : GNetServer {
+  Q_OBJECT
+  Q_PROPERTY(int backLog MEMBER backLog_)
+
+public:
   GTcpServer(GObj *parent = nullptr);
   ~GTcpServer() override;
 
   bool open() override;
   bool close() override;
 
-  QList<GTcpSession*> tcpSession_;
+  bool bind();
+  bool listen();
+  GSock accept(GSockAddr *sockAddr, socklen_t *addrLen);
+  bool acceptClose();
+
+  int backLog_{1024};
+  GSock acceptSock_{0};
+  QList<GTcpSession*> tcpSessions_;
 };

@@ -25,9 +25,14 @@ struct GSock {
 
   operator int() const { return sock_; }
 
-  int accept(GSockAddr *sockAddr, socklen_t *addrLen) {
+  int accept(GSockAddr *sockAddr, socklen_t *addrLen) { // default arg // gilgil temp 2015.06.09
     int res = ::accept(*this, &sockAddr->addr_, addrLen);
     return res;
+  }
+
+  bool bind(struct sockaddr* sockaddr, socklen_t addrLen = sizeof(GSockAddr)) {
+    int res = ::bind(*this, sockaddr, addrLen);
+    return  res != -1;
   }
 
   bool bind(GSockAddr* sockAddr, socklen_t addrLen = sizeof(GSockAddr)) {
