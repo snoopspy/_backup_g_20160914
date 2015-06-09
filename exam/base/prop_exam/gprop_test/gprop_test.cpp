@@ -5,6 +5,7 @@
 #include "myobj.h"
 #include "netclient.h"
 #include <GTcpClient>
+#include "g/net/gip.h"
 
 QObject* createObject() {
   //QObject* res = new NetClient;
@@ -13,6 +14,7 @@ QObject* createObject() {
   GTcpClient* res = new GTcpClient;
   res->localIp = "1.2.3.4";
 
+  GIp ip;
   res->setObjectName("myName");
   return res;
 }
