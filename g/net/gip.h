@@ -19,15 +19,18 @@ struct GIp {
 public:
   GIp() {}
   GIp(const GIp& rhs) : ip_(rhs.ip_) {}
-  GIp(const quint32 ip) : ip_(ip) {}
-  GIp(const QString s);
+  GIp(const quint32 ui) : ip_(ui) {}
+  GIp(const char* p) { operator =(p); }
+  GIp(const QString s) { operator =(s); }
 
-  GIp& operator = (const GIp& rhs) { ip_ = rhs.ip_; return *this; }
-  GIp& operator = (const quint32 ip) { ip_ = ip; return *this;}
-  GIp& operator = (const QString s);
+  GIp& operator =(const GIp& rhs) { ip_ = rhs.ip_; return *this; }
+  GIp& operator =(const quint32 ui) { ip_ = ui; return *this; }
+  GIp& operator =(const char* p);
+  GIp& operator =(const QString s) { *this = qPrintable(s); return *this; }
 
-  operator quint32() const { return ip_; }
-  operator QString() const;
+  /*explicit*/ operator quint32() const { return ip_; } // default operator
+  explicit operator const char*() const { return qPrintable((QString)*this); }
+  explicit operator QString() const;
 
   void clear() { ip_ = 0; }
 
