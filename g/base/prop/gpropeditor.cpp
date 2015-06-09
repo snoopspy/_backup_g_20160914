@@ -27,6 +27,7 @@ QObject* GPropEditor::object() {
 
 void GPropEditor::setObject(QObject* object) {
   if (object == object_) return;
+  clear();
   object_ = object;
   GPropItemFactory& factory = GPropItemFactory::instance();
 
