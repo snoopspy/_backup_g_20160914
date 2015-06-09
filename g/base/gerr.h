@@ -47,7 +47,7 @@ std::ostream& operator << (std::ostream& os, GErr* err);
 // GLastErr
 // ----------------------------------------------------------------------------
 struct GLastErr : GErr {
-  GLastErr() { code_ = errno; }
+  GLastErr() : code_(errno) {}
 
   const char* name() override { return "LastErr"; }
   int code() override { return code_; }
@@ -63,9 +63,9 @@ protected:
 // GStdErr
 // ----------------------------------------------------------------------------
 struct GStdErr : GErr {
-  GStdErr() { code_ = g::OK; }
-  GStdErr(int code) { code_ = code; }
-  GStdErr(int code, QString msg) { code_ = code; msg_ = msg; }
+  GStdErr() :code_(g::OK) {}
+  GStdErr(int code) : code_(code) {}
+  GStdErr(int code, QString msg) : code_(code), msg_(msg) {}
 
   const char* name() override { return "StdErr"; }
   int code() override { return code_; }
