@@ -11,7 +11,7 @@ GIp::GIp(QString s) {
 }
 
 GIp& GIp::operator = (QString s) {
-  uint32_t ui;
+  quint32 ui;
   int res = inet_pton(AF_INET, qPrintable(s), &ui);
   switch (res) {
     case 0:
@@ -27,7 +27,7 @@ GIp& GIp::operator = (QString s) {
 }
 
 GIp::operator QString() const {
-  uint32_t ui = htonl(ip_);
+  quint32 ui = htonl(ip_);
   char s[INET_ADDRSTRLEN];
   const char* res = inet_ntop(AF_INET, &ui, s, INET_ADDRSTRLEN);
   if (res == nullptr) {
@@ -55,7 +55,7 @@ TEST(GIp, assignTest) {
   GIp ip2; ip2 = ip1; // operator = (const GIp& rhs)
   EXPECT_EQ(ip2, 0x7F000001);
 
-  GIp ip3; ip3 = 0x7F000001; // operator = (const uint32_t ip)
+  GIp ip3; ip3 = 0x7F000001; // operator = (const quint32 ip)
   EXPECT_EQ(ip3, 0x7F000001);
 
   GIp ip4; ip4 = "127.0.0.1"; // operator = (const QString s)
@@ -64,7 +64,7 @@ TEST(GIp, assignTest) {
 
 TEST(GIp, operatorTest) {
   GIp ip{"127.0.0.1"};
-  uint32_t ui; ui = ip; // uint32_t()
+  quint32 ui; ui = ip; // quint32()
   EXPECT_EQ(ui, 0x7F000001);
 
   QString s; s = (QString)ip; // QString()
