@@ -33,7 +33,7 @@ GIp::operator QString() const {
   if (res == nullptr) {
     LOG(ERROR) << "inet_ntop return null " << GLastErr();
   }
-  return QString(s);
+  return QString{s};
 }
 
 // ----------------------------------------------------------------------------
@@ -67,7 +67,7 @@ TEST(GIp, operatorTest) {
   quint32 ui; ui = ip; // quint32()
   EXPECT_EQ(ui, 0x7F000001);
 
-  QString s; s = (QString)ip; // QString()
+  QString s; s = ip; // QString()
   EXPECT_EQ(s, "127.0.0.1");
 }
 

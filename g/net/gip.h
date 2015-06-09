@@ -32,9 +32,19 @@ public:
   void clear() { ip_ = 0; }
 
 public:
-  bool isLocalHost() { uint8_t prefix = (ip_ & 0xFF000000) >> 24; return prefix == 0x7F;                  } // 127.*.*.*
-  bool isBroadcast() { return ip_ == 0xFFFFFFFF;                                                          } // 255.255.255.255
-  bool isMulticast() { uint8_t prefix = (ip_ & 0xFF000000) >> 24; return prefix >= 0xE0 && prefix < 0xF0; } // 224.0.0.0 ~ 239.255.255.255
+  bool isLocalHost() { // 127.*.*.*
+    quint8 prefix = (ip_ & 0xFF000000) >> 24;
+    return prefix == 0x7F;
+  }
+
+  bool isBroadcast() { // 255.255.255.255
+    return ip_ == 0xFFFFFFFF;
+  }
+
+  bool isMulticast() { // 224.0.0.0 ~ 239.255.255.255
+    quint8 prefix = (ip_ & 0xFF000000) >> 24;
+    return prefix >= 0xE0 && prefix < 0xF0;
+  }
 
 protected:
   quint32 ip_;
