@@ -10,9 +10,9 @@
 
 #pragma once
 
-#include <string.h>
+// #include <string.h> // gilgil temp 2015.06.09
 #include <ostream>
-#include <string>
+#include <QString>
 
 namespace g {
   enum {
@@ -21,6 +21,10 @@ namespace g {
     UNKNOWN = 1024,
     NOT_SUPPORTED,
     VIRTUAL_FUNCTION_CALL
+  };
+
+  enum {
+    NET_CATEGORY = 1000
   };
 }
 
@@ -32,7 +36,7 @@ struct GErr {
 
   virtual const char* name() = 0;
   virtual int code() = 0;
-  virtual std::string msg() = 0;
+  virtual QString msg() = 0;
 };
 
 std::ostream& operator << (std::ostream& os, GErr& err);
@@ -47,7 +51,7 @@ struct GLastErr : GErr {
 
   const char* name() override { return "LastErr"; }
   int code()         override { return code_; }
-  std::string msg()  override { return strerror(code_); }
+  QString msg()  override { return strerror(code_); }
 
   void setCode(int code)      { code_ = code; }
 
@@ -59,18 +63,18 @@ protected:
 // GStdErr
 // ----------------------------------------------------------------------------
 struct GStdErr : GErr {
-  GStdErr()                          { code_ = g::OK; }
-  GStdErr(int code)                  { code_ = code; }
-  GStdErr(int code, std::string msg) { code_ = code; msg_ = msg; }
+  GStdErr()                      { code_ = g::OK; }
+  GStdErr(int code)              { code_ = code; }
+  GStdErr(int code, QString msg) { code_ = code; msg_ = msg; }
 
-  const char* name() override        { return "StdErr"; }
-  int code()         override        { return code_; }
-  std::string msg()  override        { return msg_; }
+  const char* name() override    { return "StdErr"; }
+  int code()         override    { return code_; }
+  QString msg()  override        { return msg_; }
 
-  void setCode(int code)             { code_ = code; }
-  void setMsg(std::string msg)       { msg_ = msg; }
+  void setCode(int code)         { code_ = code; }
+  void setMsg(QString msg)       { msg_ = msg; }
 
 protected:
   int code_;
-  std::string msg_;
+  QString msg_;
 };

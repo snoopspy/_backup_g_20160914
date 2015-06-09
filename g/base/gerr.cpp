@@ -4,7 +4,10 @@
 // GErr
 // ----------------------------------------------------------------------------
 std::ostream& operator << (std::ostream& os, GErr& err) {
-  os << err.name() << ":" << (err.msg().empty() ? "no msg" : err.msg()) << " code=" << err.code();
+  os
+    << err.name() << ":"
+    << (err.msg().isEmpty() ? "no msg" : qPrintable(err.msg()))
+    << " code=" << err.code();
   return os;
 }
 
