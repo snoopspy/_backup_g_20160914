@@ -17,11 +17,15 @@
 // GTcpSession
 // ----------------------------------------------------------------------------
 struct GTcpSession : GIOObj {
-public:
   GTcpSession(GObj *parent = nullptr) : GIOObj(parent) {}
 
-  ssize_t read(char *buf, ssize_t len) override;
-  ssize_t write(const char *buf, ssize_t len) override;
+  ssize_t read(char *buf, ssize_t len) override {
+    return sock.recv(buf, len);
+  }
 
-  GSock sock_;
+  ssize_t write(const char *buf, ssize_t len) override {
+    return sock.send(buf, len);
+  }
+
+  GSock sock;
 };

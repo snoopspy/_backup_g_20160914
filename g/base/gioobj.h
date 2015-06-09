@@ -15,8 +15,7 @@
 // ----------------------------------------------------------------------------
 // GIOObj
 // ----------------------------------------------------------------------------
-class GIOObj : public GObj {
-public:
+struct GIOObj : GObj {
   GIOObj(GObj *parent = nullptr) : GObj(parent) {}
 
   virtual ssize_t read(char *buf, ssize_t len) = 0;

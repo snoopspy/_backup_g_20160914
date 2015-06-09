@@ -67,7 +67,7 @@ TEST(GIp, operatorTest) {
   quint32 ui; ui = ip; // quint32()
   EXPECT_EQ(ui, 0x7F000001);
 
-  QString s; s = ip; // QString()
+  QString s; s = (QString)ip; // QString()
   EXPECT_EQ(s, "127.0.0.1");
 }
 
