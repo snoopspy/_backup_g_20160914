@@ -12,7 +12,7 @@ QObject* createObject() {
   //QObject* res = new QLineEdit;
   //QObject* res = new MyObj;
   GTcpClient* res = new GTcpClient;
-  res->localIp = "1.2.3.4";
+  res->localIp_ = "1.2.3.4";
 
   GIp ip;
   res->setObjectName("myName");
