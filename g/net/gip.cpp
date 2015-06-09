@@ -6,16 +6,12 @@
 // ----------------------------------------------------------------------------
 // GIp
 // ----------------------------------------------------------------------------
-GIp::GIp(QString s) {
-  operator =(s);
-}
-
-GIp& GIp::operator = (QString s) {
+GIp& GIp::operator =(const char* p) {
   quint32 ui;
-  int res = inet_pton(AF_INET, qPrintable(s), &ui);
+  int res = inet_pton(AF_INET, p, &ui);
   switch (res) {
     case 0:
-      LOG(ERROR) << "inet_pton return zero s=" << s;
+      LOG(ERROR) << "inet_pton return zero ip=" << p;
       break;
     case 1: // succeed
       ip_ = ntohl(ui);
@@ -45,30 +41,38 @@ GIp::operator QString() const {
 TEST(GIp, ctorTest) {
   GIp ip1; // ()
   GIp ip2{ip1}; // (const GIp& rhs)
-  GIp ip3{"127.0.0.1"}; // (const QString s)
+  GIp ip3{"127.0.0.1"}; // (const char* ip)
+  GIp ip4{(QString)"127.0.0.1"}; // (const QString ip)
 }
 
 TEST(GIp, assignTest) {
   GIp ip1{"127.0.0.1"};
-  EXPECT_EQ(ip1, 0x7F000001);
+  GIp ip2;
 
-  GIp ip2; ip2 = ip1; // operator = (const GIp& rhs)
+  ip2 = ip1; // operator =(const GIp& rhs)
   EXPECT_EQ(ip2, 0x7F000001);
 
-  GIp ip3; ip3 = 0x7F000001; // operator = (const quint32 ip)
-  EXPECT_EQ(ip3, 0x7F000001);
+  ip2 = 0x7F000002; // operator =(const quint32 ip)
+  EXPECT_EQ(ip2, 0x7F000002);
 
-  GIp ip4; ip4 = "127.0.0.1"; // operator = (const QString s)
-  EXPECT_EQ(ip4, 0x7F000001);
+  ip2 = "127.0.0.3"; // operator =(const char* ip)
+  EXPECT_EQ(ip2, 0x7F000003);
+
+  ip2 = (QString)"127.0.0.4"; // operator =(const QString ip)
+  EXPECT_EQ(ip2, 0x7F000004);
 }
 
 TEST(GIp, operatorTest) {
   GIp ip{"127.0.0.1"};
-  quint32 ui; ui = ip; // quint32()
+
+  quint32 ui; ui = ip; // operator quint32()
   EXPECT_EQ(ui, 0x7F000001);
 
-  QString s; s = ip; // QString()
-  EXPECT_EQ(s, "127.0.0.1");
+  QString s1; s1 = (const char*)ip; //operator const char*()
+  EXPECT_EQ(s1, "127.0.0.1");
+
+  QString s2; s2 = (QString)ip; // operator QString()
+  EXPECT_EQ(s2, "127.0.0.1");
 }
 
 TEST(GIp, funcTest) {
