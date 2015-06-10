@@ -19,9 +19,9 @@
 struct GEventSignal : GEvent {
   GEventSignal(
     GEventBase* eventBase,
-    evutil_socket_t fd,
+    evutil_socket_t signum,
     event_callback_fn callback,
     void* arg = nullptr,
     Options options = EV_SIGNAL | EV_PERSIST)
-    : GEvent(eventBase, fd, options, callback, arg) {}
+    : GEvent(eventBase, signum, options, callback, arg) {}
 };

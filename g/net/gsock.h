@@ -26,9 +26,10 @@ struct GSock {
   operator int() const { return sock_; }
 
   int accept(GSockAddr *sockAddr, socklen_t *addrLen) { // default arg // gilgil temp 2015.06.09
-    DLOG(INFO) << "beg accept sock_=" << sock_;
-    int res = ::accept(sock_, &sockAddr->addr_, addrLen);
-    DLOG(INFO) << "aft accept sock_=" << sock_ << " res=" << res;
+    DLOG(INFO) << "bef accept sock_=" << sock_; // gilgil temp 2015.06.09
+    int res = 999;  // gilgil temp 2015.06.09
+    res = ::accept(sock_, &sockAddr->addr_, addrLen);
+    DLOG(INFO) << "aft accept sock_=" << sock_ << " res=" << res; // gilgil temp 2015.06.09
     return res;
   }
 
@@ -43,18 +44,15 @@ struct GSock {
   }
 
   bool close() {
-    DLOG(INFO) << "beg close sock_=" << sock_;
-    int sd = sock_;
-    int res = ::close(sd);
-    if (res == -1) {
-      LOG(ERROR) << GLastErr();
-    }
-    DLOG(INFO) << "aft close sock_=" << sock_ << " res=" << res;
+    int res = ::close(sock_);
     return res != -1;
   }
 
   bool connect(GSockAddr* sockAddr, socklen_t addrLen = sizeof(GSockAddr)) {
     int res = ::connect(sock_, &sockAddr->addr_, addrLen);
+    return res != -1;
+    // ----- gilgil temp 2015.06.10 -----
+    /*
     if (res == -1) {
       if (GLastErr().code() == EINPROGRESS)
         return true;
@@ -62,6 +60,8 @@ struct GSock {
         return false;
     }
     return true;
+    */
+    // ----------------------------------
   }
 
   bool listen(int backLog) {
@@ -111,7 +111,6 @@ struct GSock {
 
   bool socket(int domain, int type, int protocol) {
     sock_ = ::socket(domain, type, protocol);
-    LOG(INFO) << "sock_=" << sock_;
     return sock_ != -1;
   }
 

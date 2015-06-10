@@ -1,10 +1,9 @@
-#include <iostream>
-#include <string>
+#include <signal.h>
 #include <thread>
 #include <gflags/gflags.h>
 #include <glog/logging.h>
 #include <GTcpServer>
-#include <QThread>
+#include <GEventSignal>
 
 DEFINE_int32(family, AF_UNSPEC, "family");
 DEFINE_string(localIp, "", "localIp");
@@ -15,38 +14,38 @@ void readProc(GTcpSession* tcpSession) {
   tcpSession->close();
 }
 
-struct AcceptProc : QThread {
-  AcceptProc(GTcpServer* tcpServer) : tcpServer_(tcpServer) {}
-  GTcpServer* tcpServer_;
-protected:
-  void run() override {
-    GSockAddr acceptAddr;
-    socklen_t addrLen = sizeof(GSockAddr);
-    while (true) {
-      DLOG(INFO) << "bef accept"; // gilgil temp
-      GSock newSock = tcpServer_->accept(&acceptAddr, &addrLen);
-      DLOG(INFO) << "aft accept " << newSock; // gilgil temp
-      LOG(INFO) << "newSock=" << newSock;
-      if (newSock == -1) break;
-      GTcpSession* tcpSession = new GTcpSession(tcpServer_, newSock);
-      new std::thread(readProc, tcpSession);
-    }
-  }
-};
-
 void acceptProc(GTcpServer* tcpServer) {
   GSockAddr acceptAddr;
-  socklen_t addrLen = sizeof(GSockAddr);
   while (true) {
-    DLOG(INFO) << "bef accept"; // gilgil temp
+    socklen_t addrLen = sizeof(GSockAddr);
     GSock newSock = tcpServer->accept(&acceptAddr, &addrLen);
-    DLOG(INFO) << "aft accept " << newSock; // gilgil temp
-    LOG(INFO) << "newSock=" << newSock;
-    if (newSock == -1) break;
+    if (newSock == -1) {
+      break;
+    }
     GTcpSession* tcpSession = new GTcpSession(tcpServer, newSock);
     new std::thread(readProc, tcpSession);
   }
 }
+
+struct SignalMgr {
+  SignalMgr(GTcpServer* tcpServer) : tcpServer_(tcpServer) {}
+
+  static void callback(evutil_socket_t, short, void* arg) {
+    DLOG(INFO) << "beg callback";
+    SignalMgr* signalMgr = (SignalMgr*)arg;
+    signalMgr->tcpServer_->acceptClose();
+    signalMgr->eventSignal_.del();
+  }
+
+  static void run(SignalMgr* signalMgr) {
+    signalMgr->eventSignal_.add();
+    signalMgr->eventBase_.dispatch();
+  }
+
+  GTcpServer* tcpServer_;
+  GEventBase eventBase_;
+  GEventSignal eventSignal_{&eventBase_, SIGINT, callback, this};
+};
 
 int main(int argc, char* argv[]) {
   google::ParseCommandLineFlags(&argc, &argv, true);
@@ -60,27 +59,11 @@ int main(int argc, char* argv[]) {
     LOG(ERROR) << tcpServer.err;
     return EXIT_FAILURE;
   }
-  DLOG(INFO) << "tcpServer sock=" << tcpServer.acceptSock_;
 
-  //std::thread acceptThread(acceptProc, &tcpServer);
-  AcceptProc* acceptProc = new AcceptProc(&tcpServer);
-  acceptProc->start();
+  std::thread acceptThread(acceptProc, &tcpServer);
+  SignalMgr signalMgr{&tcpServer};
+  std::thread signalThread(SignalMgr::run, &signalMgr);
 
-  //std::cout << "Press enter to close\n";
-  //std::string s; std::getline(std::cin, s);
-  std::this_thread::sleep_for(std::chrono::seconds(2));
-  DLOG(INFO) << "111"; // gilgil temp
-
-  int sd = tcpServer.acceptSock_;
-  ::shutdown(sd, 3);
-  ::close(sd);
-
-  DLOG(INFO) << "222";
-  tcpServer.close();
-  DLOG(INFO) << "333";
-  //acceptThread.join();
-  acceptProc->wait();
-  DLOG(INFO) << "444";
-
-  return 0;
+  acceptThread.join();
+  signalThread.join();
 }
