@@ -26,11 +26,13 @@ struct GTcpSession : GIOObj {
   }
 
   bool close() override {
+    bool res = true;
     if (!sock_.shutdown())
-      return false;
+      res = false;
     if (!sock_.close())
-      return false;
-    return true;
+      res = false;
+    sock_ = -1;
+    return res;
   }
 
   ssize_t read(char *buf, ssize_t len) override {

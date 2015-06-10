@@ -30,7 +30,7 @@ public:
 
   bool bind();
   bool listen();
-  GSock accept(GSockAddr *sockAddr, socklen_t *addrLen);
+  GSock accept(GSockAddr *sockAddr = nullptr, socklen_t *addrLen = nullptr);
   bool acceptClose();
 
   int backLog_{1024};

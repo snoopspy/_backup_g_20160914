@@ -10,18 +10,24 @@ DEFINE_string(localIp, "", "localIp");
 DEFINE_int32(port, 10065, "port");
 
 void readProc(GTcpSession* tcpSession) {
-  DLOG(INFO) << "readProc " << tcpSession->sock_;
+  DLOG(INFO) << "connected";
+  while (true) {
+    char buf[1024];
+    ssize_t readLen = tcpSession->read(buf, 1023);
+    if (readLen == 0 || readLen == -1) break;
+    buf[readLen] = '\0';
+    LOG(INFO) << buf;
+    tcpSession->write(buf, readLen);
+  }
+  DLOG(INFO) << "disconnected";
   tcpSession->close();
 }
 
 void acceptProc(GTcpServer* tcpServer) {
-  GSockAddr acceptAddr;
   while (true) {
-    socklen_t addrLen = sizeof(GSockAddr);
-    GSock newSock = tcpServer->accept(&acceptAddr, &addrLen);
-    if (newSock == -1) {
+    GSock newSock = tcpServer->accept();
+    if (newSock == -1)
       break;
-    }
     GTcpSession* tcpSession = new GTcpSession(tcpServer, newSock);
     new std::thread(readProc, tcpSession);
   }

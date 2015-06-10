@@ -90,9 +90,11 @@ GSock GTcpServer::accept(GSockAddr *sockAddr, socklen_t *addrLen) {
 }
 
 bool GTcpServer::acceptClose() {
-  bool res = acceptSock_.shutdown();
-  if (!res) return false;
-  res = acceptSock_.close();
-  if (!res) return false;
-  return true;
+  bool res = true;
+  if (!acceptSock_.shutdown())
+    res = false;
+  if (!acceptSock_.close())
+    res = false;
+  acceptSock_ = -1;
+  return res;
 }
