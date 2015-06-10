@@ -25,11 +25,8 @@ struct GSock {
 
   operator int() const { return sock_; }
 
-  int accept(GSockAddr *sockAddr, socklen_t *addrLen) { // default arg // gilgil temp 2015.06.09
-    DLOG(INFO) << "bef accept sock_=" << sock_; // gilgil temp 2015.06.09
-    int res = 999;  // gilgil temp 2015.06.09
-    res = ::accept(sock_, &sockAddr->addr_, addrLen);
-    DLOG(INFO) << "aft accept sock_=" << sock_ << " res=" << res; // gilgil temp 2015.06.09
+  int accept(GSockAddr *sockAddr = nullptr, socklen_t *addrLen = nullptr) {
+    int res = ::accept(sock_, (struct sockaddr*)sockAddr, addrLen);
     return res;
   }
 
