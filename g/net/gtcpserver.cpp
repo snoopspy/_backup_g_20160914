@@ -41,7 +41,10 @@ bool GTcpServer::open() {
 bool GTcpServer::close() {
   acceptClose();
   for (GTcpSession* tcpSession: tcpSessions_) {
-    delete tcpSession;
+    tcpSession->close();
+  }
+  while (true) {
+    if (tcpSessions_.size() == 0) break;
   }
   return true;
 }
@@ -61,7 +64,7 @@ bool GTcpServer::bind() {
     &hints,
     &infos);
   if (res != 0) {
-    SET_ERR(GStdErr(res, gai_strerror(res)));
+    SET_ERR(GNetErr(res, gai_strerror(res)));
     return false;
   }
 

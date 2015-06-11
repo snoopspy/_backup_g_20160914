@@ -36,9 +36,7 @@ void acceptProc(GTcpServer* tcpServer) {
 void signalCallback(evutil_socket_t, short, void* arg) {
   DLOG(INFO) << "beg callback";
   GTcpServer* tcpServer = (GTcpServer*)arg;
-  QThread::sleep(1); // gilgil temp
   tcpServer->close();
-  QThread::sleep(1); // gilgil temp
   DLOG(INFO) << "end callback";
 }
 
@@ -55,11 +53,11 @@ int main(int argc, char* argv[]) {
     return EXIT_FAILURE;
   }
 
-  std::thread acceptThread(acceptProc, &tcpServer);
   GEventThread eventThread;
   GEventSignal eventSignal{&eventThread.eventBase_, SIGINT, signalCallback, &tcpServer, EV_SIGNAL};
   eventSignal.add();
   eventThread.start();
+  std::thread acceptThread(acceptProc, &tcpServer);
 
   acceptThread.join();
   eventThread.wait();
