@@ -8,11 +8,11 @@ GObj::~GObj() {
 }
 
 bool GObj::open() {
-  err = new GStdErr(g::VIRTUAL_FUNCTION_CALL, "virtual function call");
+  SET_ERR(err, new GStdErr(g::VIRTUAL_FUNCTION_CALL, "virtual function call"));
   return false;
 }
 
 bool GObj::close() {
-  err = new GStdErr(g::VIRTUAL_FUNCTION_CALL, "virtual function call");
+  SET_ERR(err, new GStdErr(g::VIRTUAL_FUNCTION_CALL, "virtual function call"));
   return false;
 }

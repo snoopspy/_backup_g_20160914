@@ -16,11 +16,12 @@ GTcpClient::~GTcpClient() {
 
 bool GTcpClient::open() {
   // gilgil temp 2015.06.08
-  err = new GStdErr(g::NOT_SUPPORTED, "NOT_SUPPORTED");
+  SET_ERR(err, new GStdErr(g::NOT_SUPPORTED, "NOT_SUPPORTED"));
   return false;
 }
 
 bool GTcpClient::close() {
-  err = new GStdErr(g::NOT_SUPPORTED, "NOT_SUPPORTED");
+  // gilgil temp 2015.06.08
+  SET_ERR(err, new GStdErr(g::NOT_SUPPORTED, "NOT_SUPPORTED"));
   return false;
 }
