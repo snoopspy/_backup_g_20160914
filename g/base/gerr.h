@@ -20,17 +20,15 @@ namespace g {
     FAIL = -1,
     UNKNOWN = 1000,
     NOT_SUPPORTED,
-    VIRTUAL_FUNCTION_CALL
+    VIRTUAL_FUNCTION_CALL,
+    VALUE_IS_NULL,
+    VALUE_IS_NOT_NULL
   };
 
   enum {
     NET_CATEGORY = 2000
   };
 }
-
-#define SET_ERR(ERR, VALUE) \
-  ERR = VALUE; \
-  LOG(ERROR) << ERR;
 
 // ----------------------------------------------------------------------------
 // GErr

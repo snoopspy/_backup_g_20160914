@@ -14,7 +14,7 @@ GTcpServer::~GTcpServer() {
 
 bool GTcpServer::open() {
   if (port_ == 0) {
-    SET_ERR(err, new GNetErr(g::PORT_IS_ZERO, "port is zero"));
+    SET_ERR(GNetErr(g::PORT_IS_ZERO, "port is zero"));
     return false;
   }
   if (!bind())
@@ -47,7 +47,7 @@ bool GTcpServer::bind() {
     &hints,
     &infos);
   if (res != 0) {
-    SET_ERR(err, new GStdErr(res, gai_strerror(res)));
+    SET_ERR(GStdErr(res, gai_strerror(res)));
     return false;
   }
 
@@ -74,7 +74,7 @@ bool GTcpServer::bind() {
 
   if (!succeed) {
     GLastErr lastErr;
-    SET_ERR(err, new GNetErr(lastErr.code(), lastErr.msg()));
+    SET_ERR(GNetErr(lastErr.code(), lastErr.msg()));
     return false;
   }
   return true;

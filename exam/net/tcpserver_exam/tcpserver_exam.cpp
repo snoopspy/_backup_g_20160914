@@ -1,9 +1,10 @@
-#include <signal.h>
-#include <thread>
 #include <gflags/gflags.h>
 #include <glog/logging.h>
-#include <GTcpServer>
+#include <signal.h>
+#include <thread>
+#include <QThread>
 #include <GEventSignal>
+#include <GTcpServer>
 
 DEFINE_int32(family, AF_UNSPEC, "family");
 DEFINE_string(localIp, "", "localIp");
@@ -20,7 +21,7 @@ void readProc(GTcpSession* tcpSession) {
     tcpSession->write(buf, readLen);
   }
   DLOG(INFO) << "disconnected";
-  tcpSession->close();
+  delete tcpSession;
 }
 
 void acceptProc(GTcpServer* tcpServer) {
@@ -33,19 +34,20 @@ void acceptProc(GTcpServer* tcpServer) {
   }
 }
 
-struct SignalMgr {
-  SignalMgr(GTcpServer* tcpServer) : tcpServer_(tcpServer) {}
+struct SignalThread : public QThread {
+  SignalThread(GTcpServer* tcpServer) : tcpServer_(tcpServer) {}
 
   static void callback(evutil_socket_t, short, void* arg) {
     DLOG(INFO) << "beg callback";
-    SignalMgr* signalMgr = (SignalMgr*)arg;
-    signalMgr->tcpServer_->acceptClose();
-    signalMgr->eventSignal_.del();
+    SignalThread* signalThread = (SignalThread*)arg;
+    signalThread->tcpServer_->close();
+    signalThread->eventSignal_.del();
+    DLOG(INFO) << "end callback";
   }
 
-  static void run(SignalMgr* signalMgr) {
-    signalMgr->eventSignal_.add();
-    signalMgr->eventBase_.dispatch();
+  void run() override {
+    eventSignal_.add();
+    eventBase_.dispatch();
   }
 
   GTcpServer* tcpServer_;
@@ -67,9 +69,9 @@ int main(int argc, char* argv[]) {
   }
 
   std::thread acceptThread(acceptProc, &tcpServer);
-  SignalMgr signalMgr{&tcpServer};
-  std::thread signalThread(SignalMgr::run, &signalMgr);
+  SignalThread signalThread{&tcpServer};
+  signalThread.start();
 
   acceptThread.join();
-  signalThread.join();
+  signalThread.wait();
 }
