@@ -2,8 +2,8 @@
 #include <glog/logging.h>
 #include <signal.h>
 #include <thread>
-#include <QThread>
 #include <GEventSignal>
+#include <GEventThread>
 #include <GTcpServer>
 
 DEFINE_int32(family, AF_UNSPEC, "family");
@@ -34,26 +34,12 @@ void acceptProc(GTcpServer* tcpServer) {
   }
 }
 
-struct SignalThread : public QThread {
-  SignalThread(GTcpServer* tcpServer) : tcpServer_(tcpServer) {}
-
-  static void callback(evutil_socket_t, short, void* arg) {
-    DLOG(INFO) << "beg callback";
-    SignalThread* signalThread = (SignalThread*)arg;
-    signalThread->tcpServer_->close();
-    signalThread->eventSignal_.del();
-    DLOG(INFO) << "end callback";
-  }
-
-  void run() override {
-    eventSignal_.add();
-    eventBase_.dispatch();
-  }
-
-  GTcpServer* tcpServer_;
-  GEventBase eventBase_;
-  GEventSignal eventSignal_{&eventBase_, SIGINT, callback, this};
-};
+void signalCallback(evutil_socket_t, short, void* arg) {
+  DLOG(INFO) << "beg callback";
+  GTcpServer* tcpServer = (GTcpServer*)arg;
+  tcpServer->close();
+  DLOG(INFO) << "end callback";
+}
 
 int main(int argc, char* argv[]) {
   google::ParseCommandLineFlags(&argc, &argv, true);
@@ -69,9 +55,11 @@ int main(int argc, char* argv[]) {
   }
 
   std::thread acceptThread(acceptProc, &tcpServer);
-  SignalThread signalThread{&tcpServer};
-  signalThread.start();
+  GEventThread eventThread;
+  GEventSignal eventSignal{&eventThread.eventBase_, SIGINT, signalCallback, &tcpServer, EV_SIGNAL};
+  eventSignal.add();
+  eventThread.start();
 
   acceptThread.join();
-  signalThread.wait();
+  eventThread.wait();
 }
