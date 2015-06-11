@@ -3,8 +3,15 @@
 // ----------------------------------------------------------------------------
 // GEventThread
 // ----------------------------------------------------------------------------
+bool GEventThread::close(bool wait) {
+  if (!GThread::close(wait))
+    return false;
+  int res = eventBase_.loopbreak();
+  return res == 0;
+}
+
 void GEventThread::run() {
-  while (true) {
+  while (active()) {
     int res = eventBase_.dispatch();
     if (res == 0) // succeed
       break;

@@ -10,19 +10,18 @@
 
 #pragma once
 
-#include "geventbase.h"
-#include "g/base/gthread.h"
+#include <QThread>
 
 // ----------------------------------------------------------------------------
-// GEventThread
+// GThread
 // ----------------------------------------------------------------------------
-struct GEventThread : GThread {
-  bool close(bool wait = true) override;
+struct GThread : QThread {
+  bool active() { return active_; }
 
-  GEventBase eventBase_;
-  bool terminateOnNoEvents_{false};
-  unsigned long noEventTimeout{1000}; // msec
+  virtual bool open();
+  virtual bool close(bool wait = true);
 
-protected:
-  void run() override;
+private:
+  bool active_{false};
+
 };
