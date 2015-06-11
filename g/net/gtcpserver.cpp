@@ -19,7 +19,6 @@ struct GTcpServerSession : GTcpSession {
 // GTcpServer
 // ----------------------------------------------------------------------------
 GTcpServer::GTcpServer(GObj *parent) : GNetServer(parent) {
-
 }
 
 GTcpServer::~GTcpServer() {

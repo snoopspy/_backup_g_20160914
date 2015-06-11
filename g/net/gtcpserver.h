@@ -34,6 +34,6 @@ public:
   bool acceptClose();
 
   int backLog_{1024};
-  GSock acceptSock_{0};
+  GSock acceptSock_{-1};
   QSet<GTcpSession*> tcpSessions_;
 };

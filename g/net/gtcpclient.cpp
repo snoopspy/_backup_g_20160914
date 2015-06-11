@@ -4,10 +4,11 @@
 // GTcpClient
 // ----------------------------------------------------------------------------
 GTcpClient::GTcpClient(GObj *parent) : GNetClient(parent) {
-  tcpSession_ = new GTcpSession(this);
+  tcpSession_ = new GTcpSession;
 }
 
 GTcpClient::~GTcpClient() {
+  close();
   if (tcpSession_ != nullptr) {
     delete tcpSession_;
     tcpSession_ = nullptr;
