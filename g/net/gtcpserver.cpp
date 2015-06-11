@@ -2,6 +2,20 @@
 #include "gtcpserver.h"
 
 // ----------------------------------------------------------------------------
+// GTcpServerSession
+// ----------------------------------------------------------------------------
+struct GTcpServerSession : GTcpSession {
+  GTcpServerSession(GTcpServer* tcpServer, GSock sock) :
+    GTcpSession(sock), tcpServer_(tcpServer) {}
+
+  ~GTcpServerSession() override {
+    tcpServer_->tcpSessions_.remove(this);
+  }
+
+  GTcpServer* tcpServer_;
+};
+
+// ----------------------------------------------------------------------------
 // GTcpServer
 // ----------------------------------------------------------------------------
 GTcpServer::GTcpServer(GObj *parent) : GNetServer(parent) {
@@ -84,9 +98,14 @@ bool GTcpServer::listen() {
   return acceptSock_.listen(backLog_);
 }
 
-GSock GTcpServer::accept(GSockAddr *sockAddr, socklen_t *addrLen) {
+GTcpSession* GTcpServer::accept(GSockAddr *sockAddr, socklen_t *addrLen) {
   GSock newSock = acceptSock_.accept(sockAddr, addrLen);
-  return newSock;
+  if (newSock == -1)
+    return nullptr;
+
+  GTcpSession* newSession = new GTcpServerSession(this, newSock);
+  tcpSessions_.insert(newSession);
+  return newSession;
 }
 
 bool GTcpServer::acceptClose() {

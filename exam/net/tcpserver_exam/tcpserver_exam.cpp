@@ -26,18 +26,19 @@ void readProc(GTcpSession* tcpSession) {
 
 void acceptProc(GTcpServer* tcpServer) {
   while (true) {
-    GSock newSock = tcpServer->accept();
-    if (newSock == -1)
+    GTcpSession* newSession = tcpServer->accept();
+    if (newSession == nullptr)
       break;
-    GTcpSession* tcpSession = new GTcpSession(tcpServer, newSock);
-    new std::thread(readProc, tcpSession);
+    new std::thread(readProc, newSession);
   }
 }
 
 void signalCallback(evutil_socket_t, short, void* arg) {
   DLOG(INFO) << "beg callback";
   GTcpServer* tcpServer = (GTcpServer*)arg;
+  QThread::sleep(1); // gilgil temp
   tcpServer->close();
+  QThread::sleep(1); // gilgil temp
   DLOG(INFO) << "end callback";
 }
 

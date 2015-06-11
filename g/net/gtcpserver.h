@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <QList>
+#include <QSet>
 #include "gnetserver.h"
 #include "gtcpsession.h"
 
@@ -30,10 +30,10 @@ public:
 
   bool bind();
   bool listen();
-  GSock accept(GSockAddr *sockAddr = nullptr, socklen_t *addrLen = nullptr);
+  GTcpSession* accept(GSockAddr *sockAddr = nullptr, socklen_t *addrLen = nullptr);
   bool acceptClose();
 
   int backLog_{1024};
   GSock acceptSock_{0};
-  QList<GTcpSession*> tcpSessions_;
+  QSet<GTcpSession*> tcpSessions_;
 };

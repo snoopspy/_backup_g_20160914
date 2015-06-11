@@ -18,7 +18,8 @@
 // ----------------------------------------------------------------------------
 struct GTcpSession : GIOObj {
   GTcpSession(GObj *parent = nullptr) : GIOObj(parent) {}
-  GTcpSession(GObj *parent, GSock sock) : GIOObj(parent) , sock_(sock) {}
+  GTcpSession(GSock sock) : GIOObj(nullptr), sock_(sock) {}
+  GTcpSession(GObj *parent, GSock sock) : GIOObj(parent), sock_(sock) {}
   ~GTcpSession() override { close(); }
 
   bool open() override {
