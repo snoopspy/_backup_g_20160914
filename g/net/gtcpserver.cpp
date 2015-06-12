@@ -1,3 +1,4 @@
+#include <sys/ioctl.h>
 #include <netdb.h>
 #include "gtcpserver.h"
 
@@ -72,6 +73,15 @@ bool GTcpServer::bind() {
     if (!acceptSock_.socket(info->ai_family, info->ai_socktype, info->ai_protocol)) {
       acceptSock_.close();
       continue;
+    }
+
+    if (nonBlock_) {
+      int i = 1;
+      int res = ioctl(acceptSock_, FIONBIO, &i);
+      if (res != 0) {
+        acceptSock_.close();
+        continue;
+      }
     }
 
     if (!acceptSock_.setsockopt(SOL_SOCKET, SO_REUSEADDR)) {

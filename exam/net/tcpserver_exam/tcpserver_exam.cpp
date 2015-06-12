@@ -7,6 +7,7 @@
 DEFINE_int32(family, AF_UNSPEC, "0:AF_UNSPEC 2:AF_INET 10:AF_INET6");
 DEFINE_string(localIp, "", "localIp");
 DEFINE_int32(port, 10065, "port");
+DEFINE_bool(nonBlock, false, "nonBlock");
 DEFINE_int32(bufSize, 1024, "bufSize");
 
 void readProc(GTcpSession* tcpSession) {
@@ -24,12 +25,14 @@ void readProc(GTcpSession* tcpSession) {
 }
 
 void acceptProc(GTcpServer* tcpServer) {
+  DLOG(INFO) << "beg acceptProc";
   while (true) {
     GTcpSession* newSession = tcpServer->accept();
     if (newSession == nullptr)
       break;
     new std::thread(readProc, newSession);
   }
+  DLOG(INFO) << "end acceptProc";
 }
 
 int main(int argc, char* argv[]) {
@@ -39,6 +42,7 @@ int main(int argc, char* argv[]) {
   tcpServer.family_ = FLAGS_family;
   tcpServer.localIp_ = QString::fromStdString(FLAGS_localIp);
   tcpServer.port_ = (quint16)FLAGS_port;
+  tcpServer.nonBlock_ = FLAGS_nonBlock;
 
   if (!tcpServer.open()) {
     LOG(ERROR) << tcpServer.err;

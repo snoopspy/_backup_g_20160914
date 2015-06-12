@@ -21,6 +21,7 @@ struct GNetServer : GNet {
   Q_PROPERTY(int family MEMBER family_)
   Q_PROPERTY(QString localIp MEMBER localIp_)
   Q_PROPERTY(quint16 port MEMBER port_)
+  Q_PROPERTY(bool nonBlock MEMBER nonBlock_)
 
 public:
   GNetServer(GObj *parent = nullptr) : GNet(parent) {}
@@ -28,4 +29,5 @@ public:
   int family_{AF_UNSPEC};
   QString localIp_;
   quint16 port_{0};
+  bool nonBlock_{false};
 };
