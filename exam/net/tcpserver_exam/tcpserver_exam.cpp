@@ -1,20 +1,19 @@
 #include <gflags/gflags.h>
 #include <glog/logging.h>
-#include <signal.h>
+#include <iostream>
 #include <thread>
-#include <GEventSignal>
-#include <GEventThread>
 #include <GTcpServer>
 
-DEFINE_int32(family, AF_UNSPEC, "family");
+DEFINE_int32(family, AF_UNSPEC, "0:AF_UNSPEC 2:AF_INET 10:AF_INET6");
 DEFINE_string(localIp, "", "localIp");
 DEFINE_int32(port, 10065, "port");
+DEFINE_int32(bufSize, 1024, "bufSize");
 
 void readProc(GTcpSession* tcpSession) {
   DLOG(INFO) << "connected";
   while (true) {
-    char buf[1024];
-    ssize_t readLen = tcpSession->read(buf, 1023);
+    char buf[FLAGS_bufSize];
+    ssize_t readLen = tcpSession->read(buf, FLAGS_bufSize - 1);
     if (readLen == 0 || readLen == -1) break;
     buf[readLen] = '\0';
     LOG(INFO) << buf;
@@ -33,13 +32,6 @@ void acceptProc(GTcpServer* tcpServer) {
   }
 }
 
-void signalCallback(evutil_socket_t, short, void* arg) {
-  DLOG(INFO) << "beg callback";
-  GTcpServer* tcpServer = (GTcpServer*)arg;
-  tcpServer->close();
-  DLOG(INFO) << "end callback";
-}
-
 int main(int argc, char* argv[]) {
   google::ParseCommandLineFlags(&argc, &argv, true);
 
@@ -53,12 +45,15 @@ int main(int argc, char* argv[]) {
     return EXIT_FAILURE;
   }
 
-  GEventThread eventThread;
-  GEventSignal eventSignal{&eventThread.eventBase_, SIGINT, signalCallback, &tcpServer, EV_SIGNAL};
-  eventSignal.add();
-  eventThread.start();
   std::thread acceptThread(acceptProc, &tcpServer);
 
+  while (true) {
+    std::string s;
+    std::getline(std::cin, s);
+    if (s == "q") break;
+    // broadcast() // gilgil temp 2015.06.13
+  }
+  tcpServer.close();
+
   acceptThread.join();
-  eventThread.wait();
 }
