@@ -3,20 +3,6 @@
 #include "gtcpserver.h"
 
 // ----------------------------------------------------------------------------
-// GTcpServerSession
-// ----------------------------------------------------------------------------
-struct GTcpServerSession : GTcpSession {
-  GTcpServerSession(GTcpServer* tcpServer, GSock sock) :
-    GTcpSession(sock), tcpServer_(tcpServer) {}
-
-  ~GTcpServerSession() override {
-    tcpServer_->tcpSessions_.remove(this);
-  }
-
-  GTcpServer* tcpServer_;
-};
-
-// ----------------------------------------------------------------------------
 // GTcpServer
 // ----------------------------------------------------------------------------
 GTcpServer::GTcpServer(GObj *parent) : GNetServer(parent) {
@@ -39,14 +25,7 @@ bool GTcpServer::open() {
 }
 
 bool GTcpServer::close() {
-  acceptClose();
-  for (GTcpSession* tcpSession: tcpSessions_) {
-    tcpSession->close();
-  }
-  while (true) {
-    if (tcpSessions_.size() == 0) break;
-  }
-  return true;
+  return acceptClose();
 }
 
 bool GTcpServer::bind() {
@@ -110,17 +89,13 @@ bool GTcpServer::listen() {
   return acceptSock_.listen(backLog_);
 }
 
-GTcpSession* GTcpServer::accept(GSockAddr *sockAddr, socklen_t *addrLen) {
-  GSock newSock = acceptSock_.accept(sockAddr, addrLen);
-  if (newSock == -1)
-    return nullptr;
-
-  GTcpSession* newSession = new GTcpServerSession(this, newSock);
-  tcpSessions_.insert(newSession);
-  return newSession;
+GSock GTcpServer::accept(GSockAddr *sockAddr, socklen_t *addrLen) {
+  return acceptSock_.accept(sockAddr, addrLen);
 }
 
 bool GTcpServer::acceptClose() {
+  if (acceptSock_ == -1)
+    return true;
   bool res = true;
   if (!acceptSock_.shutdown())
     res = false;

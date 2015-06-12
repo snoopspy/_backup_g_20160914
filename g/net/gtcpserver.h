@@ -12,7 +12,6 @@
 
 #include <QSet>
 #include "gnetserver.h"
-#include "gtcpsession.h"
 
 // ----------------------------------------------------------------------------
 // GTcpServer
@@ -30,10 +29,9 @@ public:
 
   bool bind();
   bool listen();
-  GTcpSession* accept(GSockAddr *sockAddr = nullptr, socklen_t *addrLen = nullptr);
+  GSock accept(GSockAddr *sockAddr = nullptr, socklen_t *addrLen = nullptr);
   bool acceptClose();
 
   int backLog_{1024};
   GSock acceptSock_{-1};
-  QSet<GTcpSession*> tcpSessions_;
 };

@@ -10,27 +10,29 @@ DEFINE_int32(port, 10065, "port");
 DEFINE_bool(nonBlock, false, "nonBlock");
 DEFINE_int32(bufSize, 1024, "bufSize");
 
-void readProc(GTcpSession* tcpSession) {
+void readProc(GSock sock) {
   DLOG(INFO) << "connected";
   while (true) {
     char buf[FLAGS_bufSize];
-    ssize_t readLen = tcpSession->read(buf, FLAGS_bufSize - 1);
+    ssize_t readLen = sock.recv(buf, FLAGS_bufSize - 1);
     if (readLen == 0 || readLen == -1) break;
     buf[readLen] = '\0';
     LOG(INFO) << buf;
-    tcpSession->write(buf, readLen);
+    sock.send(buf, readLen);
   }
   DLOG(INFO) << "disconnected";
-  delete tcpSession;
+  sock.shutdown();
+  sock.close();
 }
 
 void acceptProc(GTcpServer* tcpServer) {
   DLOG(INFO) << "beg acceptProc";
   while (true) {
-    GTcpSession* newSession = tcpServer->accept();
-    if (newSession == nullptr)
+    GSock newSock = tcpServer->accept();
+    if (newSock == -1)
       break;
-    new std::thread(readProc, newSession);
+    std::thread readThread(readProc, newSock);
+    readThread.detach();
   }
   DLOG(INFO) << "end acceptProc";
 }
@@ -57,7 +59,8 @@ int main(int argc, char* argv[]) {
     if (s == "q") break;
     // broadcast() // gilgil temp 2015.06.13
   }
-  tcpServer.close();
 
+  tcpServer.close();
   acceptThread.join();
+  return 0;
 }
