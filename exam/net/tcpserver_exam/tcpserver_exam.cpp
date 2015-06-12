@@ -1,6 +1,8 @@
 #include <gflags/gflags.h>
 #include <glog/logging.h>
 #include <iostream>
+#include <mutex>
+#include <set>
 #include <thread>
 #include <GTcpServer>
 
@@ -9,6 +11,41 @@ DEFINE_string(localIp, "", "localIp");
 DEFINE_int32(port, 10065, "port");
 DEFINE_bool(nonBlock, false, "nonBlock");
 DEFINE_int32(bufSize, 1024, "bufSize");
+
+struct SockMgr {
+  void add(GSock sock) {
+    mutex_.lock();
+    socks_.insert(sock);
+    mutex_.unlock();
+  }
+
+  void del(GSock sock) {
+    mutex_.lock();
+    socks_.erase(socks_.find(sock));
+    mutex_.unlock();
+  }
+
+  void broadcast(std::string s) {
+    mutex_.lock();
+    for (GSock sock: socks_) {
+      sock.send(s.c_str(), s.length());
+    }
+    mutex_.unlock();
+  }
+
+  void close() {
+    mutex_.lock();
+    for (GSock sock: socks_) {
+      sock.shutdown();
+      sock.close();
+    }
+    mutex_.unlock();
+  }
+
+  std::mutex mutex_;
+  std::set<GSock> socks_;
+} _sockMgr;
+
 
 void readProc(GSock sock) {
   DLOG(INFO) << "connected";
@@ -21,6 +58,7 @@ void readProc(GSock sock) {
     sock.send(buf, readLen);
   }
   DLOG(INFO) << "disconnected";
+  _sockMgr.del(sock);
   sock.shutdown();
   sock.close();
 }
@@ -31,6 +69,7 @@ void acceptProc(GTcpServer* tcpServer) {
     GSock newSock = tcpServer->accept();
     if (newSock == -1)
       break;
+    _sockMgr.add(newSock);
     std::thread readThread(readProc, newSock);
     readThread.detach();
   }
@@ -57,10 +96,11 @@ int main(int argc, char* argv[]) {
     std::string s;
     std::getline(std::cin, s);
     if (s == "q") break;
-    // broadcast() // gilgil temp 2015.06.13
+    _sockMgr.broadcast(s);
   }
 
   tcpServer.close();
+  _sockMgr.close();
   acceptThread.join();
   return 0;
 }
