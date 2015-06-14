@@ -11,6 +11,7 @@
 #pragma once
 
 #include <event2/event.h>
+#include <glog/logging.h>
 
 // ----------------------------------------------------------------------------
 // GEventBase
@@ -32,7 +33,10 @@ struct GEventBase {
   }
 
   int dispatch() {
-    return event_base_dispatch(base_);
+    DLOG(INFO) << "bef event_base_dispatch";
+    int res = event_base_dispatch(base_);
+    DLOG(INFO) << "aft event_base_dispatch return " << res;
+    return res;
   }
 
 protected:

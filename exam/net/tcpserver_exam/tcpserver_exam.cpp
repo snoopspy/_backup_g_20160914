@@ -1,9 +1,12 @@
+#include <QCoreApplication>
 #include <gflags/gflags.h>
 #include <glog/logging.h>
 #include <iostream>
 #include <mutex>
 #include <set>
 #include <thread>
+#include <GEventSock>
+#include <GEventThread>
 #include <GTcpServer>
 
 DEFINE_int32(family, AF_UNSPEC, "0:AF_UNSPEC 2:AF_INET 10:AF_INET6");
@@ -76,6 +79,22 @@ void acceptProc(GTcpServer* tcpServer) {
   DLOG(INFO) << "end acceptProc";
 }
 
+void acceptCallback(evutil_socket_t, short, void* arg) {
+  DLOG(INFO) << "beg acceptCallback";
+  GTcpServer* tcpServer = (GTcpServer*)arg;
+  GSock newSock = tcpServer->accept();
+  if (newSock == -1)
+    return;
+  _sockMgr.add(newSock);
+  std::thread readThread(readProc, newSock);
+  readThread.detach();
+  DLOG(INFO) << "end acceptCallback";
+}
+
+struct AcceptThread : GEventThread {
+
+};
+
 int main(int argc, char* argv[]) {
   google::ParseCommandLineFlags(&argc, &argv, true);
 
@@ -84,13 +103,25 @@ int main(int argc, char* argv[]) {
   tcpServer.localIp_ = QString::fromStdString(FLAGS_localIp);
   tcpServer.port_ = (quint16)FLAGS_port;
   tcpServer.nonBlock_ = FLAGS_nonBlock;
+  DLOG(INFO) << "nonBlock=_" << tcpServer.nonBlock_;
 
   if (!tcpServer.open()) {
     LOG(ERROR) << tcpServer.err;
     return EXIT_FAILURE;
   }
 
-  std::thread acceptThread(acceptProc, &tcpServer);
+  //std::thread acceptThread(acceptProc, &tcpServer);
+  AcceptThread acceptThread;
+  GEventSock eventSock(&acceptThread.eventBase_, tcpServer.acceptSock_, acceptCallback, &tcpServer, EV_READ | EV_PERSIST);
+  eventSock.add();
+  acceptThread.start();
+  /*
+  GEventBase eventBase;
+  eventSock.add();
+  std::thread acceptThread([&](){
+    eventBase.dispatch();
+  });
+  */
 
   while (true) {
     std::string s;
@@ -99,8 +130,14 @@ int main(int argc, char* argv[]) {
     _sockMgr.broadcast(s);
   }
 
+  DLOG(INFO) << "main 111";
+  int res = eventSock.del();
+  DLOG(INFO) << "main 222";
+  acceptThread.wait();
+  DLOG(INFO) << "main 333";
   tcpServer.close();
+  DLOG(INFO) << "main 444";
   _sockMgr.close();
-  acceptThread.join();
+  DLOG(INFO) << "main 555";
   return 0;
 }
