@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <glog/logging.h>
 #include "geventbase.h"
 #include <QThread>
 
@@ -18,9 +19,9 @@
 // ----------------------------------------------------------------------------
 struct GEventThread : QThread {
   GEventBase eventBase_;
+  bool terminateOnNoEvents_{false};
+  unsigned long noEventTimeout{1000}; // msec
 
 protected:
-  void run() {
-    eventBase_.dispatch();
-  }
+  void run() override;
 };

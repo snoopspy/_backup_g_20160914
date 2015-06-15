@@ -11,7 +11,6 @@
 #pragma once
 
 #include <event2/event.h>
-#include <glog/logging.h>
 
 // ----------------------------------------------------------------------------
 // GEventBase

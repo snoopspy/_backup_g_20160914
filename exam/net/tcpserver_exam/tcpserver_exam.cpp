@@ -1,10 +1,9 @@
-#include <QCoreApplication>
-#include <signal.h>
 #include <gflags/gflags.h>
 #include <glog/logging.h>
 #include <iostream>
 #include <mutex>
 #include <set>
+#include <signal.h>
 #include <thread>
 #include <GEventSignal>
 #include <GEventSock>
@@ -68,25 +67,15 @@ void readProc(GSock sock) {
   sock.close();
 }
 
-void acceptProc(GTcpServer* tcpServer) {
-  DLOG(INFO) << "beg acceptProc";
-  while (true) {
-    GSock newSock = tcpServer->accept();
-    if (newSock == -1)
-      break;
-    _sockMgr.add(newSock);
-    std::thread readThread(readProc, newSock);
-    readThread.detach();
-  }
-  DLOG(INFO) << "end acceptProc";
-}
-
 void acceptCallback(evutil_socket_t, short, void* arg) {
   DLOG(INFO) << "beg acceptCallback";
   GTcpServer* tcpServer = (GTcpServer*)arg;
   GSock newSock = tcpServer->accept();
   if (newSock == -1)
     return;
+  if (!newSock.setNonblock()) {
+    LOG(ERROR) << GLastErr();
+  }
   _sockMgr.add(newSock);
   std::thread readThread(readProc, newSock);
   readThread.detach();
@@ -94,10 +83,10 @@ void acceptCallback(evutil_socket_t, short, void* arg) {
 }
 
 void signalCallback(evutil_socket_t, short, void* arg) {
-  DLOG(INFO) << "stt acceptCallback";
-  GEventBase* eventBase = (GEventBase*)arg;
-  eventBase->loopbreak();
-  DLOG(INFO) << "end acceptCallback";
+  DLOG(INFO) << "acceptCallback 111";
+  GEventThread* eventThread = (GEventThread*)arg;
+  eventThread->eventBase_.loopbreak();
+  DLOG(INFO) << "acceptCallback 222";
 }
 
 int main(int argc, char* argv[]) {
@@ -119,9 +108,15 @@ int main(int argc, char* argv[]) {
   GEventSock eventSock(&acceptThread.eventBase_, tcpServer.acceptSock_, acceptCallback, &tcpServer);
   eventSock.add();
 
-  GEventSignal eventSignal(&acceptThread.eventBase_, SIGINT, signalCallback, &acceptThread.eventBase_);
+  GEventSignal eventSignal(&acceptThread.eventBase_, SIGINT, signalCallback, &acceptThread);
   eventSignal.add();
   acceptThread.start();
+
+  /*
+  GEventThread readThread;
+  readThread.start();
+  readThread.wait();
+  */
 
   std::thread inputThread([](){
     while (true) {
