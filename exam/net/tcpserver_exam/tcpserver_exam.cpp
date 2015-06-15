@@ -1,10 +1,12 @@
 #include <QCoreApplication>
+#include <signal.h>
 #include <gflags/gflags.h>
 #include <glog/logging.h>
 #include <iostream>
 #include <mutex>
 #include <set>
 #include <thread>
+#include <GEventSignal>
 #include <GEventSock>
 #include <GEventThread>
 #include <GTcpServer>
@@ -91,9 +93,12 @@ void acceptCallback(evutil_socket_t, short, void* arg) {
   DLOG(INFO) << "end acceptCallback";
 }
 
-struct AcceptThread : GEventThread {
-
-};
+void signalCallback(evutil_socket_t, short, void* arg) {
+  DLOG(INFO) << "stt acceptCallback";
+  GEventBase* eventBase = (GEventBase*)arg;
+  eventBase->loopbreak();
+  DLOG(INFO) << "end acceptCallback";
+}
 
 int main(int argc, char* argv[]) {
   google::ParseCommandLineFlags(&argc, &argv, true);
@@ -110,34 +115,27 @@ int main(int argc, char* argv[]) {
     return EXIT_FAILURE;
   }
 
-  //std::thread acceptThread(acceptProc, &tcpServer);
-  AcceptThread acceptThread;
-  GEventSock eventSock(&acceptThread.eventBase_, tcpServer.acceptSock_, acceptCallback, &tcpServer, EV_READ | EV_PERSIST);
+  GEventThread acceptThread;
+  GEventSock eventSock(&acceptThread.eventBase_, tcpServer.acceptSock_, acceptCallback, &tcpServer);
   eventSock.add();
+
+  GEventSignal eventSignal(&acceptThread.eventBase_, SIGINT, signalCallback, &acceptThread.eventBase_);
+  eventSignal.add();
   acceptThread.start();
-  /*
-  GEventBase eventBase;
-  eventSock.add();
-  std::thread acceptThread([&](){
-    eventBase.dispatch();
+
+  std::thread inputThread([](){
+    while (true) {
+      std::string s;
+      std::getline(std::cin, s);
+      //if (s == "q") break;
+      _sockMgr.broadcast(s);
+    }
   });
-  */
+  inputThread.detach();
 
-  while (true) {
-    std::string s;
-    std::getline(std::cin, s);
-    if (s == "q") break;
-    _sockMgr.broadcast(s);
-  }
-
-  DLOG(INFO) << "main 111";
-  int res = eventSock.del();
-  DLOG(INFO) << "main 222";
   acceptThread.wait();
-  DLOG(INFO) << "main 333";
   tcpServer.close();
-  DLOG(INFO) << "main 444";
   _sockMgr.close();
-  DLOG(INFO) << "main 555";
+  DLOG(INFO) << "application terminated";
   return 0;
 }

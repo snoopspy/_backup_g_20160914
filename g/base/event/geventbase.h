@@ -33,9 +33,12 @@ struct GEventBase {
   }
 
   int dispatch() {
-    DLOG(INFO) << "bef event_base_dispatch";
     int res = event_base_dispatch(base_);
-    DLOG(INFO) << "aft event_base_dispatch return " << res;
+    return res;
+  }
+
+  int loopbreak() {
+    int res = event_base_loopbreak(base_);
     return res;
   }
 

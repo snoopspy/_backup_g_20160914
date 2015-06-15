@@ -49,6 +49,10 @@ public:
     }
   }
 
+  struct event* get() {
+    return event_;
+  }
+
   int add() {
     assert(event_ != nullptr);
     return event_add(event_, nullptr);

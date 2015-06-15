@@ -10,8 +10,7 @@
 
 #pragma once
 
-#include <glog/logging.h>
-#include "g/base/event/geventbase.h"
+#include "geventbase.h"
 #include <QThread>
 
 // ----------------------------------------------------------------------------
@@ -22,8 +21,6 @@ struct GEventThread : QThread {
 
 protected:
   void run() {
-    DLOG(INFO) << "beg run";
     eventBase_.dispatch();
-    DLOG(INFO) << "end run";
   }
 };
