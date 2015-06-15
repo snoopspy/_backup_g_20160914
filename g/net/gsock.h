@@ -11,6 +11,7 @@
 #pragma once
 
 #include <unistd.h> // for close
+#include <sys/ioctl.h> // for ioctl
 #include "g/base/gerr.h"
 #include "gsockaddr.h"
 
@@ -113,6 +114,12 @@ struct GSock {
 
   bool shutdown(int how = SHUT_RDWR) {
     int res = ::shutdown(sock_, how);
+    return res != -1;
+  }
+
+  bool setNonblock() {
+    int i = 1;
+    int res = ioctl(sock_, FIONBIO, &i);
     return res != -1;
   }
 

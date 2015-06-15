@@ -55,9 +55,7 @@ bool GTcpServer::bind() {
     }
 
     if (nonBlock_) {
-      int i = 1;
-      int res = ioctl(acceptSock_, FIONBIO, &i);
-      if (res != 0) {
+      if (!acceptSock_.setNonblock()) {
         acceptSock_.close();
         continue;
       }
