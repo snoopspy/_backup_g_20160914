@@ -13,7 +13,7 @@ GTcpServer::~GTcpServer() {
 
 bool GTcpServer::open() {
   if (port_ == 0) {
-    SET_ERR(GNetErr(g::PORT_IS_ZERO, "port is zero"));
+    SET_ERR(GNetErr(g::PORT_NOT_SPECIFIED, "port not specified"));
     return false;
   }
   if (!bind())
@@ -29,14 +29,15 @@ bool GTcpServer::close() {
 
 bool GTcpServer::bind() {
   GAddrInfo addrInfo;
-  memset(&addrInfo.hints_, 0, sizeof(struct addrinfo));
   addrInfo.hints_.ai_family = family_;
   addrInfo.hints_.ai_socktype = SOCK_STREAM;
   addrInfo.hints_.ai_flags = AI_PASSIVE;
 
-  QString port = QString::number(port_);
-  if (!addrInfo.query(qPrintable(localIp_), qPrintable(port), err))
+  err = addrInfo.query(localIp_, port_);
+  if (err != nullptr) {
+    LOG(ERROR) << err;
     return false;
+  }
 
   bool succeed = false;
   for (struct addrinfo* info = addrInfo.infos_; info != nullptr; info = info->ai_next) {

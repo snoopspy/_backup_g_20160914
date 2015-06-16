@@ -25,8 +25,9 @@ struct GNet : GObj {
 // ----------------------------------------------------------------------------
 namespace g {
   enum {
-    PORT_IS_ZERO = NET_CATEGORY,
-    BIND_FAIL
+    PORT_NOT_SPECIFIED = NET_CATEGORY,
+    HOST_NOT_SPECIFIED,
+    FAIL_BIND
   };
 }
 

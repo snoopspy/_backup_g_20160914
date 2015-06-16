@@ -12,8 +12,12 @@ GTcpClient::~GTcpClient() {
 }
 
 bool GTcpClient::open() {
-  if (port_ == 0) {
-    SET_ERR(GNetErr(g::PORT_IS_ZERO, "port is zero"));
+  if (host_.isEmpty()) {
+    SET_ERR(GNetErr(g::HOST_NOT_SPECIFIED, "host not specified"));
+    return false;
+  }
+  if (port_.isEmpty() || port_ == "0") {
+    SET_ERR(GNetErr(g::PORT_NOT_SPECIFIED, "port not specified"));
     return false;
   }
   if (!bind())
@@ -29,14 +33,15 @@ bool GTcpClient::close() {
 
 bool GTcpClient::bind() {
   GAddrInfo addrInfo;
-  memset(&addrInfo.hints_, 0, sizeof(struct addrinfo));
   addrInfo.hints_.ai_family = family_;
   addrInfo.hints_.ai_socktype = SOCK_STREAM;
   addrInfo.hints_.ai_flags = AI_PASSIVE;
 
-  QString port = QString::number(localPort_);
-  if (!addrInfo.query(qPrintable(localIp_), qPrintable(port), err))
+  err = addrInfo.query(localIp_, localPort_);
+  if (err != nullptr) {
+    LOG(ERROR) << err;
     return false;
+  }
 
   bool succeed = false;
   for (struct addrinfo* info = addrInfo.infos_; info != nullptr; info = info->ai_next) {
@@ -75,13 +80,14 @@ bool GTcpClient::bind() {
 
 bool GTcpClient::connect() {
   GAddrInfo addrInfo;
-  memset(&addrInfo.hints_, 0, sizeof(struct addrinfo));
   addrInfo.hints_.ai_family = family_;
   addrInfo.hints_.ai_socktype = SOCK_STREAM;
 
-  QString port = QString::number(port_);
-  if (!addrInfo.query(qPrintable(host_), qPrintable(port), err))
+  err = addrInfo.query(host_, port_);
+  if (err != nullptr) {
+    LOG(ERROR) << err;
     return false;
+  }
 
   bool succeed = false;
   for (struct addrinfo* info = addrInfo.infos_; info != nullptr; info = info->ai_next) {

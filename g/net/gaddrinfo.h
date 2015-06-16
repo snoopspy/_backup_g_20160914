@@ -26,7 +26,7 @@ struct GAddrInfo {
       freeaddrinfo(infos_);
     }
   }
-  bool query(const char* host, const char* port, GErr* err);
+  GErr* query(QString host, QString port = "");
 
   struct addrinfo hints_;
   struct addrinfo* infos_{nullptr};

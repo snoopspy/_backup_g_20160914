@@ -48,14 +48,14 @@ union GSockAddr {
     uint32_t sin6_flowinfo,
     struct in6_addr sin6_addr,
     uint32_t sin6_scope_id) {
-    addrIn6.sin6_family = family;
-    addrIn6.sin6_port = sin6_port;
-    addrIn6.sin6_flowinfo = sin6_flowinfo;
-    addrIn6.sin6_addr = sin6_addr;
-    addrIn6.sin6_scope_id = sin6_scope_id;
+    addrIn6_.sin6_family = family;
+    addrIn6_.sin6_port = sin6_port;
+    addrIn6_.sin6_flowinfo = sin6_flowinfo;
+    addrIn6_.sin6_addr = sin6_addr;
+    addrIn6_.sin6_scope_id = sin6_scope_id;
   }
 
   struct sockaddr addr_; // 16 bytes
   struct sockaddr_in addrIn_; // 16 bytes
-  struct sockaddr_in6 addrIn6; // 28 bytes
+  struct sockaddr_in6 addrIn6_; // 28 bytes
 };
