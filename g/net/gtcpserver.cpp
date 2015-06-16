@@ -67,7 +67,7 @@ bool GTcpServer::bind() {
 
   if (!succeed) {
     GLastErr lastErr;
-    SET_ERR(GNetErr(lastErr.code(), lastErr.msg()));
+    SET_ERR(GNetErr(lastErr.code(), QString("%1 localIp=%2 port=%3").arg(lastErr.msg(), localIp_).arg(port_)));
     return false;
   }
   return true;

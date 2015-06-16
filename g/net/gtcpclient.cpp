@@ -67,7 +67,7 @@ bool GTcpClient::bind() {
 
   if (!succeed) {
     GLastErr lastErr;
-    SET_ERR(GNetErr(lastErr.code(), lastErr.msg()));
+    SET_ERR(GNetErr(lastErr.code(), QString("%1 localIp=%2 localPort=%3").arg(lastErr.msg(), localIp_).arg(localPort_)));
     return false;
   }
   return true;
@@ -97,7 +97,7 @@ bool GTcpClient::connect() {
 
   if (!succeed) {
     GLastErr lastErr;
-    SET_ERR(GNetErr(lastErr.code(), lastErr.msg()));
+    SET_ERR(GNetErr(lastErr.code(), QString("%1 host=%2 port=%3").arg(lastErr.msg(), host_).arg(port_)));
     return false;
   }
   return true;
