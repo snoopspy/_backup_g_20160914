@@ -11,7 +11,7 @@
 #pragma once
 
 #include "gnetclient.h"
-#include "gtcpsession.h"
+#include "gsock.h"
 
 // ----------------------------------------------------------------------------
 // GTcpClient

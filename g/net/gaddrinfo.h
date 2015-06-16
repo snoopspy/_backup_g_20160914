@@ -10,23 +10,16 @@
 
 #pragma once
 
-#include "gnet.h"
+#include <netdb.h>
+#include "g/base/gerr.h"
 
 // ----------------------------------------------------------------------------
-// GNetServer
+// GAddrInfo
 // ----------------------------------------------------------------------------
-struct GNetServer : GNet {
-  Q_OBJECT
-  Q_PROPERTY(int family MEMBER family_)
-  Q_PROPERTY(QString localIp MEMBER localIp_)
-  Q_PROPERTY(quint16 port MEMBER port_)
-  Q_PROPERTY(bool nonBlock MEMBER nonBlock_)
+struct GAddrInfo {
+  ~GAddrInfo();
+  bool query(const char* host, const char* port, GErr* err);
 
-public:
-  GNetServer(GObj *parent = nullptr) : GNet(parent) {}
-
-  int family_{AF_UNSPEC};
-  QString localIp_;
-  quint16 port_{0};
-  bool nonBlock_{true};
+  struct addrinfo hints_;
+  struct addrinfo* infos_{nullptr};
 };

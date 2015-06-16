@@ -10,8 +10,8 @@
 
 #pragma once
 
-#include <QSet>
 #include "gnetserver.h"
+#include "gsock.h"
 
 // ----------------------------------------------------------------------------
 // GTcpServer

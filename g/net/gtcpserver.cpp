@@ -1,5 +1,4 @@
-#include <sys/ioctl.h>
-#include <netdb.h>
+#include "gaddrinfo.h"
 #include "gtcpserver.h"
 
 // ----------------------------------------------------------------------------
@@ -29,26 +28,18 @@ bool GTcpServer::close() {
 }
 
 bool GTcpServer::bind() {
-  struct addrinfo hints;
-  memset(&hints, 0, sizeof(struct addrinfo));
-  hints.ai_family = family_;
-  hints.ai_socktype = SOCK_STREAM;
-  hints.ai_flags = AI_PASSIVE;
+  GAddrInfo addrInfo;
+  memset(&addrInfo.hints_, 0, sizeof(struct addrinfo));
+  addrInfo.hints_.ai_family = family_;
+  addrInfo.hints_.ai_socktype = SOCK_STREAM;
+  addrInfo.hints_.ai_flags = AI_PASSIVE;
 
   QString port = QString::number(port_);
-  struct addrinfo *infos;
-  int res = getaddrinfo(
-    localIp_.isEmpty() ? nullptr : qPrintable(localIp_),
-    qPrintable(port),
-    &hints,
-    &infos);
-  if (res != 0) {
-    SET_ERR(GNetErr(res, gai_strerror(res)));
+  if (!addrInfo.query(qPrintable(localIp_), qPrintable(port), err))
     return false;
-  }
 
   bool succeed = false;
-  for (struct addrinfo* info = infos; info != nullptr; info = info->ai_next) {
+  for (struct addrinfo* info = addrInfo.infos_; info != nullptr; info = info->ai_next) {
     if (!acceptSock_.socket(info->ai_family, info->ai_socktype, info->ai_protocol)) {
       acceptSock_.close();
       continue;
@@ -73,7 +64,6 @@ bool GTcpServer::bind() {
     succeed = true;
     break;
   }
-  freeaddrinfo(infos);
 
   if (!succeed) {
     GLastErr lastErr;
