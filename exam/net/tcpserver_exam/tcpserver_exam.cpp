@@ -121,6 +121,7 @@ struct MyServer {
     char buf[FLAGS_bufSize];
     ssize_t readLen = sock.recv(buf, FLAGS_bufSize - 1);
     if (readLen == 0 || readLen == -1) {
+      DLOG(INFO) << "disconnected";
       sock.shutdown();
       sock.close();
       GEventSock* eventSock = (GEventSock*)arg;

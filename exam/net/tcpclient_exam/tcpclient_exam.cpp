@@ -40,16 +40,14 @@ struct MyClient {
     return true;
   }
 
-  static void readCallback(evutil_socket_t fd, short, void* arg) {
+  static void readCallback(evutil_socket_t fd, short, void*) {
     GSock sock(fd);
     char buf[FLAGS_bufSize];
     ssize_t readLen = sock.recv(buf, FLAGS_bufSize - 1);
     if (readLen == 0 || readLen == -1) {
+      DLOG(INFO) << "disconnected";
       sock.shutdown();
       sock.close();
-      GEventSock* eventSock = (GEventSock*)arg;
-      eventSock->del();
-      delete eventSock;
       return;
     }
     buf[readLen] = '\0';

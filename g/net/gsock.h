@@ -54,17 +54,6 @@ struct GSock {
   bool connect(GSockAddr* sockAddr, socklen_t addrLen = sizeof(GSockAddr)) {
     int res = ::connect(sock_, &sockAddr->addr_, addrLen);
     return res != -1;
-    // ----- gilgil temp 2015.06.10 -----
-    /*
-    if (res == -1) {
-      if (GLastErr().code() == EINPROGRESS)
-        return true;
-      else
-        return false;
-    }
-    return true;
-    */
-    // ----------------------------------
   }
 
   bool listen(int backLog) {
