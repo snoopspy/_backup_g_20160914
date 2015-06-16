@@ -8,6 +8,7 @@
 #include <GEventSignal>
 #include <GEventSock>
 #include <GEventThread>
+#include <GEventTimer>
 #include <GTcpServer>
 
 DEFINE_int32(family, AF_UNSPEC, "0:AF_UNSPEC 2:AF_INET 10:AF_INET6");
@@ -17,11 +18,11 @@ DEFINE_bool(nonBlock, true, "nonBlock");
 DEFINE_int32(bufSize, 1024, "bufSize");
 DEFINE_int32(threadCnt, 4, "threadCnt");
 
-GTcpServer tcpServer;
-GEventThread acceptThread;
-GEventThread* readThread;
+struct ConnMgr {
+  void clear() {
+    socks_.clear();
+  }
 
-struct SockMgr {
   void add(GSock sock) {
     mutex_.lock();
     socks_.insert(sock);
@@ -53,92 +54,125 @@ struct SockMgr {
 
   std::mutex mutex_;
   std::set<GSock> socks_;
-} _sockMgr;
+};
 
+struct MyServer {
+  MyServer() {
 
-void readCallback(evutil_socket_t fd, short, void* arg) {
-  GSock sock(fd);
-  char buf[FLAGS_bufSize];
-  ssize_t readLen = sock.recv(buf, FLAGS_bufSize - 1);
-  if (readLen == 0 || readLen == -1) {
-    sock.shutdown();
-    sock.close();
-    GEventSock* eventSock = (GEventSock*)arg;
-    eventSock->del();
-    delete eventSock;
-    return;
   }
-  sock.send(buf, readLen);
-}
 
-void acceptCallback(evutil_socket_t, short, void*) {
-  DLOG(INFO) << "beg acceptCallback";
-  GSock newSock = tcpServer.accept();
-  if (newSock == -1)
-    return;
-  if (!newSock.setNonblock()) {
-    LOG(ERROR) << GLastErr();
+  virtual ~MyServer() {
+    close();
   }
-  _sockMgr.add(newSock);
-  static int rr = 0;
-  GEventSock* eventSock = new GEventSock(&readThread[rr].eventBase_, newSock, readCallback);
-  eventSock->add();
-  rr = (rr + 1) % FLAGS_threadCnt;
-  DLOG(INFO) << "end acceptCallback";
-}
+
+  bool open() {
+    if (!tcpServer_.open()) {
+      LOG(ERROR) << tcpServer_.err;
+      return false;
+    }
+    connMgr_.clear();
+
+    acceptEventSock_ = new GEventSock(
+      &acceptThread_.eventBase_,
+      tcpServer_.acceptSock_,
+      acceptCallback,
+      this);
+    acceptEventSock_->add();
+
+    acceptThread_.setObjectName("acceptThread_");
+    acceptThread_.open();
+
+    readThreads_ = new GEventThread[FLAGS_threadCnt];
+    for (int i = 0; i < FLAGS_threadCnt; i++)
+      readThreads_[i].open();
+
+    return true;
+  }
+
+  bool close() {
+    connMgr_.close();
+    for (int i = 0; i < FLAGS_threadCnt; i++)
+      readThreads_[i].close(false);
+    tcpServer_.close();
+    acceptThread_.close(false);
+    delete acceptEventSock_;
+    acceptEventSock_ = nullptr;
+    for (int i = 0; i < FLAGS_threadCnt; i++)
+      readThreads_[i].wait();
+    acceptThread_.wait();
+
+    delete[] readThreads_;
+    return true;
+  }
+
+  static void acceptCallback(evutil_socket_t, short, void* arg) {
+    DLOG(INFO) << "beg acceptCallback";
+    MyServer* ms = (MyServer*)arg;
+    GSock newSock = ms->tcpServer_.accept();
+    if (newSock == -1)
+      return;
+    if (!newSock.setNonblock()) {
+      LOG(ERROR) << GLastErr();
+    }
+    ms->connMgr_.add(newSock);
+    static int rr = 0;
+    GEventSock* eventSock = new GEventSock(&ms->readThreads_[rr].eventBase_, newSock, readCallback);
+    eventSock->add();
+    rr = (rr + 1) % FLAGS_threadCnt;
+    DLOG(INFO) << "end acceptCallback";
+  }
+
+  static void readCallback(evutil_socket_t fd, short, void* arg) {
+    GSock sock(fd);
+    char buf[FLAGS_bufSize];
+    ssize_t readLen = sock.recv(buf, FLAGS_bufSize - 1);
+    if (readLen == 0 || readLen == -1) {
+      sock.shutdown();
+      sock.close();
+      GEventSock* eventSock = (GEventSock*)arg;
+      eventSock->del();
+      delete eventSock;
+      return;
+    }
+    buf[readLen] = '\0';
+    DLOG(INFO) << buf;
+    sock.send(buf, readLen);
+  }
+
+  GTcpServer tcpServer_;
+  ConnMgr connMgr_;
+  GEventThread acceptThread_;
+  GEventSock* acceptEventSock_;
+  GEventThread* readThreads_;
+} ms;
 
 void signalCallback(evutil_socket_t, short, void*) {
-  DLOG(INFO) << "acceptCallback 111";
-  acceptThread.close(false);
-  for (int i = 0; i < FLAGS_threadCnt; i++) {
-    readThread[i].close(false);
-  }
-  DLOG(INFO) << "acceptCallback 222";
+  ms.close();
 }
 
 int main(int argc, char* argv[]) {
+  //QCoreApplication a(argc, argv);
+
   google::ParseCommandLineFlags(&argc, &argv, true);
 
-  tcpServer.family_ = FLAGS_family;
-  tcpServer.localIp_ = QString::fromStdString(FLAGS_localIp);
-  tcpServer.port_ = (quint16)FLAGS_port;
-  tcpServer.nonBlock_ = FLAGS_nonBlock;
-  DLOG(INFO) << "nonBlock=_" << tcpServer.nonBlock_;
+  ms.tcpServer_.family_ = FLAGS_family;
+  ms.tcpServer_.localIp_ = QString::fromStdString(FLAGS_localIp);
+  ms.tcpServer_.port_ = (quint16)FLAGS_port;
+  ms.tcpServer_.nonBlock_ = FLAGS_nonBlock;
 
-  if (!tcpServer.open()) {
-    LOG(ERROR) << tcpServer.err;
+  if (!ms.open()) {
     return EXIT_FAILURE;
   }
 
-  readThread = new GEventThread[FLAGS_threadCnt];
-
-  GEventSock eventSock(&acceptThread.eventBase_, tcpServer.acceptSock_, acceptCallback);
-  eventSock.add();
-
-  GEventSignal eventSignal(&acceptThread.eventBase_, SIGINT, signalCallback, &acceptThread);
-  eventSignal.add();
-
-  acceptThread.open();
-  for (int i = 0; i < FLAGS_threadCnt; i++)
-    readThread[i].open();
-
-  std::thread inputThread([](){
+  //std::thread inputThread([](){
     while (true) {
       std::string s;
       std::getline(std::cin, s);
-      //if (s == "q") break;
-      _sockMgr.broadcast(s);
+      if (s == "q") break;
+      ms.connMgr_.broadcast(s);
     }
-  });
-  inputThread.detach();
-
-  acceptThread.wait();   DLOG(INFO) << "acceptThread.wait()";
-
-  tcpServer.close();     DLOG(INFO) << "tcpServer.close()";
-  _sockMgr.close();      DLOG(INFO) << "_sockMgr.close()";
-  for (int i = 0; i < FLAGS_threadCnt; i++)
-    readThread[i].wait();
-  delete[] readThread;   DLOG(INFO) << "delete[] readThread";
+  //});
+  //inputThread.detach();
+  ms.close();
   DLOG(INFO) << "application terminated";
-  return 0;
 }

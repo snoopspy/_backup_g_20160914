@@ -18,6 +18,7 @@
 // GEventThread
 // ----------------------------------------------------------------------------
 struct GEventThread : GThread {
+  ~GEventThread() override;
   bool open() override;
   bool close(bool wait = true) override;
 

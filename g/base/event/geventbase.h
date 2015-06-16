@@ -36,6 +36,11 @@ struct GEventBase {
     return res;
   }
 
+  int loop(int flags) {
+    int res = event_base_loop(base_, flags);
+    return res;
+  }
+
   int loopbreak() {
     int res = event_base_loopbreak(base_);
     return res;

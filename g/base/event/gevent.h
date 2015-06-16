@@ -55,17 +55,20 @@ public:
 
   int add() {
     assert(event_ != nullptr);
-    return event_add(event_, nullptr);
+    int res = event_add(event_, nullptr);
+    return res;
   }
 
   int add(const struct timeval timeout) {
     assert(event_ != nullptr);
-    return event_add(event_, &timeout);
+    int res = event_add(event_, &timeout);
+    return res;
   }
 
   int del() {
     assert(event_ != nullptr);
-    return event_del(event_);
+    int res = event_del(event_);
+    return res;
   }
 
 protected:
