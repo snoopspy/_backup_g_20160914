@@ -11,7 +11,7 @@
 #pragma once
 
 #include <QObject>
-#include "g/base/gerr.h"
+#include "gerr.h"
 
 // ----------------------------------------------------------------------------
 // GObj
@@ -29,4 +29,4 @@ struct GObj : QObject {
 // ----------------------------------------------------------------------------
 // SET_ERR
 // ----------------------------------------------------------------------------
-#define SET_ERR(VALUE) err = new VALUE; LOG(ERROR) << err;
+#define SET_ERR(VALUE) if (err != nullptr) delete err; err = new VALUE; LOG(ERROR) << err;
