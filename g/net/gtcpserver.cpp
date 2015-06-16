@@ -1,4 +1,3 @@
-#include <event2/event.h>
 #include <sys/ioctl.h>
 #include <netdb.h>
 #include "gtcpserver.h"
@@ -56,11 +55,10 @@ bool GTcpServer::bind() {
     }
 
     if (nonBlock_) {
-      evutil_make_socket_nonblocking(acceptSock_);
-      //if (!acceptSock_.setNonblock()) {
-//        acceptSock_.close();
-  //      continue;
-      //}
+      if (!acceptSock_.setNonblock()) {
+        acceptSock_.close();
+       continue;
+      }
     }
 
     if (!acceptSock_.setsockopt(SOL_SOCKET, SO_REUSEADDR)) {

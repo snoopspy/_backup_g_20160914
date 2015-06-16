@@ -57,14 +57,6 @@ struct ConnMgr {
 };
 
 struct MyServer {
-  MyServer() {
-
-  }
-
-  virtual ~MyServer() {
-    close();
-  }
-
   bool open() {
     if (!tcpServer_.open()) {
       LOG(ERROR) << tcpServer_.err;
@@ -83,8 +75,10 @@ struct MyServer {
     acceptThread_.open();
 
     readThreads_ = new GEventThread[FLAGS_threadCnt];
-    for (int i = 0; i < FLAGS_threadCnt; i++)
+    for (int i = 0; i < FLAGS_threadCnt; i++) {
+      readThreads_[i].setObjectName("readThreads_" + QString::number(i));
       readThreads_[i].open();
+    }
 
     return true;
   }
@@ -146,13 +140,7 @@ struct MyServer {
   GEventThread* readThreads_;
 } ms;
 
-void signalCallback(evutil_socket_t, short, void*) {
-  ms.close();
-}
-
 int main(int argc, char* argv[]) {
-  //QCoreApplication a(argc, argv);
-
   google::ParseCommandLineFlags(&argc, &argv, true);
 
   ms.tcpServer_.family_ = FLAGS_family;
