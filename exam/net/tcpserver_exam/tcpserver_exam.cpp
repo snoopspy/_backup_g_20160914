@@ -163,4 +163,5 @@ int main(int argc, char* argv[]) {
   //inputThread.detach();
   ms.close();
   DLOG(INFO) << "application terminated";
+  return 0;
 }

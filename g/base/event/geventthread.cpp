@@ -9,9 +9,11 @@ static void timerCallback(evutil_socket_t, short, void *) {
 GEventThread::~GEventThread() {
   close();
   if (createTimer_) {
-    eventTimer_->del();
-    delete eventTimer_;
-    eventTimer_ = nullptr;
+    if (eventTimer_ != nullptr) {
+      eventTimer_->del();
+      delete eventTimer_;
+      eventTimer_ = nullptr;
+    }
   }
 }
 

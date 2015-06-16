@@ -22,6 +22,7 @@ struct GNetClient : GNet {
   Q_PROPERTY(quint16 localPort MEMBER localPort_)
   Q_PROPERTY(QString host MEMBER host_)
   Q_PROPERTY(quint16 port MEMBER port_)
+  Q_PROPERTY(bool nonBlock MEMBER nonBlock_)
 
 public:
   GNetClient(GObj *parent = nullptr) : GNet(parent) {}
@@ -31,4 +32,5 @@ public:
   quint16 localPort_{0};
   QString host_;
   quint16 port_{0};
+  bool nonBlock_{true};
 };
