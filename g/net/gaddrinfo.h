@@ -17,7 +17,15 @@
 // GAddrInfo
 // ----------------------------------------------------------------------------
 struct GAddrInfo {
-  ~GAddrInfo();
+  GAddrInfo() {
+    memset(&hints_, 0, sizeof(hints_));
+  }
+
+  ~GAddrInfo() {
+    if (infos_ != nullptr) {
+      freeaddrinfo(infos_);
+    }
+  }
   bool query(const char* host, const char* port, GErr* err);
 
   struct addrinfo hints_;

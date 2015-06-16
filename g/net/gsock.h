@@ -46,8 +46,8 @@ struct GSock {
     return res != -1;
   }
 
-  bool connect(struct sockaddr* sockaddr, socklen_t addrLen = sizeof(GSockAddr)) {
-    int res = ::connect(sock_, sockaddr, addrLen);
+  bool connect(struct sockaddr* sockAddr, socklen_t addrLen = sizeof(GSockAddr)) {
+    int res = ::connect(sock_, sockAddr, addrLen);
     return res != -1;
   }
 

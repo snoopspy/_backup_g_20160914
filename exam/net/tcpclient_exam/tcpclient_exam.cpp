@@ -12,7 +12,6 @@ DEFINE_string(host, "localhost", "host");
 DEFINE_int32(port, 10065, "port");
 DEFINE_bool(nonBlock, true, "nonBlock");
 DEFINE_int32(bufSize, 1024, "bufSize");
-DEFINE_int32(threadCnt, 4, "threadCnt");
 
 struct MyClient {
   bool open() {
