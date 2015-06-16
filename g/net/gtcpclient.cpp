@@ -103,7 +103,7 @@ bool GTcpClient::connect() {
 
   if (!succeed) {
     GLastErr lastErr;
-    SET_ERR(GNetErr(lastErr.code(), QString("%1 host=%2 port=%3").arg(lastErr.msg(), host_).arg(port_)));
+    SET_ERR(GNetErr(lastErr.code(), QString("%1 host=%2 port=%3").arg(lastErr.msg(), host_, port_)));
     return false;
   }
   return true;

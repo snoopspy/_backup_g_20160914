@@ -1,6 +1,6 @@
 #include <arpa/inet.h>
 #include "g/base/gerr.h"
-#include "g/log/glog.h"
+#include "g/base/gstr.h"
 #include "gip.h"
 
 // ----------------------------------------------------------------------------
