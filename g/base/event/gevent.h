@@ -38,7 +38,7 @@ protected:
   }
 
 public:
-  virtual ~GEvent() {
+  ~GEvent() {
     destroy();
   }
 

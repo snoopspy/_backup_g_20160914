@@ -23,5 +23,4 @@ struct GEventTimer : GEvent {
     void* arg = nullptr,
     Options options = EV_PERSIST)
     : GEvent(eventBase, -1, options, callback, arg) {}
-  ~GEventTimer() {}
 };
