@@ -29,5 +29,5 @@ public:
   int family_{AF_UNSPEC};
   QString localIp_;
   quint16 port_{0};
-  bool nonBlock_{false};
+  bool nonBlock_{true};
 };
