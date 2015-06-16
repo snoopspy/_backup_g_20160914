@@ -1,6 +1,6 @@
 TEMPLATE = subdirs
 SUBDIRS += \
-	getaddrinfo_exam \
+	addrinfo_exam \
 	sockclient_exam \
 	sockserver_exam \
 	tcpclient_exam \
