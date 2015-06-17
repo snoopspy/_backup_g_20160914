@@ -27,7 +27,6 @@ public:
   bool open() override;
   bool close() override;
 
-  bool bind();
   bool listen();
   GSock accept(GSockAddr *sockAddr = nullptr, socklen_t *addrLen = nullptr);
   bool acceptClose();

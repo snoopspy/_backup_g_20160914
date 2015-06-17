@@ -23,8 +23,5 @@ struct GTcpClient : GNetClient {
   bool open() override;
   bool close() override;
 
-  bool bind();
-  bool connect();
-
   GSock sock_{-1};
 };
