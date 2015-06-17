@@ -35,7 +35,12 @@ bool GTcpClient::close() {
   if (sock_ == -1)
     return true;
 
-  bool res = sock_.close();
+  bool res = true;
+  if (!sock_.shutdown())
+    res = false;
+
+  if (!sock_.close())
+    res = false;
 
   sock_ = -1;
   return res;

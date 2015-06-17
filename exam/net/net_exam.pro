@@ -4,4 +4,6 @@ SUBDIRS += \
 	asynctcpclient_exam \
 	asynctcpserver_exam \
 	sockclient_exam \
-	sockserver_exam
+	sockserver_exam \
+	tcpclient_exam \
+	tcpserver_exam
