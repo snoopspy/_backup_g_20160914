@@ -23,6 +23,7 @@ bool GTcpServer::open() {
 
   if (!listen())
     return false;
+
   return true;
 }
 
@@ -41,11 +42,14 @@ GSock GTcpServer::accept(GSockAddr *sockAddr, socklen_t *addrLen) {
 bool GTcpServer::acceptClose() {
   if (acceptSock_ == -1)
     return true;
+
   bool res = true;
   if (!acceptSock_.shutdown())
     res = false;
+
   if (!acceptSock_.close())
     res = false;
+
   acceptSock_ = -1;
   return res;
 }

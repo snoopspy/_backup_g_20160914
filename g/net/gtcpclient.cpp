@@ -28,9 +28,16 @@ bool GTcpClient::open() {
 
   if (!connect(sock_, SOCK_STREAM, host_, port_))
     return false;
+
   return true;
 }
 
 bool GTcpClient::close() {
-  return sock_.close();
+  if (acceptSock_ == -1)
+    return true;
+
+  bool res = sock_.close();
+
+  sock_ = -1;
+  return res;
 }
