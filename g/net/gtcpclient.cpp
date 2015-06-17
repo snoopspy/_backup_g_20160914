@@ -33,7 +33,7 @@ bool GTcpClient::open() {
 }
 
 bool GTcpClient::close() {
-  if (acceptSock_ == -1)
+  if (sock_ == -1)
     return true;
 
   bool res = sock_.close();
