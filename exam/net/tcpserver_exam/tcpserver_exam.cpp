@@ -67,6 +67,12 @@ int main(int argc, char* argv[]) {
   }
 
   tcpServer.close();
+  _mutex.lock();
+  for (GSock sock: _socks) {
+    sock.shutdown();
+    sock.close();
+  }
+  _mutex.unlock();
   acceptThread.join();
 
   return 0;
