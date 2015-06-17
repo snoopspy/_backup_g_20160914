@@ -52,3 +52,20 @@ bool GTcpServer::acceptClose() {
   acceptSock_ = -1;
   return res;
 }
+
+// ----------------------------------------------------------------------------
+// GTEST
+// ----------------------------------------------------------------------------
+#ifdef GTEST
+#include <gtest/gtest.h>
+
+TEST(GTcpServer, openCloseTest) {
+  GTcpServer tcpServer;
+  tcpServer.port_ = "10065";
+  for (int i = 0; i < 100000; i++) {
+    EXPECT_TRUE(tcpServer.open());
+    EXPECT_TRUE(tcpServer.close());
+  }
+}
+
+#endif // GTEST

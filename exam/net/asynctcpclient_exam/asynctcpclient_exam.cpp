@@ -12,7 +12,7 @@ DEFINE_string(host, "localhost", "host");
 DEFINE_string(port, "10065", "port");
 DEFINE_int32(bufSize, 1024, "bufSize");
 
-void readCallback(evutil_socket_t, short events, void* arg) {
+void readCallback(evutil_socket_t, short, void* arg) {
   GAsyncTcpSession* tcpSession = (GAsyncTcpSession*)arg;
   char buf[FLAGS_bufSize];
   ssize_t readLen = tcpSession->read(buf, FLAGS_bufSize - 1);
@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
   }
 
   GEventThread readThread;
-  tcpClient.tcpSession_.assignEventBase(&readThread.eventBase_, readCallback);
+  tcpClient.tcpSession_.assign(&readThread.eventBase_, readCallback);
   readThread.open();
 
   std::thread inputThread(inputProc, &tcpClient, &readThread);

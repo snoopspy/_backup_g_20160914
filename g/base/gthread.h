@@ -23,5 +23,4 @@ struct GThread : QThread {
 
 private:
   bool active_{false};
-
 };

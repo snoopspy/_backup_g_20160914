@@ -23,7 +23,7 @@ struct GAsyncTcpSession : GTcpSession {
   bool open() override;
   bool close() override;
 
-  void assignEventBase(
+  void assign(
     GEventBase* eventBase,
     event_callback_fn callback,
     void* arg = nullptr,

@@ -12,6 +12,7 @@ DEFINE_string(port, "10065", "port");
 DEFINE_int32(bufSize, 1024, "bufSize");
 
 void readProc(GTcpClient* tcpClient) {
+  std::clog << "connected\n";
   char buf[FLAGS_bufSize];
   while (true) {
     ssize_t readLen = tcpClient->sock_.recv(buf, FLAGS_bufSize - 1);
@@ -19,6 +20,7 @@ void readProc(GTcpClient* tcpClient) {
     buf[readLen] = '\0';
     std::clog << buf << std::endl;
   }
+  std::clog << "disconnected\n";
 }
 
 void inputProc(GTcpClient* tcpClient) {

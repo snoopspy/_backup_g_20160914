@@ -21,7 +21,7 @@ bool GAsyncTcpSession::close() {
   return res;
 }
 
-void GAsyncTcpSession::assignEventBase(
+void GAsyncTcpSession::assign(
   GEventBase* eventBase,
   event_callback_fn callback,
   void* arg,
