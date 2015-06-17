@@ -13,7 +13,7 @@
 
 DEFINE_int32(family, AF_UNSPEC, "0:AF_UNSPEC 2:AF_INET 10:AF_INET6");
 DEFINE_string(localIp, "", "localIp");
-DEFINE_int32(port, 10065, "port");
+DEFINE_string(port, "10065", "port");
 DEFINE_bool(nonBlock, true, "nonBlock");
 DEFINE_int32(bufSize, 1024, "bufSize");
 DEFINE_int32(threadCnt, 4, "threadCnt");
@@ -146,7 +146,7 @@ int main(int argc, char* argv[]) {
 
   ms.tcpServer_.family_ = FLAGS_family;
   ms.tcpServer_.localIp_ = QString::fromStdString(FLAGS_localIp);
-  ms.tcpServer_.port_ = (quint16)FLAGS_port;
+  ms.tcpServer_.port_ = QString::fromStdString(FLAGS_port);
   ms.tcpServer_.nonBlock_ = FLAGS_nonBlock;
 
   if (!ms.open()) {

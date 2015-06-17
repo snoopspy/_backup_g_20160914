@@ -7,9 +7,9 @@
 
 DEFINE_int32(family, AF_UNSPEC, "0:AF_UNSPEC 2:AF_INET 10:AF_INET6");
 DEFINE_string(localIp, "", "localIp");
-DEFINE_int32(localPort, 0, "locapPort");
+DEFINE_string(localPort, "0", "localPort");
 DEFINE_string(host, "localhost", "host");
-DEFINE_int32(port, 10065, "port");
+DEFINE_string(port, "10065", "port");
 DEFINE_bool(nonBlock, true, "nonBlock");
 DEFINE_int32(bufSize, 1024, "bufSize");
 
@@ -63,9 +63,9 @@ int main(int argc, char* argv[]) {
 
   mc.tcpClient_.family_ = FLAGS_family;
   mc.tcpClient_.localIp_ = QString::fromStdString(FLAGS_localIp);
-  mc.tcpClient_.localPort_ = (quint16)(FLAGS_localPort);
+  mc.tcpClient_.localPort_ = QString::fromStdString(FLAGS_localPort);
   mc.tcpClient_.host_ = QString::fromStdString(FLAGS_host);
-  mc.tcpClient_.port_ = (quint16)FLAGS_port;
+  mc.tcpClient_.port_ = QString::fromStdString(FLAGS_port);
   mc.tcpClient_.nonBlock_ = FLAGS_nonBlock;
 
   if (!mc.open()) {
