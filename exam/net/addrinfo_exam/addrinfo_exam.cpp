@@ -28,46 +28,45 @@ int main(int argc, char* argv[]) {
     return EXIT_FAILURE;
   }
 
+  clog << "idx\tfamily\t\tsocktype\tprotocol\tip(port)\n";
   int idx = 0;
   struct addrinfo* info;
   for (info = addrInfo.infos_; info != nullptr; info = info->ai_next) {
-    clog << "idx=" << idx;
+    clog << idx;
 
-    clog  << " family=" << info->ai_family;
+    clog  << "\t" << info->ai_family;
     switch (info->ai_family) {
       case AF_UNSPEC: clog << "(AF_UNSPEC)"; break;
       case AF_INET: clog << "(AF_INET)"; break;
       case AF_INET6: clog << "(AF_INET6)"; break;
     }
 
-    clog << "\tsocktype=" << info->ai_socktype;
+    clog << "\t" << info->ai_socktype;
     switch (info->ai_socktype) {
       case SOCK_STREAM: clog << "(SOCK_STREAM)"; break;
       case SOCK_DGRAM: clog << "(SOCK_DGRAM)"; break;
       case SOCK_RAW: clog << "(SOCK_RAW)"; break;
     }
 
-    clog << "\tprotocol=" << info->ai_protocol;
+    clog << "\t" << info->ai_protocol;
     switch (info->ai_protocol) {
       case IPPROTO_TCP: clog << "(IPPROTO_TCP)"; break;
       case IPPROTO_UDP: clog << "(IPPROTO_UDP)"; break;
       case IPPROTO_IP: clog << "(IPPROTO_IP)"; break;
     }
 
-    clog << endl;
-
     if (info->ai_family == AF_INET) {
       struct sockaddr_in* addrIn = (struct sockaddr_in*)info->ai_addr;
-      clog << "\tip=" << QString(GIp(ntohl(addrIn->sin_addr.s_addr)));
-      clog << "\tport=" << htons(addrIn->sin_port);
+      clog << "\t" << QString(GIp(ntohl(addrIn->sin_addr.s_addr)));
+      clog << "(" << htons(addrIn->sin_port) << ")";
       clog << endl;
     } else
    if (info->ai_family == AF_INET6) {
       struct sockaddr_in6* addrIn6 = (struct sockaddr_in6*)info->ai_addr;
       char str[INET6_ADDRSTRLEN];
       inet_ntop(info->ai_family, info->ai_addr, str, INET6_ADDRSTRLEN);
-      clog << "\tip6=" << str;
-      clog << "\tport=" << htons(addrIn6->sin6_port);
+      clog << "\t" << str;
+      clog << "(" << htons(addrIn6->sin6_port) << ")";
       clog << endl;
    }
    idx++;
