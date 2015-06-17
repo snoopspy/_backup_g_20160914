@@ -19,6 +19,7 @@ void readProc(GSock sock) {
     buf[readLen] = '\0';
     std::clog << buf << std::endl;
   }
+  exit(0);
 }
 
 int main(int argc, char* argv[]) {
