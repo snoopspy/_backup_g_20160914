@@ -24,7 +24,7 @@ void readProc(GSock sock) {
     std::clog << buf << std::endl;
   }
   _mutex.lock();
-  _socks.erase(_socks.find(sock));
+  _socks.erase(sock);
   _mutex.unlock();
 }
 
