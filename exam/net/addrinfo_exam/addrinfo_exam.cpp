@@ -10,7 +10,7 @@ DEFINE_int32(family, AF_UNSPEC, "0:AF_UNSPEC 2:AF_INET 10:AF_INET6");
 DEFINE_int32(socktype, 0, "0:UNKNOWN 1:SOCK_STREAM 2:SOCK_DGRAM");
 DEFINE_int32(flags, 0, "flags");
 DEFINE_string(host, "", "host");
-DEFINE_string(port, "", "port");
+DEFINE_string(port, "0", "port");
 
 using namespace std;
 
