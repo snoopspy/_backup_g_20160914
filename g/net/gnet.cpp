@@ -13,7 +13,7 @@ GSock GNet::bind(int sockType, QString ip, QString port, bool reuseAddr) {
   err = addrInfo.query(ip, port);
   if (err != nullptr) {
     LOG(ERROR) << err;
-    return false;
+    return GSock(-1);
   }
 
   GSock sock;
@@ -49,7 +49,7 @@ GSock GNet::bind(int sockType, QString ip, QString port, bool reuseAddr) {
   if (!succeed) {
     GLastErr lastErr;
     SET_ERR(GNetErr(lastErr.code(), QString("%1 ip=%2 port=%3").arg(lastErr.msg(), ip, port)));
-    sock = -1;
+    return GSock(-1);
   }
   return sock;
 }

@@ -26,7 +26,7 @@ public:
   GNetClient(GObj *parent = nullptr) : GNet(parent) {}
 
   QString localIp_;
-  QString localPort_;
+  QString localPort_{"0"};
   QString host_;
-  QString port_;
+  QString port_{"0"};
 };
