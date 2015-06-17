@@ -14,7 +14,7 @@ GErr* GAddrInfo::query(QString host, QString port) {
 
   const char* pPort = nullptr;
   QByteArray baPort;
-  if (!(port.isEmpty() || port == "0")) {
+  if (!port.isEmpty()) {
     baPort = port.toLocal8Bit();
     pPort = baPort.constData();
   }
