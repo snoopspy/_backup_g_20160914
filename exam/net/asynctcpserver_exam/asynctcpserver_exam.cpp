@@ -12,9 +12,9 @@
 #include <GTcpServer>
 
 DEFINE_int32(family, AF_UNSPEC, "0:AF_UNSPEC 2:AF_INET 10:AF_INET6");
+DEFINE_bool(nonBlock, true, "nonBlock");
 DEFINE_string(localIp, "", "localIp");
 DEFINE_string(port, "10065", "port");
-DEFINE_bool(nonBlock, true, "nonBlock");
 DEFINE_int32(bufSize, 1024, "bufSize");
 DEFINE_int32(threadCnt, 4, "threadCnt");
 
@@ -145,9 +145,9 @@ int main(int argc, char* argv[]) {
   google::ParseCommandLineFlags(&argc, &argv, true);
 
   ms.tcpServer_.family_ = FLAGS_family;
+  ms.tcpServer_.nonBlock_ = FLAGS_nonBlock;
   ms.tcpServer_.localIp_ = QString::fromStdString(FLAGS_localIp);
   ms.tcpServer_.port_ = QString::fromStdString(FLAGS_port);
-  ms.tcpServer_.nonBlock_ = FLAGS_nonBlock;
 
   if (!ms.open()) {
     return EXIT_FAILURE;
