@@ -11,15 +11,24 @@ DEFINE_string(host, "localhost", "host");
 DEFINE_string(port, "10065", "port");
 DEFINE_int32(bufSize, 1024, "bufSize");
 
-void readProc(GSock sock) {
+void readProc(GTcpClient* tcpClient) {
   char buf[FLAGS_bufSize];
   while (true) {
-    ssize_t readLen = sock.recv(buf, FLAGS_bufSize - 1);
+    ssize_t readLen = tcpClient->sock_.recv(buf, FLAGS_bufSize - 1);
     if (readLen == 0 || readLen == -1) break;
     buf[readLen] = '\0';
     std::clog << buf << std::endl;
   }
-  exit(0);
+}
+
+void inputProc(GTcpClient* tcpClient) {
+  while (true) {
+    std::string s;
+    std::getline(std::cin, s);
+    if (s == "q") break;
+    tcpClient->sock_.send(s.c_str(), s.length());
+  }
+  tcpClient->close();
 }
 
 int main(int argc, char* argv[]) {
@@ -38,17 +47,12 @@ int main(int argc, char* argv[]) {
     exit(EXIT_FAILURE);
   }
 
-  std::thread readThread(readProc, tcpClient.sock_);
+  std::thread readThread(readProc, &tcpClient);
+  std::thread inputThread(inputProc, &tcpClient);
+  inputThread.detach();
 
-  while (true) {
-    std::string s;
-    std::getline(std::cin, s);
-    if (s == "q") break;
-    tcpClient.sock_.send(s.c_str(), s.length());
-  }
-
-  tcpClient.close();
   readThread.join();
+  tcpClient.close();
 
   return 0;
 }

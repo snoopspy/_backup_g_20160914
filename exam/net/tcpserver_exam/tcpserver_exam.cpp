@@ -22,15 +22,16 @@ void readProc(GSock sock) {
     if (readLen == 0 || readLen == -1) break;
     buf[readLen] = '\0';
     std::clog << buf << std::endl;
+    sock.send(buf, readLen);
   }
   _mutex.lock();
   _socks.erase(sock);
   _mutex.unlock();
 }
 
-void acceptProc(GSock acceptSock) {
+void acceptProc(GTcpServer* tcpServer) {
   while (true) {
-    GSock newSock = acceptSock.accept();
+    GSock newSock = tcpServer->acceptSock_.accept();
     if (newSock == -1) break;
     _mutex.lock();
     _socks.insert(newSock);
@@ -38,6 +39,19 @@ void acceptProc(GSock acceptSock) {
     std::thread readThread(readProc, newSock);
     readThread.detach();
   }
+}
+
+void inputProc(GTcpServer* tcpServer) {
+  while (true) {
+    std::string s;
+    std::getline(std::cin, s);
+    if (s == "q") break;
+    _mutex.lock();
+    for (GSock sock: _socks)
+      sock.send(s.c_str(), s.length());
+    _mutex.unlock();
+  }
+  tcpServer->close();
 }
 
 int main(int argc, char* argv[]) {
@@ -54,18 +68,11 @@ int main(int argc, char* argv[]) {
     exit(EXIT_FAILURE);
   }
 
-  std::thread acceptThread(acceptProc, tcpServer.acceptSock_);
+  std::thread acceptThread(acceptProc, &tcpServer);
+  std::thread inputThread(inputProc, &tcpServer);
+  inputThread.detach();
 
-  while (true) {
-    std::string s;
-    std::getline(std::cin, s);
-    if (s == "q") break;
-    _mutex.lock();
-    for (GSock sock: _socks)
-      sock.send(s.c_str(), s.length());
-    _mutex.unlock();
-  }
-
+  acceptThread.join();
   tcpServer.close();
   _mutex.lock();
   for (GSock sock: _socks) {
@@ -73,7 +80,6 @@ int main(int argc, char* argv[]) {
     sock.close();
   }
   _mutex.unlock();
-  acceptThread.join();
 
   return 0;
 }
