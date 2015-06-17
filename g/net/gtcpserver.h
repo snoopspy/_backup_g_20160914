@@ -21,7 +21,7 @@ struct GTcpServer : GNetServer {
   Q_PROPERTY(int backLog MEMBER backLog_)
 
 public:
-  GTcpServer(GObj *parent = nullptr);
+  GTcpServer(GObj* parent = nullptr);
   ~GTcpServer() override;
 
   bool open() override;

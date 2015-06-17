@@ -3,7 +3,7 @@
 // ----------------------------------------------------------------------------
 // GTcpServer
 // ----------------------------------------------------------------------------
-GTcpServer::GTcpServer(GObj *parent) : GNetServer(parent) {
+GTcpServer::GTcpServer(GObj* parent) : GNetServer(parent) {
 }
 
 GTcpServer::~GTcpServer() {

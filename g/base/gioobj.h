@@ -16,7 +16,7 @@
 // GIOObj
 // ----------------------------------------------------------------------------
 struct GIOObj : GObj {
-  GIOObj(GObj *parent = nullptr) : GObj(parent) {}
+  GIOObj(GObj* parent = nullptr) : GObj(parent) {}
 
   virtual ssize_t read(char *buf, ssize_t len) = 0;
   virtual ssize_t write(const char *buf, ssize_t len) = 0;

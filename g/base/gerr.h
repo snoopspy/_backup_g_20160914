@@ -11,7 +11,6 @@
 #pragma once
 
 #include <ostream>
-#include <glog/logging.h>
 #include <QString>
 
 namespace g {

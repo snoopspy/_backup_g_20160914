@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <glog/logging.h>
 #include <QObject>
 #include "gerr.h"
 
@@ -17,7 +18,7 @@
 // GObj
 // ----------------------------------------------------------------------------
 struct GObj : QObject {
-  GObj(GObj *parent = nullptr) : QObject(parent) {}
+  GObj(GObj* parent = nullptr) : QObject(parent) {}
   ~GObj() override;
 
   virtual bool open();

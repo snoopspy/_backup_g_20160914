@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
 
   GErr* err = addrInfo.query(QString::fromStdString(FLAGS_host), QString::fromStdString(FLAGS_port));
   if (err != nullptr) {
-    LOG(ERROR) << err;
+    clog << err << endl;
     return EXIT_FAILURE;
   }
 

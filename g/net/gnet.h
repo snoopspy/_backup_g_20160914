@@ -23,7 +23,7 @@ struct GNet : GObj {
   Q_PROPERTY(bool nonBlock MEMBER nonBlock_)
 
 public:
-  GNet(GObj *parent = nullptr) : GObj(parent) {}
+  GNet(GObj* parent = nullptr) : GObj(parent) {}
 
   GSock bind(int sockType, QString ip, QString port, bool reuseAddr);
   bool connect(GSock sock, int sockType, QString host, QString port);

@@ -3,7 +3,7 @@
 // ----------------------------------------------------------------------------
 // GTcpClient
 // ----------------------------------------------------------------------------
-GTcpClient::GTcpClient(GObj *parent) : GNetClient(parent) {
+GTcpClient::GTcpClient(GObj* parent) : GNetClient(parent) {
 }
 
 GTcpClient::~GTcpClient() {

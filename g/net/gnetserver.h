@@ -21,7 +21,7 @@ struct GNetServer : GNet {
   Q_PROPERTY(QString port MEMBER port_)
 
 public:
-  GNetServer(GObj *parent = nullptr) : GNet(parent) {}
+  GNetServer(GObj* parent = nullptr) : GNet(parent) {}
 
   QString localIp_;
   QString port_{"0"};

@@ -32,6 +32,7 @@ bool GEventThread::open() {
 bool GEventThread::close(bool wait) {
   if (!GThread::close(false))
     return false;
+
   int res = eventBase_.loopbreak();
   if (res != 0) {
     LOG(ERROR) << "eventBase_.loopbreak() return " << res;
