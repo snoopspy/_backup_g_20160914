@@ -20,6 +20,7 @@
 struct GNet : GObj {
   Q_OBJECT
   Q_PROPERTY(int family MEMBER family_)
+  Q_PROPERTY(int sockType MEMBER sockType_)
   Q_PROPERTY(bool nonBlock MEMBER nonBlock_)
 
 public:
@@ -29,6 +30,7 @@ public:
   bool connect(GSock sock, int sockType, QString host, QString port);
 
   int family_{AF_UNSPEC};
+  int sockType_{SOCK_STREAM};
   bool nonBlock_{false};
 };
 
@@ -48,3 +50,8 @@ struct GNetErr : GStdErr {
 
   const char* name() override { return "NetErr"; }
 };
+
+// ----------------------------------------------------------------------------
+// Defines
+// ----------------------------------------------------------------------------
+#define INVALID_SOCKET -1

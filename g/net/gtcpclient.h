@@ -20,8 +20,5 @@ struct GTcpClient : GNetClient {
   GTcpClient(GObj* parent = nullptr);
   ~GTcpClient() override;
 
-  bool open() override;
-  bool close() override;
-
   GSock sock_{-1};
 };
