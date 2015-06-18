@@ -23,7 +23,7 @@
 // ----------------------------------------------------------------------------
 // GSock
 // ----------------------------------------------------------------------------
-struct GSock {
+struct GSock final {
   GSock() {}
   GSock(const GSock& rhs) : sock_(rhs.sock_) {}
   GSock(int sock) : sock_(sock) {}
