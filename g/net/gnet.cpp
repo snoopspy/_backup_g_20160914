@@ -60,8 +60,10 @@ bool GNet::connect(GSock sock, int sockType, QString host, QString port) {
   addrInfo.hints_.ai_socktype = sockType;
 
   err = addrInfo.query(host, port);
-  if (err != nullptr) {
-    LOG(ERROR) << err;
+  if (err != nullptr)
+  {
+    //LOG(ERROR) << err << QString("host=%1 port=%2").arg(host, port);
+    LOG(ERROR) << host;
     return false;
   }
 

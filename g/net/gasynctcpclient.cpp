@@ -27,10 +27,10 @@ TEST(GAsyncTcpClient, failTest) {
 
 static void acceptProc(GTcpServer* tcpServer) {
   while (true) {
-    GSock newSock = tcpServer->accept();
-    if (newSock == INVALID_SOCKET)
+    GTcpSession* newSession = tcpServer->accept();
+    if (newSession == nullptr)
       break;
-    newSock.close();
+    delete newSession;
   }
 }
 

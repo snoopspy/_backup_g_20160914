@@ -12,6 +12,7 @@
 
 #include <ostream>
 #include <QString>
+#include "gstr.h"
 
 namespace g {
   enum {
