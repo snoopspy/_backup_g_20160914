@@ -18,10 +18,4 @@
 // ----------------------------------------------------------------------------
 struct GAsyncTcpClient : GTcpClient {
   GAsyncTcpClient(GObj* parent = nullptr);
-  ~GAsyncTcpClient() override;
-
-  bool open() override;
-  bool close() override;
-
-  GAsyncTcpSession tcpSession_{this};
 };

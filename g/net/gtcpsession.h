@@ -20,22 +20,14 @@ struct GTcpSession : GIOObj {
   GTcpSession(GObj* parent) : GIOObj(parent) {}
   ~GTcpSession() override { close(); }
 
-  bool open() override {
-    return sock_ != INVALID_SOCKET;
-  }
-
   bool close() override {
     if (sock_ == INVALID_SOCKET)
       return true;
-
     bool res = true;
-
     if (!sock_.shutdown())
       res = false;
-
     if (!sock_.close())
       res = false;
-
     sock_ = INVALID_SOCKET;
     return res;
   }

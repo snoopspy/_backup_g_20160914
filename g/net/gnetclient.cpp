@@ -3,7 +3,7 @@
 // ----------------------------------------------------------------------------
 // GNetClient
 // ----------------------------------------------------------------------------
-GSock GNetClient::doOpen() {
+bool GNetClient::checkHostAndPort() {
   if (host_.isEmpty()) {
     SET_ERR(GNetErr(g::HOST_NOT_SPECIFIED, "host not specified"));
     return false;
@@ -11,32 +11,25 @@ GSock GNetClient::doOpen() {
 
   if (port_.isEmpty() || port_ == "0") {
     SET_ERR(GNetErr(g::PORT_NOT_SPECIFIED, "port not specified"));
-    return GSock(INVALID_SOCKET);
+    return false;
   }
-
-  GSock sock = bind(SOCK_STREAM, localIp_, localPort_, true);
-  if (sock == INVALID_SOCKET)
-    return sock;
-
-  if (!connect(sock, SOCK_STREAM, host_, port_)) {
-    sock.close();
-    return GSock(INVALID_SOCKET);
-  }
-
-  return true;
 }
 
-bool GNetClient::doClose(GSock sock) {
-  if (sock == INVALID_SOCKET)
-    return true;
+GSock GNetClient::bind() {
+  GSock sock = GNet::bind(sockType_, localIp_, localPort_, true);
+  if (sock == INVALID_SOCKET) {
+    GLastErr lastErr;
+    SET_ERR(GNetErr(lastErr.code(), lastErr.msg()));
+    return INVALID_SOCKET;
+  }
+  return sock;
+}
 
-  bool res = true;
-
-  if (!sock.shutdown())
-    res = false;
-
-  if (!sock.close())
-    res = false;
-
-  return res;
+bool GNetClient::connect(GSock sock) {
+  if (!GNet::connect(sock, sockType_, host_, port_)) {
+      GLastErr lastErr;
+      SET_ERR(GNetErr(lastErr.code(), lastErr.msg()));
+      return false;
+  }
+  return true;
 }

@@ -4,10 +4,35 @@
 // GTcpClient
 // ----------------------------------------------------------------------------
 GTcpClient::GTcpClient(GObj* parent) : GNetClient(parent) {
+  sockType_ = SOCK_STREAM;
+  tcpSession_ = new GTcpSession(this);
 }
 
 GTcpClient::~GTcpClient() {
   close();
+  if (tcpSession_ != nullptr) {
+    delete tcpSession_;
+    tcpSession_ = nullptr;
+  }
+}
+
+bool GTcpClient::open() {
+  if (!GNetClient::checkHostAndPort())
+    return false;
+
+  tcpSession_->sock_ = GNetClient::bind();
+  if (tcpSession_->sock_ == INVALID_SOCKET)
+    return false;
+
+  if (!GNetClient::connect(tcpSession_->sock_))
+    return false;
+
+  return true;
+}
+
+bool GTcpClient::close() {
+  bool res = tcpSession_->close();
+  return res;
 }
 
 // ----------------------------------------------------------------------------

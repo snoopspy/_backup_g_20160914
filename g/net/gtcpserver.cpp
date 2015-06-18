@@ -4,54 +4,51 @@
 // GTcpServer
 // ----------------------------------------------------------------------------
 GTcpServer::GTcpServer(GObj* parent) : GNetServer(parent) {
+  sockType_ = SOCK_STREAM;
+  acceptSession_ = new GTcpSession(this);
 }
 
 GTcpServer::~GTcpServer() {
   close();
+  if (acceptSession_ != nullptr) {
+    delete acceptSession_;
+    acceptSession_ = nullptr;
+  }
 }
 
 bool GTcpServer::open() {
-  if (port_ == 0) {
-    SET_ERR(GNetErr(g::PORT_NOT_SPECIFIED, "port not specified"));
+  if (!GNetServer::checkLocalIpAndPort())
     return false;
+
+  acceptSession_->sock_ = GNetServer::bind();
+  if (acceptSession_->sock_ == INVALID_SOCKET)
+    return false;
+
+  if (!acceptSession_->sock_.listen(backLog_)) {
+    GLastErr lastErr;
+    SET_ERR(GNetErr(lastErr.code(), lastErr.msg()));
+    return INVALID_SOCKET;
   }
 
-  acceptSock_ = bind(SOCK_STREAM, localIp_, port_, true);
-  if (acceptSock_ == INVALID_SOCKET)
-    return false;
-
-  if (!listen())
+  if (!acceptSession_->open())
     return false;
 
   return true;
 }
 
 bool GTcpServer::close() {
-  return acceptClose();
-}
-
-bool GTcpServer::listen() {
-  return acceptSock_.listen(backLog_);
-}
-
-GSock GTcpServer::accept(GSockAddr *sockAddr, socklen_t *addrLen) {
-  return acceptSock_.accept(sockAddr, addrLen);
-}
-
-bool GTcpServer::acceptClose() {
-  if (acceptSock_ == INVALID_SOCKET)
-    return true;
-
-  bool res = true;
-
-  if (!acceptSock_.shutdown())
-    res = false;
-
-  if (!acceptSock_.close())
-    res = false;
-
-  acceptSock_ = INVALID_SOCKET;
+  bool res = acceptSession_->close();
   return res;
+}
+
+GTcpSession* GTcpServer::accept() {
+  GSock newSock = acceptSession_->sock_.accept();
+  if (newSock == INVALID_SOCKET)
+    return nullptr;
+
+  GTcpSession* newSession = new GTcpSession(this);
+  newSession->sock_ = newSock;
+  return newSession;
 }
 
 // ----------------------------------------------------------------------------

@@ -23,6 +23,9 @@ struct GNetServer : GNet {
 public:
   GNetServer(GObj* parent = nullptr) : GNet(parent) {}
 
+  bool checkLocalIpAndPort();
+  GSock bind();
+
   QString localIp_;
   QString port_{"0"};
 };

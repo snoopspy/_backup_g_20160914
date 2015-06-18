@@ -11,7 +11,7 @@
 #pragma once
 
 #include "gnetserver.h"
-#include "gsock.h"
+#include "gtcpsession.h"
 
 // ----------------------------------------------------------------------------
 // GTcpServer
@@ -27,11 +27,9 @@ public:
   bool open() override;
   bool close() override;
 
-  bool listen();
-  GSock accept(GSockAddr *sockAddr = nullptr, socklen_t *addrLen = nullptr);
-  bool acceptClose();
+  virtual GTcpSession* accept();
 
   int backLog_{1024};
 
-  GSock acceptSock_{INVALID_SOCKET};
+  GTcpSession* acceptSession_;
 };

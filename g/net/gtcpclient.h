@@ -11,7 +11,7 @@
 #pragma once
 
 #include "gnetclient.h"
-#include "gsock.h"
+#include "gtcpsession.h"
 
 // ----------------------------------------------------------------------------
 // GTcpClient
@@ -20,5 +20,8 @@ struct GTcpClient : GNetClient {
   GTcpClient(GObj* parent = nullptr);
   ~GTcpClient() override;
 
-  GSock sock_{INVALID_SOCKET};
+  bool open() override;
+  bool close() override;
+
+  GTcpSession* tcpSession_;
 };

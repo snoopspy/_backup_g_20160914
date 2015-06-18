@@ -30,7 +30,7 @@ public:
   bool connect(GSock sock, int sockType, QString host, QString port);
 
   int family_{AF_UNSPEC};
-  int sockType_{SOCK_STREAM};
+  int sockType_; // SOCK_STREAM or SOCK_DGRAM
   bool nonBlock_{false};
 };
 
