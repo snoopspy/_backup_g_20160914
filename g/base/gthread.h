@@ -18,8 +18,19 @@
 struct GThread : QThread {
   bool active() { return active_; }
 
-  virtual bool open();
-  virtual bool close(bool wait = true);
+  virtual bool open() {
+    active_ = true;
+    QThread::start();
+    return true;
+  }
+
+  virtual bool close(bool wait = true) {
+    bool res = true;
+    active_ = false;
+    if (wait)
+      res = QThread::wait();
+    return res;
+  }
 
 private:
   bool active_{false};
