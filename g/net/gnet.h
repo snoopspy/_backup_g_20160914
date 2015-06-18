@@ -28,6 +28,7 @@ public:
 
   GSock bind(int sockType, QString ip, QString port, bool reuseAddr);
   bool connect(GSock sock, int sockType, QString host, QString port);
+  bool listen(GSock sock, int backLog);
 
   int family_{AF_UNSPEC};
   int sockType_; // SOCK_STREAM or SOCK_DGRAM

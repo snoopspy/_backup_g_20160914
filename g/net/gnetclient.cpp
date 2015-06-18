@@ -17,20 +17,9 @@ bool GNetClient::checkHostAndPort() {
 }
 
 GSock GNetClient::bind() {
-  GSock sock = GNet::bind(sockType_, localIp_, localPort_, true);
-  if (sock == INVALID_SOCKET) {
-    GLastErr lastErr;
-    SET_ERR(GNetErr(lastErr.code(), lastErr.msg()));
-    return INVALID_SOCKET;
-  }
-  return sock;
+  return GNet::bind(sockType_, localIp_, localPort_, true);
 }
 
 bool GNetClient::connect(GSock sock) {
-  if (!GNet::connect(sock, sockType_, host_, port_)) {
-      GLastErr lastErr;
-      SET_ERR(GNetErr(lastErr.code(), lastErr.msg()));
-      return false;
-  }
-  return true;
+  return GNet::connect(sock, sockType_, host_, port_);
 }

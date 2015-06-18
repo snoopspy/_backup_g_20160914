@@ -1,10 +1,9 @@
 #include <gflags/gflags.h>
 #include <iostream>
 #include <thread>
-#include <GNetClient>
+#include <GTcpClient>
 
 DEFINE_int32(family, AF_UNSPEC, "0:AF_UNSPEC 2:AF_INET 10:AF_INET6");
-DEFINE_int32(sockType, SOCK_STREAM, "1:SOCK_STREAM 2:SOCK_DGRAM");
 DEFINE_bool(nonBlock, false, "nonBlock");
 DEFINE_string(localIp, "", "localIp");
 DEFINE_string(localPort, "0", "localPort");
@@ -13,25 +12,18 @@ DEFINE_string(port, "10065", "port");
 DEFINE_int32(bufSize, 1024, "bufSize");
 
 struct MyClient {
-  GNetClient netClient_;
-  GSock sock_;
+  GTcpClient tcpClient_;
   std::thread readThread_;
 
   bool open() {
-    if (!netClient_.checkHostAndPort())
-      return false;
-    sock_ = netClient_.bind();
-    if (sock_ == INVALID_SOCKET)
-      return false;
-    if (!netClient_.connect(sock_))
+    if (!tcpClient_.open())
       return false;
     readThread_ = std::thread(&MyClient::readProc, this);
     return true;
   }
 
   void close() {
-    sock_.shutdown();
-    sock_.close();
+    tcpClient_.close();
   }
 
   void wait() {
@@ -42,7 +34,7 @@ struct MyClient {
     std::clog << "connected\n";
     char buf[FLAGS_bufSize];
     while (true) {
-      ssize_t readLen = sock_.recv(buf, FLAGS_bufSize - 1);
+      ssize_t readLen = tcpClient_.tcpSession_->read(buf, FLAGS_bufSize - 1);
       if (readLen == 0 || readLen == -1) break;
       buf[readLen] = '\0';
       std::clog << buf << std::endl;
@@ -56,7 +48,7 @@ void inputProc() {
     std::string s;
     std::getline(std::cin, s);
     if (s == "q") break;
-    mc.sock_.send(s.c_str(), s.length());
+    mc.tcpClient_.tcpSession_->write(s.c_str(), s.length());
   }
   mc.close();
 }
@@ -64,16 +56,15 @@ void inputProc() {
 int main(int argc, char* argv[]) {
   google::ParseCommandLineFlags(&argc, &argv, true);
 
-  mc.netClient_.family_ = FLAGS_family;
-  mc.netClient_.sockType_ = FLAGS_sockType;
-  mc.netClient_.nonBlock_ = FLAGS_nonBlock;
-  mc.netClient_.localIp_ = QString::fromStdString(FLAGS_localIp);
-  mc.netClient_.localPort_ = QString::fromStdString(FLAGS_localPort);
-  mc.netClient_.host_ = QString::fromStdString(FLAGS_host);
-  mc.netClient_.port_ = QString::fromStdString(FLAGS_port);
+  mc.tcpClient_.family_ = FLAGS_family;
+  mc.tcpClient_.nonBlock_ = FLAGS_nonBlock;
+  mc.tcpClient_.localIp_ = QString::fromStdString(FLAGS_localIp);
+  mc.tcpClient_.localPort_ = QString::fromStdString(FLAGS_localPort);
+  mc.tcpClient_.host_ = QString::fromStdString(FLAGS_host);
+  mc.tcpClient_.port_ = QString::fromStdString(FLAGS_port);
 
   if (!mc.open()) {
-    std::clog << mc.netClient_.err << std::endl;
+    std::clog << mc.tcpClient_.err << std::endl;
     exit(EXIT_FAILURE);
   }
 

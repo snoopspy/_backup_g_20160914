@@ -84,3 +84,12 @@ bool GNet::connect(GSock sock, int sockType, QString host, QString port) {
   }
   return true;
 }
+
+bool GNet::listen(GSock sock, int backLog) {
+  if (!sock.listen(backLog)) {
+    GLastErr lastErr;
+    SET_ERR(GNetErr(lastErr.code(), lastErr.msg()));
+    return false;
+  }
+  return true;
+}

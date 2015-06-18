@@ -24,13 +24,7 @@ bool GTcpServer::open() {
   if (acceptSession_->sock_ == INVALID_SOCKET)
     return false;
 
-  if (!acceptSession_->sock_.listen(backLog_)) {
-    GLastErr lastErr;
-    SET_ERR(GNetErr(lastErr.code(), lastErr.msg()));
-    return INVALID_SOCKET;
-  }
-
-  if (!acceptSession_->open())
+  if (!GNetServer::listen(acceptSession_->sock_, backLog_))
     return false;
 
   return true;

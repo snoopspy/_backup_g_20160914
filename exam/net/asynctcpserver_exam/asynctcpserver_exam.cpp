@@ -66,7 +66,7 @@ struct MyServer {
 
     acceptEventSock_ = new GEventSock(
       &acceptThread_.eventBase_,
-      tcpServer_.acceptSock_,
+      tcpServer_.acceptSession_->sock_,
       acceptCallback,
       this);
     acceptEventSock_->add();
@@ -102,7 +102,8 @@ struct MyServer {
   static void acceptCallback(evutil_socket_t, short, void* arg) {
     DLOG(INFO) << "beg acceptCallback";
     MyServer* ms = (MyServer*)arg;
-    GSock newSock = ms->tcpServer_.accept();
+    //GSock newSock = ms->tcpServer_.accept();
+    GSock newSock = -1; // gilgil temp
     if (newSock == -1)
       return;
     if (!newSock.setNonblock()) {

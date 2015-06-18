@@ -31,7 +31,7 @@ void inputProc(GTcpClient* tcpClient, GEventThread* readThread) {
     std::string s;
     std::getline(std::cin, s);
     if (s == "q") break;
-    tcpClient->sock_.send(s.c_str(), s.length());
+    tcpClient->tcpSession_->write(s.c_str(), s.length());
   }
   tcpClient->close();
   readThread->close(false);
@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
   }
 
   GEventThread readThread;
-  tcpClient.tcpSession_.assign(&readThread.eventBase_, readCallback);
+  ((GAsyncTcpSession*)tcpClient.tcpSession_)->assign(&readThread.eventBase_, readCallback);
   readThread.open();
 
   std::thread inputThread(inputProc, &tcpClient, &readThread);
