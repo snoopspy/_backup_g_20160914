@@ -30,7 +30,7 @@ TEST(GTcpClient, failTest) {
 static void acceptProc(GTcpServer* tcpServer) {
   while (true) {
     GSock newSock = tcpServer->accept();
-    if (newSock == -1)
+    if (newSock == INVALID_SOCKET)
       break;
     newSock.close();
   }

@@ -17,7 +17,7 @@ bool GTcpServer::open() {
   }
 
   acceptSock_ = bind(SOCK_STREAM, localIp_, port_, true);
-  if (acceptSock_ == -1)
+  if (acceptSock_ == INVALID_SOCKET)
     return false;
 
   if (!listen())
@@ -39,17 +39,18 @@ GSock GTcpServer::accept(GSockAddr *sockAddr, socklen_t *addrLen) {
 }
 
 bool GTcpServer::acceptClose() {
-  if (acceptSock_ == -1)
+  if (acceptSock_ == INVALID_SOCKET)
     return true;
 
   bool res = true;
+
   if (!acceptSock_.shutdown())
     res = false;
 
   if (!acceptSock_.close())
     res = false;
 
-  acceptSock_ = -1;
+  acceptSock_ = INVALID_SOCKET;
   return res;
 }
 

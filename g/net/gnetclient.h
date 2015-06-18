@@ -25,8 +25,8 @@ struct GNetClient : GNet {
 public:
   GNetClient(GObj* parent = nullptr) : GNet(parent) {}
 
-  GSock open();
-  bool close(GSock sock);
+  GSock doOpen();
+  bool doClose(GSock sock);
 
   QString localIp_;
   QString localPort_{"0"};

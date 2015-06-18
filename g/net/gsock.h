@@ -16,6 +16,11 @@
 #include "gsockaddr.h"
 
 // ----------------------------------------------------------------------------
+// Defines
+// ----------------------------------------------------------------------------
+#define INVALID_SOCKET -1
+
+// ----------------------------------------------------------------------------
 // GSock
 // ----------------------------------------------------------------------------
 struct GSock {
@@ -33,32 +38,32 @@ struct GSock {
 
   bool bind(struct sockaddr* sockAddr, socklen_t addrLen = sizeof(GSockAddr)) {
     int res = ::bind(sock_, sockAddr, addrLen);
-    return res != -1;
+    return res == 0;
   }
 
   bool bind(GSockAddr* sockAddr, socklen_t addrLen = sizeof(GSockAddr)) {
     int res = ::bind(sock_, &sockAddr->addr_, addrLen);
-    return res != -1;
+    return res == 0;
   }
 
   bool close() {
     int res = ::close(sock_);
-    return res != -1;
+    return res == 0;
   }
 
   bool connect(struct sockaddr* sockAddr, socklen_t addrLen = sizeof(GSockAddr)) {
     int res = ::connect(sock_, sockAddr, addrLen);
-    return res != -1;
+    return res == 0;
   }
 
   bool connect(GSockAddr* sockAddr, socklen_t addrLen = sizeof(GSockAddr)) {
     int res = ::connect(sock_, &sockAddr->addr_, addrLen);
-    return res != -1;
+    return res == 0;
   }
 
   bool listen(int backLog) {
     int res = ::listen(sock_, backLog);
-    return res != -1;
+    return res == 0;
   }
 
   ssize_t recv(void *buf, size_t len, int flags = 0) {
@@ -95,26 +100,26 @@ struct GSock {
     if (optval == nullptr) {
       int temp = 1;
       int res = ::setsockopt(sock_, level, optname, &temp, sizeof(temp));
-      return res != -1;
+      return res == 0;
     }
     int res = ::setsockopt(sock_, level, optname, optval, optLen) != -1;
-    return res != -1;
+    return res == 0;
   }
 
   bool socket(int domain, int type, int protocol) {
     sock_ = ::socket(domain, type, protocol);
-    return sock_ != -1;
+    return sock_ != INVALID_SOCKET;
   }
 
   bool shutdown(int how = SHUT_RDWR) {
     int res = ::shutdown(sock_, how);
-    return res != -1;
+    return res == 0;
   }
 
   bool setNonblock() {
     int i = 1;
     int res = ioctl(sock_, FIONBIO, &i);
-    return res != -1;
+    return res == 0;
   }
 
 protected:
