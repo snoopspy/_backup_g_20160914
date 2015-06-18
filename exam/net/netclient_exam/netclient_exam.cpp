@@ -17,8 +17,12 @@ struct MyClient {
   std::thread readThread_;
 
   bool open() {
-    sock_ = netClient_.createSock();
+    if (!netClient_.checkHostAndPort())
+      return false;
+    sock_ = netClient_.bind();
     if (sock_ == INVALID_SOCKET)
+      return false;
+    if (netClient_.connect(sock_))
       return false;
     readThread_ = std::thread(&MyClient::readProc, this);
     return true;

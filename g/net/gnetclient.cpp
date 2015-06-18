@@ -13,6 +13,7 @@ bool GNetClient::checkHostAndPort() {
     SET_ERR(GNetErr(g::PORT_NOT_SPECIFIED, "port not specified"));
     return false;
   }
+  return true;
 }
 
 GSock GNetClient::bind() {

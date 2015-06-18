@@ -32,11 +32,11 @@ struct GTcpSession : GIOObj {
     return res;
   }
 
-  ssize_t read(char *buf, ssize_t len) override {
+  ssize_t readData(char* buf, ssize_t len) override {
     return sock_.recv(buf, len);
   }
 
-  ssize_t write(const char *buf, ssize_t len) override {
+  ssize_t writeData(const char* buf, ssize_t len) override {
     return sock_.send(buf, len);
   }
 
