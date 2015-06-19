@@ -24,9 +24,10 @@ struct GAddrInfo {
   ~GAddrInfo() {
     if (infos_ != nullptr) {
       freeaddrinfo(infos_);
+      infos_ = nullptr;
     }
   }
-  GErr* query(QString host, QString port = "");
+  GErr* query(const char* host, const char* port = "0");
 
   struct addrinfo hints_;
   struct addrinfo* infos_{nullptr};

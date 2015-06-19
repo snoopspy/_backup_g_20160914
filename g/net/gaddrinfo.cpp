@@ -4,22 +4,14 @@
 // ----------------------------------------------------------------------------
 // GAddrInfo
 // ----------------------------------------------------------------------------
-GErr* GAddrInfo::query(QString host, QString port) {
-  const char* pHost = nullptr;
-  QByteArray baHost;
-  if (!host.isEmpty()) {
-    baHost = host.toLocal8Bit();
-    pHost = baHost.constData();
-  }
+GErr* GAddrInfo::query(const char* host, const char* port) {
+  if (host != nullptr && *host == '\0')
+    host = nullptr;
 
-  const char* pPort = nullptr;
-  QByteArray baPort;
-  if (!port.isEmpty()) {
-    baPort = port.toLocal8Bit();
-    pPort = baPort.constData();
-  }
+  if (port != nullptr && *port == '\0')
+    port = nullptr;
 
-  int res = getaddrinfo(pHost, pPort, &hints_, &infos_);
+  int res = getaddrinfo(host, port, &hints_, &infos_);
   if (res != 0) {
     return new GNetErr(res, gai_strerror(res));
   }

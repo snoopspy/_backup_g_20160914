@@ -16,17 +16,16 @@
 // GIp
 // ----------------------------------------------------------------------------
 struct GIp final {
-public:
   GIp() {}
   GIp(const GIp& rhs) : ip_(rhs.ip_) {}
-  GIp(const quint32 ui) : ip_(ui) {}
-  GIp(const char* p) { operator =(p); }
-  GIp(const QString s) { operator =(s); }
+  GIp(const quint32 rhs) : ip_(rhs) {}
+  GIp(const char* rhs) { operator =(rhs); }
+  GIp(const QString& rhs) { operator =(rhs); }
 
   GIp& operator =(const GIp& rhs) { ip_ = rhs.ip_; return *this; }
-  GIp& operator =(const quint32 ui) { ip_ = ui; return *this; }
-  GIp& operator =(const char* p);
-  GIp& operator =(const QString s) { *this = qPrintable(s); return *this; }
+  GIp& operator =(const quint32 rhs) { ip_ = rhs; return *this; }
+  GIp& operator =(const char* rhs);
+  GIp& operator =(const QString& rhs) { *this = qPrintable(rhs); return *this; }
 
   /*explicit*/ operator quint32() const { return ip_; } // default operator
   explicit operator const char*() const { return qPrintable((QString)*this); }

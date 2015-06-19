@@ -17,6 +17,8 @@
 // GSockAddr
 // ----------------------------------------------------------------------------
 union GSockAddr {
+  // ----- gilgil temp 2015.06.19 -----
+  /*
   GSockAddr() {
   }
 
@@ -54,6 +56,8 @@ union GSockAddr {
     addrIn6_.sin6_addr = sin6_addr;
     addrIn6_.sin6_scope_id = sin6_scope_id;
   }
+  */
+  // ----------------------------------
 
   struct sockaddr addr_; // 16 bytes
   struct sockaddr_in addrIn_; // 16 bytes

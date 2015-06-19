@@ -8,7 +8,7 @@
 
 DEFINE_int32(family, AF_UNSPEC, "0:AF_UNSPEC 2:AF_INET 10:AF_INET6");
 DEFINE_int32(socktype, 0, "0:UNKNOWN 1:SOCK_STREAM 2:SOCK_DGRAM");
-DEFINE_int32(flags, 0, "flags");
+DEFINE_int32(flags, 0, "1:AI_PASSIVE");
 DEFINE_string(host, "", "host");
 DEFINE_string(port, "0", "port");
 
@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
   addrInfo.hints_.ai_socktype = FLAGS_socktype;
   addrInfo.hints_.ai_flags = FLAGS_flags;
 
-  GErr* err = addrInfo.query(QString::fromStdString(FLAGS_host), QString::fromStdString(FLAGS_port));
+  GErr* err = addrInfo.query(FLAGS_host.c_str(), FLAGS_port.c_str());
   if (err != nullptr) {
     clog << err << endl;
     return EXIT_FAILURE;
