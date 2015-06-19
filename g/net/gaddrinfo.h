@@ -27,7 +27,9 @@ struct GAddrInfo {
       infos_ = nullptr;
     }
   }
-  GErr* query(const char* host, const char* port = "0");
+
+  bool query(const char* host, GErr** err = nullptr);
+  bool query(const char* host, const char* port, GErr** err = nullptr);
 
   struct addrinfo hints_;
   struct addrinfo* infos_{nullptr};
