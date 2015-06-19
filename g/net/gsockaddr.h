@@ -11,11 +11,22 @@
 #pragma once
 
 #include <netinet/in.h>
+#include <GIp>
+#include <GIp6>
 
 // ----------------------------------------------------------------------------
 // GSockAddr
 // ----------------------------------------------------------------------------
 union GSockAddr {
+  GSockAddr(struct sockaddr* addr);
+  GSockAddr(struct sockaddr_in* addrIn);
+  GSockAddr(struct sockaddr_in6* addrIn6);
+
+  int family();
+  GIp ip();
+  GIp6 ip6();
+  quint16 port();
+
   struct sockaddr addr_; // 16 bytes
   struct sockaddr_in addrIn_; // 16 bytes
   struct sockaddr_in6 addrIn6_; // 28 bytes

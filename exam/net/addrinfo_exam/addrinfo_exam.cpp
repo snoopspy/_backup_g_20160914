@@ -63,6 +63,14 @@ int main(int argc, char* argv[]) {
     }
 
     GSockAddr* sockAddr = (GSockAddr*)info->ai_addr;
+    if (sockAddr->family() == AF_INET)
+      clog << "\t" << QString(sockAddr->ip());
+    else
+      clog << "\t" << QString(sockAddr->ip6());
+    clog << "(" << sockAddr->port() << ")";
+
+    clog << endl;
+    /*
     if (info->ai_family == AF_INET) {
       GIp ip{sockAddr->addrIn_.sin_addr};
       clog << "\t" << QString(ip);
@@ -75,6 +83,7 @@ int main(int argc, char* argv[]) {
       clog << "(" << htons(sockAddr->addrIn6_.sin6_port) << ")";
       clog << endl;
    }
+   */
    idx++;
   }
 

@@ -34,3 +34,21 @@ bool GAddrInfo::query(const struct addrinfo& hints, const char* host, const char
   }
   return true;
 }
+
+// ----------------------------------------------------------------------------
+// GTEST
+// ----------------------------------------------------------------------------
+#ifdef GTEST
+#include <gtest/gtest.h>
+
+TEST(GAddrInfo, test) {
+  GAddrInfo addrInfo;
+
+  EXPECT_TRUE(addrInfo.query("127.0.0.1"));
+  GSockAddr* sockAddr = (GSockAddr*)addrInfo.info_->ai_addr;
+  sockAddr->ip();
+  sockAddr->port();
+
+}
+
+#endif // GTEST

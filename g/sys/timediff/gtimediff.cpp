@@ -47,37 +47,37 @@ struct MyTest {
 };
 
 #include "gtimediffchrono.h"
-TEST(TimeDiff, chronoTest) {
+TEST(GTimeDiff, chronoTest) {
   MyTest<GTimeDiffChrono>();
 }
 
 #include "gtimediffelapsedtimer.h"
-TEST(TimeDiff, elapsedTimerTest) {
+TEST(GTimeDiff, elapsedTimerTest) {
   MyTest<GTimeDiffElapsedTimer>();
 }
 
 #ifdef _WIN32
 #include "gtimediffgettickcount.h"
-TEST(TimeDiff, getTickCountTest) {
+TEST(GTimeDiff, getTickCountTest) {
   MyTest<GTimeDiffGetTickCount>();
 }
 #endif // _WIN32
 
 #include "gtimediffgettimeofday.h"
 
-TEST(TimeDiff, getTimeOfDayTest) {
+TEST(GTimeDiff, getTimeOfDayTest) {
   MyTest<GTimeDiffGetTimeOfDay>();
 }
 
 #include "gtimediffnull.h"
-TEST(TimeDiff, nullTest) {
+TEST(GTimeDiff, nullTest) {
   MyTest<GTimeDiffNull>();
 }
 
 #ifdef _WIN32
 #include "gtimedifftimegettime.h"
 
-TEST(TimeDiff, TimeGetTimeTest) {
+TEST(GTimeDiff, TimeGetTimeTest) {
   MyTest<GTimeDiffTimeGetTime>();
 }
 #endif // _WIN32
