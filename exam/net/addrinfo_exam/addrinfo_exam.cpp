@@ -29,11 +29,13 @@ int main(int argc, char* argv[]) {
     return EXIT_FAILURE;
   }
 
-  clog << "idx\tfamily\t\tsocktype\tprotocol\tip(port)\n";
+  clog << "idx\taddrlen\tfamily\t\tsocktype\tprotocol\tip(port)\n";
   int idx = 0;
   struct addrinfo* info;
   for (info = addrInfo.infos_; info != nullptr; info = info->ai_next) {
     clog << idx;
+
+    clog << "\t" << info->ai_addrlen;
 
     clog  << "\t" << info->ai_family;
     switch (info->ai_family) {
