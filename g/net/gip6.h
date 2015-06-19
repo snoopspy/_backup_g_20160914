@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <netinet/in.h>
 #include <QString>
 
 typedef int aaa[8];
@@ -26,11 +27,13 @@ struct GIp6 final {
   GIp6(const Addr& rhs) { memcpy(ip6_, rhs, SIZE); }
   GIp6(const char* rhs) { operator =(rhs); }
   GIp6(const QString rhs) { operator =(rhs); }
+  GIp6(const struct in6_addr& rhs) { operator=(rhs); }
 
   GIp6& operator =(const GIp6& rhs) { memcpy(ip6_, rhs.ip6_, SIZE); return *this; }
   GIp6& operator =(const Addr& rhs) { memcpy(ip6_, rhs, SIZE); return *this; }
   GIp6& operator =(const char* rhs);
   GIp6& operator =(const QString& rhs) { *this = qPrintable(rhs); return *this; }
+  GIp6& operator =(const struct in6_addr& rhs) { memcpy(ip6_, &rhs, SIZE); return *this; }
 
   bool operator ==(const GIp6& rhs) const { return memcmp(ip6_, rhs.ip6_, SIZE) == 0; }
 

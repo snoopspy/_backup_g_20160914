@@ -3,6 +3,7 @@
 #include <iostream>
 #include <GAddrInfo>
 #include <GIp>
+#include <GIp6>
 #include <GStr>
 #include <GSockAddr>
 
@@ -55,18 +56,17 @@ int main(int argc, char* argv[]) {
       case IPPROTO_IP: clog << "(IPPROTO_IP)"; break;
     }
 
+    GSockAddr* sockAddr = (GSockAddr*)info->ai_addr;
     if (info->ai_family == AF_INET) {
-      struct sockaddr_in* addrIn = (struct sockaddr_in*)info->ai_addr;
-      clog << "\t" << QString(GIp(ntohl(addrIn->sin_addr.s_addr)));
-      clog << "(" << htons(addrIn->sin_port) << ")";
+      GIp ip{sockAddr->addrIn_.sin_addr};
+      clog << "\t" << QString(ip);
+      clog << "(" << htons(sockAddr->addrIn_.sin_port) << ")";
       clog << endl;
     } else
    if (info->ai_family == AF_INET6) {
-      struct sockaddr_in6* addrIn6 = (struct sockaddr_in6*)info->ai_addr;
-      char str[INET6_ADDRSTRLEN];
-      inet_ntop(info->ai_family, info->ai_addr, str, INET6_ADDRSTRLEN);
-      clog << "\t" << str;
-      clog << "(" << htons(addrIn6->sin6_port) << ")";
+      GIp6 ip6{sockAddr->addrIn6_.sin6_addr};
+      clog << "\t" << QString(ip6);
+      clog << "(" << htons(sockAddr->addrIn6_.sin6_port) << ")";
       clog << endl;
    }
    idx++;
