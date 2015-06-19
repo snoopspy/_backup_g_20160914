@@ -17,20 +17,19 @@
 // GAddrInfo
 // ----------------------------------------------------------------------------
 struct GAddrInfo {
-  GAddrInfo() {
-    memset(&hints_, 0, sizeof(hints_));
-  }
+  GAddrInfo() : info_(nullptr) {}
 
   ~GAddrInfo() {
-    if (infos_ != nullptr) {
-      freeaddrinfo(infos_);
-      infos_ = nullptr;
+    if (info_ != nullptr) {
+      freeaddrinfo(info_);
+      info_ = nullptr;
     }
   }
 
   bool query(const char* host, GErr** err = nullptr);
   bool query(const char* host, const char* port, GErr** err = nullptr);
+  bool query(const struct addrinfo& hints, const char* host, GErr** err = nullptr);
+  bool query(const struct addrinfo& hints, const char* host, const char* port, GErr** err = nullptr);
 
-  struct addrinfo hints_;
-  struct addrinfo* infos_{nullptr};
+  struct addrinfo* info_{nullptr};
 };

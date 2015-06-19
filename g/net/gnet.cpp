@@ -6,18 +6,21 @@
 // ----------------------------------------------------------------------------
 GSock GNet::bind(int sockType, QString ip, QString port, bool reuseAddr) {
   GAddrInfo addrInfo;
-  addrInfo.hints_.ai_family = family_;
-  addrInfo.hints_.ai_socktype = sockType;
-  addrInfo.hints_.ai_flags = AI_PASSIVE;
+  struct addrinfo hints;
 
-  if (!addrInfo.query(qPrintable(ip), qPrintable(port), &err)) {
+  memset(&hints, 0, sizeof(hints));
+  hints.ai_family = family_;
+  hints.ai_socktype = sockType;
+  hints.ai_flags = AI_PASSIVE;
+
+  if (!addrInfo.query(hints, qPrintable(ip), qPrintable(port), &err)) {
     LOG(ERROR) << err;
     return GSock(INVALID_SOCKET);
   }
 
   GSock sock;
   bool succeed = false;
-  for (struct addrinfo* info = addrInfo.infos_; info != nullptr; info = info->ai_next) {
+  for (struct addrinfo* info = addrInfo.info_; info != nullptr; info = info->ai_next) {
     if (!sock.socket(info->ai_family, info->ai_socktype, info->ai_protocol)) {
       sock.close();
       continue;
@@ -55,16 +58,19 @@ GSock GNet::bind(int sockType, QString ip, QString port, bool reuseAddr) {
 
 bool GNet::connect(GSock sock, int sockType, QString host, QString port) {
   GAddrInfo addrInfo;
-  addrInfo.hints_.ai_family = family_;
-  addrInfo.hints_.ai_socktype = sockType;
+  struct addrinfo hints;
 
-  if (!addrInfo.query(qPrintable(host), qPrintable(port)), &err) {
+  memset(&hints, 0, sizeof(hints));
+  hints.ai_family = family_;
+  hints.ai_socktype = sockType;
+
+  if (!addrInfo.query(hints, qPrintable(host), qPrintable(port)), &err) {
     LOG(ERROR) << err << QString("host=%1 port=%2").arg(host, port);
     return false;
   }
 
   bool succeed = false;
-  for (struct addrinfo* info = addrInfo.infos_; info != nullptr; info = info->ai_next) {
+  for (struct addrinfo* info = addrInfo.info_; info != nullptr; info = info->ai_next) {
     if (!sock.connect(info->ai_addr, info->ai_addrlen)) {
       if (!(nonBlock_ && errno == EINPROGRESS)) {
         sock.close();

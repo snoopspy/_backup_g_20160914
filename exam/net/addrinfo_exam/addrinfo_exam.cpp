@@ -7,9 +7,9 @@
 #include <GStr>
 #include <GSockAddr>
 
+DEFINE_int32(flags, 0, "1:AI_PASSIVE");
 DEFINE_int32(family, AF_UNSPEC, "0:AF_UNSPEC 2:AF_INET 10:AF_INET6");
 DEFINE_int32(socktype, 0, "0:UNKNOWN 1:SOCK_STREAM 2:SOCK_DGRAM");
-DEFINE_int32(flags, 0, "1:AI_PASSIVE");
 DEFINE_string(host, "", "host");
 DEFINE_string(port, "0", "port");
 
@@ -19,12 +19,15 @@ int main(int argc, char* argv[]) {
   google::ParseCommandLineFlags(&argc, &argv, true);
 
   GAddrInfo addrInfo;
-  addrInfo.hints_.ai_family = FLAGS_family;
-  addrInfo.hints_.ai_socktype = FLAGS_socktype;
-  addrInfo.hints_.ai_flags = FLAGS_flags;
+  struct addrinfo hints;
+
+  memset(&hints, 0, sizeof(hints));
+  hints.ai_flags = FLAGS_flags;
+  hints.ai_family = FLAGS_family;
+  hints.ai_socktype = FLAGS_socktype;
 
   GErr* err;
-  if (!addrInfo.query(FLAGS_host.c_str(), FLAGS_port.c_str(), &err)) {
+  if (!addrInfo.query(hints, FLAGS_host.c_str(), FLAGS_port.c_str(), &err)) {
     clog << err << endl;
     delete err;
     return EXIT_FAILURE;
@@ -33,7 +36,7 @@ int main(int argc, char* argv[]) {
   clog << "idx\taddrlen\tfamily\t\tsocktype\tprotocol\tip(port)\n";
   int idx = 0;
   struct addrinfo* info;
-  for (info = addrInfo.infos_; info != nullptr; info = info->ai_next) {
+  for (info = addrInfo.info_; info != nullptr; info = info->ai_next) {
     clog << idx;
 
     clog << "\t" << info->ai_addrlen;
