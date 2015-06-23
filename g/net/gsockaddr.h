@@ -18,7 +18,7 @@
 // ----------------------------------------------------------------------------
 // GSockAddr
 // ----------------------------------------------------------------------------
-union GSockAddr {
+union GSockAddr final {
   GSockAddr();
   GSockAddr(struct sockaddr* addr);
   GSockAddr(struct sockaddr_in* addrIn);
