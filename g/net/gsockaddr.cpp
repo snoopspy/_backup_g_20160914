@@ -1,10 +1,14 @@
 #include <assert.h>
 #include <string.h>
+#include "gaddrinfo.h"
 #include "gsockaddr.h"
 
 // ----------------------------------------------------------------------------
 // GSockAddr
 // ----------------------------------------------------------------------------
+GSockAddr::GSockAddr() {
+}
+
 GSockAddr::GSockAddr(struct sockaddr* addr) {
   memcpy(this, addr, sizeof(*addr));
 }
@@ -15,6 +19,16 @@ GSockAddr::GSockAddr(struct sockaddr_in* addrIn) {
 
 GSockAddr::GSockAddr(struct sockaddr_in6* addrIn6) {
   memcpy(this, addrIn6, sizeof(*addrIn6));
+}
+
+GErr* GSockAddr::init(const char* host, const char* port) {
+  GAddrInfo addrInfo;
+  GErr* err = addrInfo.query(host, port);
+  if (err == nullptr) {
+    assert(addrInfo.info_->ai_addrlen <= sizeof(*this));
+    memcpy(this, addrInfo.info_->ai_addr, addrInfo.info_->ai_addrlen);
+  }
+  return err;
 }
 
 int GSockAddr::family() {
@@ -49,3 +63,38 @@ quint16 GSockAddr::port() {
   else
     return 0;
 }
+
+// ----------------------------------------------------------------------------
+// GTEST
+// ----------------------------------------------------------------------------
+#ifdef GTEST
+#include <gtest/gtest.h>
+
+TEST(GSockAddr, ipTest) {
+  GSockAddr sockAddr;
+  sockAddr.init("127.0.0.1", nullptr);
+  EXPECT_EQ(sockAddr.family(), AF_INET);
+  QString ip = (QString)(sockAddr.ip());
+  EXPECT_EQ(ip, "127.0.0.1");
+  quint16 port = sockAddr.port();
+  EXPECT_EQ(port, 0);
+}
+
+TEST(GSockAddr, ip6Test) {
+  GSockAddr sockAddr;
+  sockAddr.init("::1", nullptr);
+  EXPECT_EQ(sockAddr.family(), AF_INET6);
+  QString ip6 = (QString)(sockAddr.ip6());
+  EXPECT_EQ(ip6, "::1");
+  quint16 port = sockAddr.port();
+  EXPECT_EQ(port, 0);
+}
+
+TEST(GSockAddr, portTest) {
+  GSockAddr sockAddr;
+  EXPECT_EQ(sockAddr.init(nullptr, "80"), nullptr);
+  quint16 port = sockAddr.port();
+  EXPECT_EQ(port, 80);
+}
+
+#endif // GTEST

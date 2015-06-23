@@ -11,16 +11,20 @@
 #pragma once
 
 #include <netinet/in.h>
-#include <GIp>
-#include <GIp6>
+#include "g/base/gerr.h"
+#include "gip.h"
+#include "gip6.h"
 
 // ----------------------------------------------------------------------------
 // GSockAddr
 // ----------------------------------------------------------------------------
 union GSockAddr {
+  GSockAddr();
   GSockAddr(struct sockaddr* addr);
   GSockAddr(struct sockaddr_in* addrIn);
   GSockAddr(struct sockaddr_in6* addrIn6);
+
+  GErr* init(const char* host, const char* port);
 
   int family();
   GIp ip();

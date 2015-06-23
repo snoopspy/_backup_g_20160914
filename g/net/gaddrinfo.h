@@ -16,15 +16,9 @@
 // ----------------------------------------------------------------------------
 // GAddrInfo
 // ----------------------------------------------------------------------------
-struct GAddrInfo {
-  GAddrInfo() : info_(nullptr) {}
-
-  ~GAddrInfo() {
-    if (info_ != nullptr) {
-      freeaddrinfo(info_);
-      info_ = nullptr;
-    }
-  }
+struct GAddrInfo final {
+  GAddrInfo();
+  ~GAddrInfo();
 
   GErr* query(const char* host);
   GErr* query(const char* host, const char* port);
