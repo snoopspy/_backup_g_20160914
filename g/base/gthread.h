@@ -16,6 +16,8 @@
 // GThread
 // ----------------------------------------------------------------------------
 struct GThread : QThread {
+  GThread(QObject* parent = nullptr) : QThread(parent) {}
+
   bool active() { return active_; }
 
   virtual bool open() {
