@@ -4,23 +4,23 @@
 // ----------------------------------------------------------------------------
 // GAddrInfo
 // ----------------------------------------------------------------------------
-bool GAddrInfo::query(const char* host, GErr** err) {
+GErr* GAddrInfo::query(const char* host) {
   struct addrinfo hints;
   memset(&hints, 0, sizeof(hints));
-  return query(hints, host, nullptr, err);
+  return query(hints, host, nullptr);
 }
 
-bool GAddrInfo::query(const char* host, const char* port, GErr** err) {
+GErr* GAddrInfo::query(const char* host, const char* port) {
   struct addrinfo hints;
   memset(&hints, 0, sizeof(hints));
-  return query(hints, host, port, err);
+  return query(hints, host, port);
 }
 
-bool GAddrInfo::query(const struct addrinfo& hints, const char* host, GErr** err) {
-  return query(hints, host, nullptr, err);
+GErr* GAddrInfo::query(const struct addrinfo& hints, const char* host) {
+  return query(hints, host, nullptr);
 }
 
-bool GAddrInfo::query(const struct addrinfo& hints, const char* host, const char* port, GErr** err) {
+GErr* GAddrInfo::query(const struct addrinfo& hints, const char* host, const char* port) {
   if (host != nullptr && *host == '\0')
     host = nullptr;
 
@@ -28,11 +28,11 @@ bool GAddrInfo::query(const struct addrinfo& hints, const char* host, const char
     port = nullptr;
 
   int res = getaddrinfo(host, port, &hints, &info_);
-  if (res != 0 && err != nullptr) {
-    *err = new GNetErr(res, gai_strerror(res));
-    return false;
+  if (res != 0) {
+    GErr* err = new GNetErr(res, gai_strerror(res));
+    return err;
   }
-  return true;
+  return nullptr;
 }
 
 // ----------------------------------------------------------------------------
@@ -41,14 +41,28 @@ bool GAddrInfo::query(const struct addrinfo& hints, const char* host, const char
 #ifdef GTEST
 #include <gtest/gtest.h>
 
-TEST(GAddrInfo, test) {
-  GAddrInfo addrInfo;
+TEST(GAddrInfo, hostTest) {
+  {
+    GAddrInfo addrInfo;
+    EXPECT_EQ(addrInfo.query("127.0.0.1"), nullptr);
+    GSockAddr* sockAddr = (GSockAddr*)addrInfo.info_->ai_addr;
+    EXPECT_EQ(sockAddr->family(), AF_INET);
+    QString ip = (QString)(sockAddr->ip());
+    EXPECT_EQ(ip, "127.0.0.1");
+    quint16 port = sockAddr->port();
+    EXPECT_EQ(port, 0);
+  }
 
-  EXPECT_TRUE(addrInfo.query("127.0.0.1"));
-  GSockAddr* sockAddr = (GSockAddr*)addrInfo.info_->ai_addr;
-  sockAddr->ip();
-  sockAddr->port();
-
+  {
+    GAddrInfo addrInfo;
+    EXPECT_EQ(addrInfo.query("::1"), nullptr);
+    GSockAddr* sockAddr = (GSockAddr*)addrInfo.info_->ai_addr;
+    EXPECT_EQ(sockAddr->family(), AF_INET6);
+    QString ip6 = (QString)(sockAddr->ip6());
+    EXPECT_EQ(ip6, "::1");
+    quint16 port = sockAddr->port();
+    EXPECT_EQ(port, 0);
+  }
 }
 
 #endif // GTEST

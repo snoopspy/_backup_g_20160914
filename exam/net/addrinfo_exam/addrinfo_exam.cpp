@@ -26,8 +26,8 @@ int main(int argc, char* argv[]) {
   hints.ai_family = FLAGS_family;
   hints.ai_socktype = FLAGS_socktype;
 
-  GErr* err;
-  if (!addrInfo.query(hints, FLAGS_host.c_str(), FLAGS_port.c_str(), &err)) {
+  GErr* err = addrInfo.query(hints, FLAGS_host.c_str(), FLAGS_port.c_str());
+  if (err != nullptr) {
     clog << err << endl;
     delete err;
     return EXIT_FAILURE;

@@ -13,7 +13,8 @@ GSock GNet::bind(int sockType, QString ip, QString port, bool reuseAddr) {
   hints.ai_socktype = sockType;
   hints.ai_flags = AI_PASSIVE;
 
-  if (!addrInfo.query(hints, qPrintable(ip), qPrintable(port), &err)) {
+  err = addrInfo.query(hints, qPrintable(ip), qPrintable(port));
+  if (err != nullptr) {
     LOG(ERROR) << err;
     return GSock(INVALID_SOCKET);
   }
@@ -64,7 +65,8 @@ bool GNet::connect(GSock sock, int sockType, QString host, QString port) {
   hints.ai_family = family_;
   hints.ai_socktype = sockType;
 
-  if (!addrInfo.query(hints, qPrintable(host), qPrintable(port), &err)) {
+  err = addrInfo.query(hints, qPrintable(host), qPrintable(port));
+  if (err != nullptr) {
     LOG(ERROR) << err << QString(" host=%1 port=%2").arg(host, port);
     return false;
   }
