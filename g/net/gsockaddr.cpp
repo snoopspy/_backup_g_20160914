@@ -21,12 +21,18 @@ GSockAddr::GSockAddr(struct sockaddr_in6* addrIn6) {
   memcpy(this, addrIn6, sizeof(*addrIn6));
 }
 
+void GSockAddr::clear() {
+  memset(this, 0, sizeof(*this));
+}
+
 GErr* GSockAddr::init(const char* host, const char* port) {
   GAddrInfo addrInfo;
   GErr* err = addrInfo.query(host, port);
   if (err == nullptr) {
     assert(addrInfo.info_->ai_addrlen <= sizeof(*this));
     memcpy(this, addrInfo.info_->ai_addr, addrInfo.info_->ai_addrlen);
+  } else {
+    clear();
   }
   return err;
 }

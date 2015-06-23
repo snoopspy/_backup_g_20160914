@@ -24,6 +24,7 @@ union GSockAddr {
   GSockAddr(struct sockaddr_in* addrIn);
   GSockAddr(struct sockaddr_in6* addrIn6);
 
+  void clear();
   GErr* init(const char* host, const char* port);
 
   int family();
