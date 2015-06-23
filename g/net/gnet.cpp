@@ -4,98 +4,63 @@
 // ----------------------------------------------------------------------------
 // GNet
 // ----------------------------------------------------------------------------
-GSock GNet::bind(int sockType, QString ip, QString port, bool reuseAddr) {
+GSock GNet::bind(const QString& ip, const QString& port, bool reuseAddr) {
   GAddrInfo addrInfo;
   struct addrinfo hints;
 
   memset(&hints, 0, sizeof(hints));
-  hints.ai_family = family_;
-  hints.ai_socktype = sockType;
   hints.ai_flags = AI_PASSIVE;
+  hints.ai_family = family_;
+  hints.ai_socktype = sockType_;
 
   err = addrInfo.query(hints, qPrintable(ip), qPrintable(port));
   if (err != nullptr) {
-    LOG(ERROR) << err;
+    LOG(ERROR) << err << QString(" host=%1 port=%2").arg(ip, port);
     return GSock(INVALID_SOCKET);
   }
 
   GSock sock;
   bool succeed = false;
-  for (struct addrinfo* info = addrInfo.info_; info != nullptr; info = info->ai_next) {
+  struct addrinfo* info = addrInfo.info_;
+  while (true) {
     if (!sock.socket(info->ai_family, info->ai_socktype, info->ai_protocol)) {
+      GLastErr lastErr;
+      SET_ERR(GNetErr(lastErr.code(), QString("%1 family=%2 socktype=%3 protocol=%4")
+        .arg(info->ai_family, info->ai_socktype, info->ai_protocol)));
       sock.close();
-      continue;
+      break;
     }
 
     if (nonBlock_) {
       if (!sock.setNonblock()) {
+        SET_ERR(GLastErr());
         sock.close();
-       continue;
+        break;
       }
     }
 
     if (reuseAddr) {
       if (!sock.setsockopt(SOL_SOCKET, SO_REUSEADDR)) {
+        SET_ERR(GLastErr());
         sock.close();
-        continue;
+        break;
       }
     }
 
     if (!sock.bind(info->ai_addr, info->ai_addrlen)) {
+      GLastErr lastErr;
+      SET_ERR(GNetErr(lastErr.code(), QString("%1 ip=%2 port=%3")
+        .arg(lastErr.msg(), ip, port)));
       sock.close();
-      continue;
+      break;
     }
+
     succeed = true;
     break;
   }
 
-  if (!succeed) {
-    GLastErr lastErr;
-    SET_ERR(GNetErr(lastErr.code(), QString("%1 ip=%2 port=%3").arg(lastErr.msg(), ip, port)));
+  if (!succeed)
     return GSock(INVALID_SOCKET);
-  }
   return sock;
 }
 
-bool GNet::connect(GSock sock, int sockType, QString host, QString port) {
-  GAddrInfo addrInfo;
-  struct addrinfo hints;
-
-  memset(&hints, 0, sizeof(hints));
-  hints.ai_family = family_;
-  hints.ai_socktype = sockType;
-
-  err = addrInfo.query(hints, qPrintable(host), qPrintable(port));
-  if (err != nullptr) {
-    LOG(ERROR) << err << QString(" host=%1 port=%2").arg(host, port);
-    return false;
-  }
-
-  bool succeed = false;
-  for (struct addrinfo* info = addrInfo.info_; info != nullptr; info = info->ai_next) {
-    if (!sock.connect(info->ai_addr, info->ai_addrlen)) {
-      if (!(nonBlock_ && errno == EINPROGRESS)) {
-        sock.close();
-        continue;
-      }
-    }
-    succeed = true;
-    break;
-  }
-
-  if (!succeed) {
-    GLastErr lastErr;
-    SET_ERR(GNetErr(lastErr.code(), QString("%1 host=%2 port=%3").arg(lastErr.msg(), host, port)));
-    return false;
-  }
-  return true;
-}
-
-bool GNet::listen(GSock sock, int backLog) {
-  if (!sock.listen(backLog)) {
-    GLastErr lastErr;
-    SET_ERR(GNetErr(lastErr.code(), lastErr.msg()));
-    return false;
-  }
-  return true;
-}

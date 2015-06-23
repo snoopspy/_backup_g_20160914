@@ -1,4 +1,5 @@
-#include <net/gnetserver.h>
+#include "gaddrinfo.h"
+#include "gnetserver.h"
 
 // ----------------------------------------------------------------------------
 // GNetServer
@@ -12,5 +13,15 @@ bool GNetServer::checkLocalIpAndPort() {
 }
 
 GSock GNetServer::bind() {
-  return GNet::bind(sockType_, localIp_, port_, true);
+  return GNet::bind(localIp_, port_, true);
+}
+
+bool GNetServer::listen(GSock sock, int backLog) {
+  if (!sock.listen(backLog)) {
+    GLastErr lastErr;
+    SET_ERR(GNetErr(lastErr.code(), QString("%1 backLoc=%2")
+      .arg(lastErr.msg(), backLog)));
+    return false;
+  }
+  return true;
 }

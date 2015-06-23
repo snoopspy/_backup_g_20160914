@@ -26,9 +26,7 @@ struct GNet : GObj {
 public:
   GNet(GObj* parent = nullptr) : GObj(parent) {}
 
-  GSock bind(int sockType, QString ip, QString port, bool reuseAddr);
-  bool connect(GSock sock, int sockType, QString host, QString port);
-  bool listen(GSock sock, int backLog);
+  GSock bind(const QString& ip, const QString& port, bool reuseAddr);
 
   int family_{AF_UNSPEC}; // AF_UNSPEC(0), AF_INET(2) or AF_INET6(10)
   int sockType_; // SOCK_STREAM(1), SOCK_DGRAM(2) or SOCK_RAW(3)

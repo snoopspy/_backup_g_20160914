@@ -25,6 +25,7 @@ public:
 
   bool checkLocalIpAndPort();
   GSock bind();
+  bool listen(GSock sock, int backLog);
 
   QString localIp_;
   QString port_{"0"};
