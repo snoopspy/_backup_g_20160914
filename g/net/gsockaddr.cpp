@@ -72,7 +72,7 @@ quint16 GSockAddr::port() {
 
 TEST(GSockAddr, ipTest) {
   GSockAddr sockAddr;
-  sockAddr.init("127.0.0.1", nullptr);
+  EXPECT_EQ(sockAddr.init("127.0.0.1", nullptr), nullptr);
   EXPECT_EQ(sockAddr.family(), AF_INET);
   QString ip = (QString)(sockAddr.ip());
   EXPECT_EQ(ip, "127.0.0.1");
@@ -82,7 +82,7 @@ TEST(GSockAddr, ipTest) {
 
 TEST(GSockAddr, ip6Test) {
   GSockAddr sockAddr;
-  sockAddr.init("::1", nullptr);
+  EXPECT_EQ(sockAddr.init("::1", nullptr), nullptr);
   EXPECT_EQ(sockAddr.family(), AF_INET6);
   QString ip6 = (QString)(sockAddr.ip6());
   EXPECT_EQ(ip6, "::1");
