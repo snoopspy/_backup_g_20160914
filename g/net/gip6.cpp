@@ -22,7 +22,7 @@ GIp6& GIp6::operator =(const char* rhs) {
 
 GIp6::operator QString() const {
   char s[INET6_ADDRSTRLEN];
-  const char* res = inet_ntop(AF_INET6, &ip6_, s, INET_ADDRSTRLEN);
+  const char* res = inet_ntop(AF_INET6, &ip6_, s, INET6_ADDRSTRLEN);
   if (res == nullptr) {
     LOG(ERROR) << "inet_ntop return null " << GLastErr();
     return QString();
