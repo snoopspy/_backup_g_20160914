@@ -1,32 +1,44 @@
-#include <arpa/inet.h> // for inet_ntop
-#include <gflags/gflags.h>
 #include <iostream>
 #include <GAddrInfo>
 #include <GIp>
 #include <GIp6>
+#include <GParam>
 #include <GStr>
 #include <GSockAddr>
 
-DEFINE_int32(flags, 0, "1:AI_PASSIVE");
-DEFINE_int32(family, AF_UNSPEC, "0:AF_UNSPEC 2:AF_INET 10:AF_INET6");
-DEFINE_int32(socktype, 0, "0:UNKNOWN 1:SOCK_STREAM 2:SOCK_DGRAM");
-DEFINE_string(host, "", "host");
-DEFINE_string(port, "0", "port");
+struct Option : GObj {
+  Q_OBJECT
+  Q_PROPERTY(int flags MEMBER flags_)
+  Q_PROPERTY(int family MEMBER family_)
+  Q_PROPERTY(int socktype MEMBER socktype_)
+  Q_PROPERTY(QString host MEMBER host_)
+  Q_PROPERTY(QString port MEMBER port_)
+
+public:
+  int flags_{0}; // 1:AI_PASSIVE
+  int family_{AF_UNSPEC}; // 0:AF_UNSPEC 2:AF_INET 10:AF_INET6
+  int socktype_{0}; // 0:UNKNOWN 1:SOCK_STREAM 2:SOCK_DGRAM
+  QString host_{""};
+  QString port_{"0"};
+} option;
 
 using namespace std;
 
 int main(int argc, char* argv[]) {
   google::ParseCommandLineFlags(&argc, &argv, true);
+  { GParam param(argc, argv);
+    param.parse(&option);
+  }
 
   GAddrInfo addrInfo;
   struct addrinfo hints;
 
   memset(&hints, 0, sizeof(hints));
-  hints.ai_flags = FLAGS_flags;
-  hints.ai_family = FLAGS_family;
-  hints.ai_socktype = FLAGS_socktype;
+  hints.ai_flags = option.flags_;
+  hints.ai_family = option.family_;
+  hints.ai_socktype = option.socktype_;
 
-  GErr* err = addrInfo.query(hints, FLAGS_host.c_str(), FLAGS_port.c_str());
+  GErr* err = addrInfo.query(hints, qPrintable(option.host_), qPrintable(option.port_));
   if (err != nullptr) {
     clog << err << endl;
     delete err;
@@ -70,22 +82,10 @@ int main(int argc, char* argv[]) {
     clog << "(" << sockAddr->port() << ")";
 
     clog << endl;
-    /*
-    if (info->ai_family == AF_INET) {
-      GIp ip{sockAddr->addrIn_.sin_addr};
-      clog << "\t" << QString(ip);
-      clog << "(" << htons(sockAddr->addrIn_.sin_port) << ")";
-      clog << endl;
-    } else
-   if (info->ai_family == AF_INET6) {
-      GIp6 ip6{sockAddr->addrIn6_.sin6_addr};
-      clog << "\t" << QString(ip6);
-      clog << "(" << htons(sockAddr->addrIn6_.sin6_port) << ")";
-      clog << endl;
-   }
-   */
-   idx++;
+    idx++;
   }
 
   return 0;
 }
+
+#include "addrinfo_exam.moc"
