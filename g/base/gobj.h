@@ -24,6 +24,9 @@ struct GObj : QObject {
   virtual bool open();
   virtual bool close();
 
+  virtual void helpCommandLine(std::ostream* os = nullptr);
+  virtual bool parseCommandLine(int argc, const char* argv[], QString prefixName = "");
+
   GErr* err{nullptr};
 };
 

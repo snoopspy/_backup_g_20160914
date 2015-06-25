@@ -22,7 +22,8 @@ namespace g {
     NOT_SUPPORTED,
     VIRTUAL_FUNCTION_CALL,
     VALUE_IS_NULL,
-    VALUE_IS_NOT_NULL
+    VALUE_IS_NOT_NULL,
+    ERROR_IN_PARSING
   };
 
   enum {
